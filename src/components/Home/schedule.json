@@ -1,0 +1,65 @@
+[
+  {
+    "week": "1주차",
+    "duration": "4시간",
+    "period": "4/7 ~ 4/28",
+    "topic": "HTML/CSS 기초",
+    "link": "https://www.notion.so/thisis6515/1-326bd7a8eb4880d49ef3cb496de4ef41?source=copy_link"
+  },
+  {
+    "week": "2주차",
+    "duration": "4시간 1분",
+    "period": "4/29 ~ 5/5",
+    "topic": "CSS 레이아웃 & 반응형",
+    "link": "https://www.notion.so/thisis6515/2-326bd7a8eb4880fe9eeccee216d311bd?source=copy_link"
+  },
+  {
+    "week": "3주차",
+    "duration": "3시간 39분",
+    "period": "5/6 ~ 5/12",
+    "topic": "JavaScript 기초",
+    "link": "https://www.notion.so/thisis6515/3-326bd7a8eb4880cca5cfe62aa7f288f0?source=copy_link"
+  },
+  {
+    "week": "4주차",
+    "duration": "2시간 8분",
+    "period": "5/13 ~ 5/19",
+    "topic": "JS 비동기와 데이터",
+    "link": "https://www.notion.so/thisis6515/4-326bd7a8eb4880688a75ed00a2546a4b?source=copy_link"
+  },
+  {
+    "week": "5주차",
+    "duration": "1시간 6분",
+    "period": "5/20 ~ 5/26",
+    "topic": "React 시작하기",
+    "link": "https://www.notion.so/thisis6515/5-326bd7a8eb488049bd6bf9b19b2791c5?source=copy_link"
+  },
+  {
+    "week": "6주차",
+    "duration": "1시간 42분",
+    "period": "5/27 ~ 6/2",
+    "topic": "상태와 Effect",
+    "link": "https://www.notion.so/thisis6515/6-326bd7a8eb48801685b0d0cddce82760?source=copy_link"
+  },
+  {
+    "week": "7주차",
+    "duration": "55분",
+    "period": "6/3 ~ 6/9",
+    "topic": "React Router",
+    "link": "https://www.notion.so/thisis6515/7-326bd7a8eb4880d39183f7c094e00938?source=copy_link"
+  },
+  {
+    "week": "8주차",
+    "duration": "태엽이 직강",
+    "period": "6/10 ~ 6/16",
+    "topic": "백엔드 API 연결",
+    "link": "https://www.notion.so/thisis6515/8-33abd7a8eb48804895c9d95c858e6ae9?source=copy_link"
+  },
+  {
+    "week": "9주차",
+    "duration": "태엽이 직강",
+    "period": "6/17 ~ 6/23",
+    "topic": "배포",
+    "link": "https://www.notion.so/thisis6515/9-33abd7a8eb4880c8ab08c16b2a38cbfd?source=copy_link"
+  }
+]
