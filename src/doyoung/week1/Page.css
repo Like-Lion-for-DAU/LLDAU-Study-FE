@@ -1,13 +1,8 @@
 .week-page {
   padding: 32px;
-}
-
-.week-page h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
-}
-.week-page {
-  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .week-page h2 {
@@ -22,14 +17,8 @@ body {
     color: #333;
 }
 
-.week-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 .card {
-    width: 130%;
+    width: 100%;
     max-width: 450px;
     background-color: white;
     padding: 20px;
