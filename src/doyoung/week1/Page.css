@@ -1,8 +1,68 @@
 .week-page {
   padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .week-page h2 {
   font-size: 1.5rem;
   font-weight: 700;
+}
+
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+.card {
+    width: 100%;
+    max-width: 450px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    margin: 30px 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.container {
+    width: 80%;
+    max-width: 800px;
+    background-color: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+section {
+    margin-bottom: 25px;
+}
+
+section h2 {
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
+}
+
+a {
+    text-decoration: none;
+}
+
+.skills > div{
+    min-width: 150px;
+    background-color: white;
+    color: black;
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: bold;
+    width: 30%;
+}
+
+.frontend {
+    color: #3498db; /* 파란색 */
+    font-weight: bold;
 }

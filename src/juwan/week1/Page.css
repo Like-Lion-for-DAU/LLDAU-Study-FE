@@ -1,3 +1,8 @@
+#root {
+  min-height: 100vh;
+  background-color: rgb(237, 237, 235);
+}
+
 .week-page {
   padding: 32px;
 }
@@ -5,4 +10,81 @@
 .week-page h2 {
   font-size: 1.5rem;
   font-weight: 700;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+img {
+  object-fit: cover;
+}
+
+/* 요약 박스 */
+.box1 {            
+  padding-top: 20px;
+  width: 300px;
+  height: 320px;
+  border-radius: 15px;
+  margin: 40px;
+  background: white;
+}
+
+/* 본문 냉용 */
+.box2 {
+  padding-top: 1px;
+  padding-bottom: 10px;
+  width: 95%;
+  max-width: 600px;
+  border-radius: 15px;
+  margin: 40px;
+  background-color: white;
+}
+
+/* 박스 이미지 */
+.box1 img {        
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+  display: block;
+}
+
+.name {
+  margin: 12px 12px 4px;
+}
+
+.role {
+  color: blue;
+  margin: 0px 12px 6px;
+}
+
+.goal {
+  margin: 0px 12px 4px;
+}
+
+.club_name {
+  color: gray;
+  margin: 0px 12px 6px;
+  margin-bottom:20px;
+}
+
+.subtitle {
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0px 12px 4px;
+}
+
+.my {
+  margin: 0px 12px 6px;
+  margin-bottom: 20px;
+}
+
+.box2 ul {
+  padding-left: 40px;
+  margin-bottom: 15px;
+}
+
+.final {
+  margin: 0px 12px 4px;
 }

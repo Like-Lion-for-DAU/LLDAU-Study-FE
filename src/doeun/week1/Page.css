@@ -1,8 +1,48 @@
 .week-page {
-  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
-.week-page h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
+.card1 {
+  width:400px;
+  background-color: #fff;
+  border-radius: 20px; /* 둥근 모서리 */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  text-align: left;
+  gap: 10px;
+}
+
+.profile-img {
+  width: 100%;
+  object-fit: cover;
+  padding: 20px;
+}
+
+strong {
+  color: rgb(78, 78, 238);
+}
+
+
+.card2 {
+  max-width: 1000px;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+ul {
+  padding-left: 20px;
+  margin: 10px;
+}
+
+.detail, .info, .number, .word {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
