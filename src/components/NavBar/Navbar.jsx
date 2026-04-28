@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { NavLink, Link } from "react-router-dom";
 import "./Navbar.css";
+import logo from "../../assets/header/logo.png";
 
 const weeks = Array.from({ length: 10 }, (_, i) => i + 1);
 
@@ -22,7 +23,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="navbar-inner">
         <NavLink to="/" className="navbar-logo">
-          <img src="/image/logo.png" alt="logo" className="navbar-logo-img" />
+          <img src={logo} alt="logo" className="navbar-logo-img" />
           LLDAU Study
         </NavLink>
         <div className={`navbar-links ${menuOpen ? "open" : ""}`}>
