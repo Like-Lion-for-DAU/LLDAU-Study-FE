@@ -4,7 +4,7 @@
   gap: 30px;
 }
 
-.card1 {
+.profile-card {
   width:400px;
   background-color: #fff;
   border-radius: 20px; /* 둥근 모서리 */
@@ -20,12 +20,12 @@
   padding: 20px;
 }
 
-strong {
+.profile-card strong, .detail-card strong {
   color: rgb(78, 78, 238);
 }
 
 
-.card2 {
+.detail-card {
   max-width: 1000px;
   background-color: #fff;
   border-radius: 20px;
@@ -36,7 +36,7 @@ strong {
   gap: 10px;
 }
 
-ul {
+.number ul, .skill ul {
   padding-left: 20px;
   margin: 10px;
 }
