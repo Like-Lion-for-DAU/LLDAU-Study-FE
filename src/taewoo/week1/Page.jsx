@@ -2,90 +2,57 @@ import "./Page.css";
 
 export default function Week1Page() {
   return (
-    <div className="week-page">
-      <table class="round_table" width="280">
-        <tr>
-          <img class="profil_image" src="https://i.pinimg.com/236x/ab/58/35/ab58355b3cc43e8649ef972985205330.jpg"></img>
-        </tr>
+    <div>
+      <div className="main_profile">
 
-        <h2>&#160;백태우</h2>
+        <img class="profile_image" src="https://i.pinimg.com/236x/ab/58/35/ab58355b3cc43e8649ef972985205330.jpg"></img>
 
-        <b class="blue">&#160;Frontend</b>
-        <br></br>
+        <h2 className="name">백태우</h2>
+        <b className="blue_rule">Frontend</b>
+        <p className="line_introduce">I'm Empty Stack Junior :(</p>
+      </div>
 
-        <p>&#160;I'm Empty Stack Junior :(</p>
-        <p class="space">&#160;</p>
-      </table>
 
-      <br></br>
+      <div className="profile_infomation">
+        <h2 className="name">백태우</h2>
+        <b className="blue_rule">Frontend</b>
+        <p className="join_club">DAU_DSIS</p>
 
-      <table class="round_table" width="550">
-        <th>&#160;</th>
-        <h1>백태우</h1>
-        <b class="blue">&#160;Frontend</b>
-        <br></br>
-        &#160;DAU_DSIS
+        <br />
 
-        <br></br><br></br>
+        <h3 className="introduce_title">자기소개</h3>
+        <p className="introduce">AI학과지만 FullStack을 목표하기때문에 Frontend 짱 먹어보겠습니다</p>
         
-        <h3>자기소개</h3>
-        <p>&#160;AI학과이지만 Full Stack Developer를 목표로 하고있기 때문에 Frontend에서 </p>
-        <p>&#160;짱 먹어보겠습니다 감사합니다</p>
-        <br></br>
+        <br />
 
-        <h3>연락처</h3>
-        <b class="name">&#160;&middot;</b>
-        &#160;Email : btu0414@gmail.com
-        <br></br>
+        <h3 className="introduce_title">연락처</h3>
+        <ul>
+          <li>Email: btu0414@gmail.com</li>
+          <li>Phone: 010-4564-4725</li>
+          <li>Website: <a href="https://www.acmicpc.net/">www.acmicpc.net</a></li>
+          <li>github: <a href="https://github.com/TW1OO">github.com/TW1OO</a><a href="https://github.com/TW1OO"><img class="mark_size" src="https://img.icons8.com/p1em/1200/github.jpg"></img></a></li>
+        </ul>
 
-        <b class="name">&#160;&middot;</b>
-        &#160;Phone : 010-4564-4725
-        <br></br>
+        <br/>
 
-        <b class="name">&#160;&middot;</b>
-        &#160;Website : <a href="https://www.acmicpc.net/">https://www.acmicpc.net/</a>
+        <h3 className="introduce_title">관심 기술</h3>
+        <ul>
+          <li>NLP</li>
+          <li>LLM</li>
+          <li>python</li>
+        </ul>
 
-        <br></br><br></br>
-        <h3>관심 기술</h3>
+        <br/>
 
-        <b class="name">&#160;&middot;</b>
-        &#160;NLU / NLG
-        <br></br>
-
-        <b class="name">&#160;&middot;</b>
-        &#160;NLP
-        <br></br>
-
-        <b class="name">&#160;&middot;</b>
-        &#160;LLM
-        <br></br><br></br>
-
-        <h3>한 마디</h3>
-        <p class="space">&#160;</p>
-        <p>&#160;모두가 원하는 개발자가 되어보겠습니다.</p>
-        <p class="space">&#160;</p>
-      </table>
-
-      <br></br>
-
-      <table class="round_table" widht="450">
         <h3>읽고 있는 책</h3>
-        <br height="10px"></br>
-        <img class="book_detail" src="https://contents.kyobobook.co.kr/sih/fit-in/400x0/pdt/9788966260959.jpg"></img>&#160;
-        <img class="book_detail" src="https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791169211475.jpg"></img>
-      </table>
+        <img class="book_picture" src="https://contents.kyobobook.co.kr/sih/fit-in/400x0/pdt/9788966260959.jpg"></img>
+        <img class="book_picture" src="https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791169211475.jpg"></img>
 
-      <br></br>
+        <h3 className="introduce_title">한 마디</h3>
+        <p className="introduce">모두가 원하는 개발자가 되겠습니다.</p>
 
-      <table>
-        <a href="https://github.com/TW1OO">
-          <img class="mark_size" src="https://img.icons8.com/p1em/1200/github.jpg"></img>
-        </a>
-        <a></a>
-        <a href="https://www.instagram.com/baek_taeu/">
-          <img class="mark_size" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbeQEaLYtW8864NUrNmf8OtltgNKJSvhx5xA&s"></img>
-        </a>
-      </table>
+      </div>
+
     </div>
   );
 }
