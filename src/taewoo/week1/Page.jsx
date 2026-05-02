@@ -9,7 +9,7 @@ export default function Week1Page() {
 
         <h2 className="name">백태우</h2>
         <b className="blue_rule">Frontend</b>
-        <p className="line_introduce">I'm Empty Stack Junior :(</p>
+        <p className="line_introduce">I'm Empty Stack Junior <b>:(</b></p>
       </div>
 
 
@@ -44,7 +44,7 @@ export default function Week1Page() {
 
         <br/>
 
-        <h3>읽고 있는 책</h3>
+        <h3 >읽고 있는 책</h3>
         <img class="book_picture" src="https://contents.kyobobook.co.kr/sih/fit-in/400x0/pdt/9788966260959.jpg"></img>
         <img class="book_picture" src="https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791169211475.jpg"></img>
 
