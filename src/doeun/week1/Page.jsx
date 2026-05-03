@@ -1,11 +1,12 @@
 import "./Page.css";
+import logo from "./talk_potato.jpg";
 
 export default function Week1Page() {
   return (
     <div className="week-page">
-      <div className="card1">
+      <div className="profile-card">
         <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeiEU1E04mO8ZKPSBg0rEkODKXVoW3MTeypA&s"
+          src={logo}
           alt="profile"
           className="profile-img"
         />
@@ -14,7 +15,7 @@ export default function Week1Page() {
         <p>열심히 배우는 프론트엔드 개발자입니다!</p>
       </div>
 
-      <div className="card2">
+      <div className="detail-card">
         <header className="detail-H">
           <h1>이도은</h1>
           <strong>Frontend</strong>
@@ -25,8 +26,7 @@ export default function Week1Page() {
           <section className="info">
             <h3>자기소개</h3>
             <p>
-              모르는게 너무 많은 말하는수국입니다. 스펀지처럼 이해하려고
-              노력하고 있습니다. 배움에는 끝이없다..!
+              안녕하세요! 말하는 감자입니다. 잘부탁드립니다. 배움에는 끝이없다..!
             </p>
           </section>
 
