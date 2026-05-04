@@ -1,8 +1,56 @@
 .week-page {
   padding: 32px;
+  background:#f1f2f6;
 }
 
 .week-page h2 {
   font-size: 1.5rem;
   font-weight: 700;
+}
+
+.cardpack{
+  display: flex;
+  flex-wrap: wrap;
+  gap:20px;
+}
+
+.card {
+  width: 410px;
+  overflow: hidden;
+}
+
+.myname {
+  color : #db3434;
+  font-weight: bold;
+}
+
+span {
+  color : blue;
+  font-weight : bold;
+}
+
+.photo {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  overflow: auto;
+}
+
+.detailcardpack{
+  display: flex;
+  flex-direction: column;
+  gap : 40px;
+}
+
+.detailcard{
+  width:100%;
+  padding:40px;
+  background:white;
+  border-radius:15px;
+  box-sizing:border-box;
+}
+
+.dsis{
+  font-weight : bold;
+  color : #29bbd2;
 }
