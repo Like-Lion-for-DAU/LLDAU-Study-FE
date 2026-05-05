@@ -10,40 +10,28 @@
   font-weight: 700;
 }
 
+.photo{
+    width:300px;
+}
 
 .card {
     width: 100%;
-    max-width: 450px;
     background-color: white;
     padding: 20px;
     border-radius: 15px;
     text-align: center;
-    margin: 30px 0;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    margin: 30px;
 }
 
 .container {
     width: 80%;
-    max-width: 800px;
     background-color: white;
     padding: 25px;
     border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-.skills > div{
-    min-width: 150px;
-    background-color: white;
-    color: black;
-    border: 1px solid #ccc;
-    padding: 10px 15px;
-    border-radius: 6px;
-    text-align: center;
-    font-weight: bold;
-    width: 30%;
-}
 
 .frontend {
-    color: #3498db; /* 파란색 */
+    color: #3498db;
     font-weight: bold;
 }
