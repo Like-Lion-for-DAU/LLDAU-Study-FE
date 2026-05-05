@@ -1,17 +1,17 @@
-import "./Page.css";
+import styles from "./Page.module.css";
 import profile from "./profileimg.png"
 
 export default function Week1Page() {
   return (
-    <div className="week-page">
-      <div className="intro">
+    <div className={styles["week-page"]}>
+      <div className={styles["intro"]}>
         <img src = {profile} alt = "프로필 사진" className = "profileimg"></img>
         <h2 className = "intro-name">정소민</h2>
         <p className = "end">Frontend</p>
         <p>컴퓨터공학과 25학번 정소민입니다.</p>
       </div>
 
-      <div className="detail">
+      <div className={styles["detail"]}>
         <div className = "main">
           <h1>정소민</h1>
           <p className = "end">Frontend</p>

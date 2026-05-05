@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink, Link } from "react-router-dom";
-import "./Navbar.css";
+import styles from "./Navbar.module.css";
 import logo from "../../assets/header/logo.png";
 
 const weeks = Array.from({ length: 10 }, (_, i) => i + 1);
@@ -20,30 +20,30 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <nav className="navbar">
-      <div className="navbar-inner">
-        <NavLink to="/" className="navbar-logo">
-          <img src={logo} alt="logo" className="navbar-logo-img" />
+    <nav className={styles["navbar"]}>
+      <div className={styles["navbar-inner"]}>
+        <NavLink to="/" className={styles["navbar-logo"]}>
+          <img src={logo} alt="logo" className={styles["navbar-logo-img"]} />
           LLDAU Study
         </NavLink>
-        <div className={`navbar-links ${menuOpen ? "open" : ""}`}>
+        <div className={`${styles["navbar-links"]} ${menuOpen ? styles["open"] : ""}`}>
           {members.map((m) => (
-            <div key={m.path} className="navbar-dropdown">
+            <div key={m.path} className={styles["navbar-dropdown"]}>
               <NavLink
                 to={m.path}
                 className={({ isActive }) =>
-                  `navbar-link ${isActive ? "active" : ""}`
+                  `${styles["navbar-link"]} ${isActive ? styles["active"] : ""}`
                 }
                 onClick={() => setMenuOpen(false)}
               >
                 {m.name}
               </NavLink>
-              <div className="navbar-dropdown-menu">
+              <div className={styles["navbar-dropdown-menu"]}>
                 {weeks.map((week) => (
                   <Link
                     key={week}
                     to={`${m.path}/week${week}`}
-                    className="navbar-dropdown-item"
+                    className={styles["navbar-dropdown-item"]}
                     onClick={() => setMenuOpen(false)}
                   >
                     {week}주차
@@ -54,12 +54,12 @@ export default function Navbar() {
           ))}
         </div>
         <button
-          className="navbar-hamburger"
+          className={styles["navbar-hamburger"]}
           onClick={() => setMenuOpen(!menuOpen)}
         >
-          <span className="hamburger-line" />
-          <span className="hamburger-line" />
-          <span className="hamburger-line" />
+          <span className={styles["hamburger-line"]} />
+          <span className={styles["hamburger-line"]} />
+          <span className={styles["hamburger-line"]} />
         </button>
       </div>
     </nav>

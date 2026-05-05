@@ -1,15 +1,15 @@
-import "./Page.css";
+import styles from "./Page.module.css";
 
 export default function Week1Page() {
   return (
-    <div className="week-page">
+    <div className={styles["week-page"]}>
       <h2>1주차 과제 제출</h2>
 
       <header>
         <h1>자기소개 만들기</h1>
       </header>
 
-      <section className="card">
+      <section className={styles["card"]}>
         <article>
           <img
             src="https://i.pinimg.com/236x/4d/95/31/4d9531cd97ec55ed7ec35448fbe0e41d.jpg"
@@ -17,7 +17,7 @@ export default function Week1Page() {
             width="300px"
           />
           <h2>임도영</h2>
-          <p className="frontend">Frontend</p>
+          <p className={styles["frontend"]}>Frontend</p>
           <p>
             <strong>한 줄 자기소개:</strong>아기사자 14기 프론트엔드 임도영
             입니다.
@@ -25,7 +25,7 @@ export default function Week1Page() {
         </article>
       </section>
 
-      <main className="container">
+      <main className={styles["container"]}>
         <section>
           <h2>기본 정보</h2>
           <ul>
@@ -34,7 +34,7 @@ export default function Week1Page() {
             </li>
             <li>
               <strong>소속 파트:</strong>
-              <span className="frontend"> Frontend</span>
+              <span className={styles["frontend"]}> Frontend</span>
             </li>
             <li>
               <strong>동아리명:</strong> 디스이즈
@@ -54,7 +54,7 @@ export default function Week1Page() {
 
         <section>
           <h2>관심 기술</h2>
-          <div className="skills">
+          <div className={styles["skills"]}>
             <div>HTML / CSS</div>
             <div>JavaScript</div>
             <div>React</div>
