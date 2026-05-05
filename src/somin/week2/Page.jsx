@@ -1,4 +1,4 @@
-import "./Page.css";
+import styles from "./Page.module.css";
 import jsm from './profile/jsm.png';
 import kjw from './profile/kjw.gif';
 import idy from './profile/idy.png';
@@ -10,94 +10,94 @@ import jsy from './profile/jsy.png';
 
 export default function Week2Page() {
   return (
-    <div className="week-page">
-      <section className="card-intro">
-        <div className = "card-me">
-          <div className="profileimg">
+    <div className={styles["week-page"]}>
+      <section className={styles["card-intro"]}>
+        <div className={styles["card-me"]}>
+          <div className={styles["profileimg"]}>
             <img src={jsm} alt="정소민 프로필" />
-            <span className="badge">React</span>
+            <span className={styles["badge"]}>React</span>
           </div>
-          <p className = "name">정소민</p>
-          <p className = "end">Frontend</p>
+          <p className={styles["name"]}>정소민</p>
+          <p className={styles["end"]}>Frontend</p>
           <p>컴퓨터공학과 25학번 정소민입니다.</p>
         </div>
         
-        <div className = "card">
-          <div className="profileimg">
+        <div className={styles["card"]}>
+          <div className={styles["profileimg"]}>
             <img src={kjw} alt="김주완 프로필" />
-            <span className="badge">HTML/CSS</span>
+            <span className={styles["badge"]}>HTML/CSS</span>
           </div>
-          <p className = "name">김주완</p>
-          <p className = "end">Frontend</p>
+          <p className={styles["name"]}>김주완</p>
+          <p className={styles["end"]}>Frontend</p>
           <p>성실히 배우고 싶은 학생입니다.</p>
         </div>
         
-        <div className = "card">
-          <div className="profileimg">
+        <div className={styles["card"]}>
+          <div className={styles["profileimg"]}>
             <img src={idy} alt="임도영 프로필" />
-            <span className="badge">HTML / CSS</span>
+            <span className={styles["badge"]}>HTML / CSS</span>
           </div>
-          <p className = "name">임도영</p>
-          <p className = "end">Frontend</p>
+          <p className={styles["name"]}>임도영</p>
+          <p className={styles["end"]}>Frontend</p>
           <p>아기사자 14기 프론트엔드 임도영입니다.</p>
         </div>
         
-        <div className = "card">
-          <div className="profileimg">
+        <div className={styles["card"]}>
+          <div className={styles["profileimg"]}>
             <img src={jsm} alt="김나함 프로필" />
-            <span className="badge">HTML / CSS</span>
+            <span className={styles["badge"]}>HTML / CSS</span>
           </div>
-          <p className = "name">김나함</p>
-          <p className = "end">Frontend</p>
+          <p className={styles["name"]}>김나함</p>
+          <p className={styles["end"]}>Frontend</p>
           <p>분야를 넘나들며 성장하는 개발자입니다.</p>
         </div>
         
-        <div className = "card">
-          <div className="profileimg">
+        <div className={styles["card"]}>
+          <div className={styles["profileimg"]}>
             <img src={btw} alt="백태우 프로필" />
-            <span className="badge">NLU / NLG</span>
+            <span className={styles["badge"]}>NLU / NLG</span>
           </div>
-          <p className = "name">백태우</p>
-          <p className = "end">Frontend</p>
+          <p className={styles["name"]}>백태우</p>
+          <p className={styles["end"]}>Frontend</p>
           <p>I'm Empty Stack Junior</p>
         </div>
         
-        <div className = "card">
-          <div className="profileimg">
+        <div className={styles["card"]}>
+          <div className={styles["profileimg"]}>
             <img src={ide} alt="이도은 프로필" />
-            <span className="badge">HTML / CSS</span>
+            <span className={styles["badge"]}>HTML / CSS</span>
           </div>
-          <p className = "name">이도은</p>
-          <p className = "end">Frontend</p>
+          <p className={styles["name"]}>이도은</p>
+          <p className={styles["end"]}>Frontend</p>
           <p>열심히 배우는 프론트엔드 개발자입니다!</p>
         </div>
         
-        <div className = "card">
-          <div className="profileimg">
+        <div className={styles["card"]}>
+          <div className={styles["profileimg"]}>
             <img src={jsy} alt="정서윤 프로필" />
-            <span className="badge">TypeScript</span>
+            <span className={styles["badge"]}>TypeScript</span>
           </div>
-          <p className = "name">정서윤</p>
-          <p className = "end">Frontend</p>
+          <p className={styles["name"]}>정서윤</p>
+          <p className={styles["end"]}>Frontend</p>
           <p>열심히 배워가고있는 프론트엔드 개발자입니다!</p>
         </div>
       </section>
 
-      <section className="card-detail">
+      <section className={styles["card-detail"]}>
 
-        <div className = "detail">
-          <div className = "main">
-            <p className = "name">정소민</p>
-            <p className = "end">Frontend</p>
-            <p className = "club">디스이즈</p>
+        <div className={styles["detail"]}>
+          <div className={styles["main"]}>
+            <p className={styles["name"]}>정소민</p>
+            <p className={styles["end"]}>Frontend</p>
+            <p className={styles["club"]}>디스이즈</p>
           </div>
 
-          <div className = "introduce">
+          <div className={styles["introduce"]}>
             <p>자기소개</p>
             <p>컴퓨터공학과 25학번 정소민입니다. 프론트엔드를 맡고 있습니다.</p>
           </div>
 
-          <div className = "contact">
+          <div className={styles["contact"]}>
             <p>연락처</p>
             <ul>
               <li>email : sominjung1116@gmail.com</li>
@@ -107,7 +107,7 @@ export default function Week2Page() {
             </ul>
           </div>
 
-          <div className = "interest">
+          <div className={styles["interest"]}>
             <p>관심기술</p>
             <ul>
               <li>React</li>
@@ -116,25 +116,25 @@ export default function Week2Page() {
             </ul>
           </div>
         
-          <div className = "gako">
+          <div className={styles["gako"]}>
             <p>각오 한 마디</p>
             <p>열심히 하겠습니다.</p>
           </div>
         </div>
 
-        <div className = "detail">
-          <div className = "main">
-            <p className = "name">김주완</p>
-            <p className = "end">Frontend</p>
-            <p className = "club">LikeLion DAU</p>
+        <div className={styles["detail"]}>
+          <div className={styles["main"]}>
+            <p className={styles["name"]}>김주완</p>
+            <p className={styles["end"]}>Frontend</p>
+            <p className={styles["club"]}>LikeLion DAU</p>
           </div>
 
-          <div className = "introduce">
+          <div className={styles["introduce"]}>
             <p>자기소개</p>
             <p>컴퓨터공학과 1학년입니다. <br/>웹 개발을 배우며, 코드 하나하나 다 이해하려고 노력하고 있습니다.</p>
           </div>
 
-          <div className = "contact">
+          <div className={styles["contact"]}>
             <p>연락처</p>
             <ul>
               <li>email : mmnnbbnn070910@gmail.com</li>
@@ -143,7 +143,7 @@ export default function Week2Page() {
             </ul>
           </div>
 
-          <div className = "interest">
+          <div className={styles["interest"]}>
             <p>관심기술</p>
             <ul>
               <li>HTML/CSS</li>
@@ -152,20 +152,20 @@ export default function Week2Page() {
             </ul>
           </div>
         
-          <div className = "gako">
+          <div className={styles["gako"]}>
             <p>각오 한 마디</p>
             <p>성실히 배워서 웹개발 마스터가 되고 싶습니다.</p>
           </div>
         </div>
 
-        <div className = "detail">
-          <div className = "main">
-            <p className = "name">임도영</p>
-            <p className = "end">Frontend</p>
-            <p className = "club">디스이즈</p>
+        <div className={styles["detail"]}>
+          <div className={styles["main"]}>
+            <p className={styles["name"]}>임도영</p>
+            <p className={styles["end"]}>Frontend</p>
+            <p className={styles["club"]}>디스이즈</p>
           </div>
 
-          <div className = "introduce">
+          <div className={styles["introduce"]}>
             <p>자기소개</p>
             <p>동아대 26학번 컴퓨터공학과, 아기사자 14기 임도영입니다. 이번 활동을
             통해 많이 공부하며, 공부한 것을 활동 및 대회 참여를 통해
@@ -173,7 +173,7 @@ export default function Week2Page() {
             부탁드립니다.</p>
           </div>
 
-          <div className = "contact">
+          <div className={styles["contact"]}>
             <p>연락처</p>
             <ul>
               <li>email : dlaehdud342@naver.com</li>
@@ -182,7 +182,7 @@ export default function Week2Page() {
             </ul>
           </div>
 
-          <div className = "interest">
+          <div className={styles["interest"]}>
             <p>관심기술</p>
             <ul>
               <li>HTML / CSS</li>
@@ -193,25 +193,25 @@ export default function Week2Page() {
             </ul>
           </div>
         
-          <div className = "gako">
+          <div className={styles["gako"]}>
             <p>각오 한 마디</p>
             <p>꾸준히 노력하고 적극적인 참여를 통해 성장하는 개발자가 되겠습니다.</p>
           </div>
         </div>
 
-        <div className = "detail">
-          <div className = "main">
-            <p className = "name">김나함</p>
-            <p className = "end">Frontend</p>
-            <p className = "club">멋쟁이사자처럼 아기사자 14기, 자기개발 동아리</p>
+        <div className={styles["detail"]}>
+          <div className={styles["main"]}>
+            <p className={styles["name"]}>김나함</p>
+            <p className={styles["end"]}>Frontend</p>
+            <p className={styles["club"]}>멋쟁이사자처럼 아기사자 14기, 자기개발 동아리</p>
           </div>
 
-          <div className = "introduce">
+          <div className={styles["introduce"]}>
             <p>자기소개</p>
             <p>동아대학교 응용생물공학과 25학번 김나함입니다. 멋쟁이사자처럼을 통해 처음 프론트엔드에 도전하는 중입니다.</p>
           </div>
 
-          <div className = "contact">
+          <div className={styles["contact"]}>
             <p>연락처</p>
             <ul>
               <li>email : naham9488@gmail.com</li>
@@ -220,7 +220,7 @@ export default function Week2Page() {
             </ul>
           </div>
 
-          <div className = "interest">
+          <div className={styles["interest"]}>
             <p>관심기술</p>
             <ul>
               <li>HTML / CSS</li>
@@ -228,25 +228,25 @@ export default function Week2Page() {
             </ul>
           </div>
         
-          <div className = "gako">
+          <div className={styles["gako"]}>
             <p>각오 한 마디</p>
             <p>부족한 점은 많지만 포기하지 않고 계속 노력하여 성장하는 아기사자가 되겠습니다!</p>
           </div>
         </div>
 
-        <div className = "detail">
-          <div className = "main">
-            <p className = "name">백태우</p>
-            <p className = "end">Frontend</p>
-            <p className = "club">DAU_DSIS</p>
+        <div className={styles["detail"]}>
+          <div className={styles["main"]}>
+            <p className={styles["name"]}>백태우</p>
+            <p className={styles["end"]}>Frontend</p>
+            <p className={styles["club"]}>DAU_DSIS</p>
           </div>
 
-          <div className = "introduce">
+          <div className={styles["introduce"]}>
             <p>자기소개</p>
             <p>AI학과이지만 Full Stack Developer를 목표로 하고있기 때문에 Frontend에서 짱 먹어보겠습니다 감사합니다</p>
           </div>
 
-          <div className = "contact">
+          <div className={styles["contact"]}>
             <p>연락처</p>
             <ul>
               <li>email : btu0414@gmail.com</li>
@@ -256,7 +256,7 @@ export default function Week2Page() {
             </ul>
           </div>
 
-          <div className = "interest">
+          <div className={styles["interest"]}>
             <p>관심기술</p>
             <ul>
               <li>NLU / NLG</li>
@@ -265,25 +265,25 @@ export default function Week2Page() {
             </ul>
           </div>
         
-          <div className = "gako">
+          <div className={styles["gako"]}>
             <p>각오 한 마디</p>
             <p>모두가 원하는 개발자가 되어보겠습니다.</p>
           </div>
         </div>
-        <div className = "detail">
-          <div className = "main">
-            <p className="name">이도은</p>
-            <p className = "end">Frontend</p>
-            <p className = "club">LION TRACK</p>
+        <div className={styles["detail"]}>
+          <div className={styles["main"]}>
+            <p className={styles["name"]}>이도은</p>
+            <p className={styles["end"]}>Frontend</p>
+            <p className={styles["club"]}>LION TRACK</p>
           </div>
 
-          <div className = "introduce">
+          <div className={styles["introduce"]}>
             <p>자기소개</p>
             <p>모르는게 너무 많은 말하는수국입니다. 스펀지처럼 이해하려고
                노력하고 있습니다. 배움에는 끝이없다..!</p>
           </div>
 
-          <div className = "contact">
+          <div className={styles["contact"]}>
             <p>연락처</p>
             <ul>
               <li>email : dodo55860@gmail.com</li>
@@ -293,7 +293,7 @@ export default function Week2Page() {
             </ul>
           </div>
 
-          <div className = "interest">
+          <div className={styles["interest"]}>
             <p>관심기술</p>
             <ul>
               <li>HTML / CSS</li>
@@ -302,20 +302,20 @@ export default function Week2Page() {
             </ul>
           </div>
         
-          <div className = "gako">
+          <div className={styles["gako"]}>
             <p>각오 한 마디</p>
             <p>팀원들에게 든든한 개발자가 되고싶습니다.</p>
           </div>
         </div>
 
-        <div className = "detail">
-          <div className = "main">
-            <p className = "name">정서윤</p>
-            <p className = "end">Frontend</p>
-            <p className = "club">디스이즈</p>
+        <div className={styles["detail"]}>
+          <div className={styles["main"]}>
+            <p className={styles["name"]}>정서윤</p>
+            <p className={styles["end"]}>Frontend</p>
+            <p className={styles["club"]}>디스이즈</p>
           </div>
 
-          <div className = "introduce">
+          <div className={styles["introduce"]}>
             <p>자기소개</p>
             <p>안녕하세요, 프론트엔드를 맡고 있는 07년생 26학번 컴퓨터공학과 정서윤입니다.
             아직 부족한 점이 많지만, 배우는 과정 자체를 즐기며 꾸준히 성장하고 있습니다.
@@ -323,7 +323,7 @@ export default function Week2Page() {
             많이 배우고 경험하는 것을 목표로 열심히 해보겠습니다. 감사합니다!</p>
           </div>
 
-          <div className = "contact">
+          <div className={styles["contact"]}>
             <p>연락처</p>
             <ul>
               <li>email : t01021124995@gmail.com</li>
@@ -333,7 +333,7 @@ export default function Week2Page() {
             </ul>
           </div>
 
-          <div className = "interest">
+          <div className={styles["interest"]}>
             <p>관심기술</p>
             <ul>
               <li>TypeScript — 타입 기반 개발</li>
@@ -343,7 +343,7 @@ export default function Week2Page() {
             </ul>
           </div>
         
-          <div className = "gako">
+          <div className={styles["gako"]}>
             <p>각오 한 마디</p>
             <p>기초를 탄탄히 다지며, 맡은 역할을 끝까지 책임지는 개발자가 되겠습니다.</p>
           </div>
