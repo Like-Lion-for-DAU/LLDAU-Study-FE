@@ -43,7 +43,6 @@ export default function Week1Page() {
                 <li>Phone: 010-2686-5586</li>
               </ul>
             </section>
-          </footer>
 
           <section className="skill">
             <h3>관심 기술</h3>
@@ -58,6 +57,7 @@ export default function Week1Page() {
             <h3>한 마디</h3>
             <p>팀원들에게 든든한 개발자가 되고싶습니다.</p>
           </section>
+        </footer>
         </main>
       </div>
     </div>
