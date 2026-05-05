@@ -125,7 +125,7 @@ export default function Week2Page() {
           </ul>
 
           <h3 className={styles["introduce_title"]}>한 마디</h3>
-          <p className={styles["introduce"]}>모두가 원하는 개발자가 되겠습니다.</p>
+          <p className={styles["introduce_last"]}>모두가 원하는 개발자가 되겠습니다.</p>
         </div>
 
         <div className={styles["profile_infomation"]}>
@@ -153,7 +153,7 @@ export default function Week2Page() {
           </ul>
 
           <h3 className={styles["introduce_title"]}>한 마디</h3>
-          <p className={styles["introduce"]}>모두가 원하는 개발자가 되겠습니다.</p>
+          <p className={styles["introduce_last"]}>모두가 원하는 개발자가 되겠습니다.</p>
         </div>
 
         <div className={styles["profile_infomation"]}>
@@ -181,7 +181,7 @@ export default function Week2Page() {
           </ul>
 
           <h3 className={styles["introduce_title"]}>한 마디</h3>
-          <p className={styles["introduce"]}>모두가 원하는 개발자가 되겠습니다.</p>
+          <p className={styles["introduce_last"]}>모두가 원하는 개발자가 되겠습니다.</p>
         </div>
 
         <div className={styles["profile_infomation"]}>
@@ -209,7 +209,7 @@ export default function Week2Page() {
           </ul>
 
           <h3 className={styles["introduce_title"]}>한 마디</h3>
-          <p className={styles["introduce"]}>모두가 원하는 개발자가 되겠습니다.</p>
+          <p className={styles["introduce_last"]}>모두가 원하는 개발자가 되겠습니다.</p>
         </div>
 
         <div className={styles["profile_infomation"]}>
@@ -237,7 +237,7 @@ export default function Week2Page() {
           </ul>
 
           <h3 className={styles["introduce_title"]}>한 마디</h3>
-          <p className={styles["introduce"]}>모두가 원하는 개발자가 되겠습니다.</p>
+          <p className={styles["introduce_last"]}>모두가 원하는 개발자가 되겠습니다.</p>
         </div>
 
         <div className={styles["profile_infomation"]}>
@@ -265,7 +265,7 @@ export default function Week2Page() {
           </ul>
 
           <h3 className={styles["introduce_title"]}>한 마디</h3>
-          <p className={styles["introduce"]}>모두가 원하는 개발자가 되겠습니다.</p>
+          <p className={styles["introduce_last"]}>모두가 원하는 개발자가 되겠습니다.</p>
         </div>
 
         <div className={styles["profile_infomation"]}>
@@ -293,7 +293,7 @@ export default function Week2Page() {
           </ul>
 
           <h3 className={styles["introduce_title"]}>한 마디</h3>
-          <p className={styles["introduce"]}>모두가 원하는 개발자가 되겠습니다.</p>
+          <p className={styles["introduce_last"]}>모두가 원하는 개발자가 되겠습니다.</p>
         </div>
 
         <div className={styles["profile_infomation"]}>
@@ -321,7 +321,7 @@ export default function Week2Page() {
           </ul>
 
           <h3 className={styles["introduce_title"]}>한 마디</h3>
-          <p className={styles["introduce"]}>모두가 원하는 개발자가 되겠습니다.</p>
+          <p className={styles["introduce_last"]}>모두가 원하는 개발자가 되겠습니다.</p>
         </div>
 
         <div className={styles["profile_infomation"]}>
@@ -349,7 +349,7 @@ export default function Week2Page() {
           </ul>
 
           <h3 className={styles["introduce_title"]}>한 마디</h3>
-          <p className={styles["introduce"]}>모두가 원하는 개발자가 되겠습니다.</p>
+          <p className={styles["introduce_last"]}>모두가 원하는 개발자가 되겠습니다.</p>
         </div>
       </div>
 
