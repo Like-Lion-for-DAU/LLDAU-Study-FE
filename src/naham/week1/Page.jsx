@@ -2,62 +2,26 @@ import "./Page.css";
 
 export default function Week1Page() {
   return (
-    <!DOCTYPE html>
+   
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>자기소개</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      background-color: #f5f5f5;
-    }
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>자기소개 - 김나함</title>
 
-    .container {
-      width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    /* 카드 영역 */
-    .card {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-
-    /* 상세 영역 */
-    .detail {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-    }
-
-    .section {
-      margin-bottom: 20px;
-    }
-
-    .section h3 {
-      margin-bottom: 10px;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
   <div class="container">
 
-    <!-- 1. 자기소개 카드 -->
+    
     <div class="card">
       <h2>김나함</h2>
-      <p>Frontend</p>
-      <p>분야를 넘나들며 성장하는 개발자입니다.</p>
+      <p class="position">Frontend</p>
+      <p class="slogan">분야를 넘나들며 성장하는 개발자입니다.</p>
     </div>
 
-    <!-- 2. 상세 정보 -->
+    
     <div class="detail">
 
       <div class="section">
@@ -100,6 +64,5 @@ export default function Week1Page() {
   </div>
 </body>
 </html>
-    
   );
 }
