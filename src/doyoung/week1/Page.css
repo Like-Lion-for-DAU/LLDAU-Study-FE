@@ -11,12 +11,6 @@
 }
 
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    color: #333;
-}
-
 .card {
     width: 100%;
     max-width: 450px;
@@ -35,19 +29,6 @@ body {
     padding: 25px;
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-section {
-    margin-bottom: 25px;
-}
-
-section h2 {
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 5px;
-}
-
-a {
-    text-decoration: none;
 }
 
 .skills > div{

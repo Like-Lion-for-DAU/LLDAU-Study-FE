@@ -12,14 +12,6 @@
   font-weight: 700;
 }
 
-* {
-  box-sizing: border-box;
-}
-
-img {
-  object-fit: cover;
-}
-
 /* 요약 박스 */
 .box1 {            
   padding-top: 20px;
