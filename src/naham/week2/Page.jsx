@@ -2,14 +2,6 @@ import "./Page.css";
 
 export default function Week2Page() {
   return (
-    <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>아기 사자 자기소개</title>
-    
-    <link rel="stylesheet" href="style.css">
-</head>
 <body>
     <main class="container">
         
