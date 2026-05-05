@@ -1,5 +1,5 @@
 import styles from "./Page.module.css";
-import logo from "./talk_potato.jpg"
+import logo from "./talk_potato.jpg";
 
 export default function Week1Page() {
   return (
@@ -7,6 +7,7 @@ export default function Week1Page() {
       <div className={styles["profile-card"]}>
         <img
           src={logo}
+          alt="profile"
           className={styles["profile-img"]}
         />
         <h2>이도은 아기사자</h2>
@@ -25,7 +26,7 @@ export default function Week1Page() {
           <section className={styles["info"]}>
             <h3>자기소개</h3>
             <p>
-              모르는게 너무 많은 말하는감자입니다. 잘부탁드립니다. 배움에는 끝이없다..!
+              안녕하세요! 말하는 감자입니다. 잘부탁드립니다. 배움에는 끝이없다..!
             </p>
           </section>
 
@@ -42,7 +43,6 @@ export default function Week1Page() {
                 <li>Phone: 010-2686-5586</li>
               </ul>
             </section>
-          </footer>
 
           <section className={styles["skill"]}>
             <h3>관심 기술</h3>
@@ -57,6 +57,7 @@ export default function Week1Page() {
             <h3>한 마디</h3>
             <p>팀원들에게 든든한 개발자가 되고싶습니다.</p>
           </section>
+        </footer>
         </main>
       </div>
     </div>
