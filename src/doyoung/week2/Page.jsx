@@ -1,4 +1,4 @@
-import "./Page.css";
+import styles from "./Page.module.css";
 import jGif from "../../assets/doyoung/week2/j.gif";
 import idyJPG from "../../assets/doyoung/week2/idy.jpg";
 import bJPG from "../../assets/doyoung/week2/b.jpg";
@@ -9,66 +9,66 @@ import hPNG from "../../assets/doyoung/week2/h.png";
 
 export default function Week2Page() {
   return (
-    <div className="week-page">
+    <div className={styles["week-page"]}>
       <h2>2주차</h2>
       <h2>아기사자 명단 대시보드</h2>
 
-      <section className="cardpack">
-        <div className="card">
-          <img src={jGif} alt="프로필 사진" className="photo" />
+      <section className={styles["cardpack"]}>
+        <div className={styles["card"]}>
+          <img src={jGif} alt="프로필 사진" className={styles["photo"]} />
           <h2>김주완</h2>
-          <span className="frontend">Frontend</span>
+          <span className={styles["frontend"]}>Frontend</span>
           <p>성실히 배우고 싶은 학생입니다.</p>
         </div>
 
-        <div className="card">
-          <img src={idyJPG} alt="프로필 사진" className="photo" />
+        <div className={styles["card"]}>
+          <img src={idyJPG} alt="프로필 사진" className={styles["photo"]} />
           <h2>임도영</h2>
-          <span className="frontend">Frontend</span>
-          <p className="myname">아기사자 14기 프론트엔드 임도영 입니다.</p>
+          <span className={styles["frontend"]}>Frontend</span>
+          <p className={styles["myname"]}>아기사자 14기 프론트엔드 임도영 입니다.</p>
         </div>
 
-        <div className="card">
-          <img src={hPNG} alt="프로필 사진" className="photo" />
+        <div className={styles["card"]}>
+          <img src={hPNG} alt="프로필 사진" className={styles["photo"]} />
           <h2>김나함</h2>
-          <span className="frontend">Frontend</span>
+          <span className={styles["frontend"]}>Frontend</span>
           <p>분야를 넘나들며 성장하는 개발자입니다.</p>
         </div>
 
-        <div className="card">
-          <img src={bJPG} alt="프로필 사진" className="photo" />
+        <div className={styles["card"]}>
+          <img src={bJPG} alt="프로필 사진" className={styles["photo"]} />
           <h2>백태우</h2>
-          <span className="frontend">Frontend</span>
+          <span className={styles["frontend"]}>Frontend</span>
           <p>I'm Empty Stack Junior</p>
         </div>
 
-        <div className="card">
-          <img src={jsmPNG} alt="프로필 사진" className="photo" />
+        <div className={styles["card"]}>
+          <img src={jsmPNG} alt="프로필 사진" className={styles["photo"]} />
           <h2>정소민</h2>
-          <span className="frontend">Frontend</span>
+          <span className={styles["frontend"]}>Frontend</span>
           <p>컴퓨터공학과 25학번 정소민입니다.</p>
         </div>
 
-        <div className="card">
-          <img src={iJPEG} alt="프로필 사진" className="photo" />
+        <div className={styles["card"]}>
+          <img src={iJPEG} alt="프로필 사진" className={styles["photo"]} />
           <h2>이도은</h2>
-          <span className="frontend">Frontend</span>
+          <span className={styles["frontend"]}>Frontend</span>
           <p>열심히 배우는 프론트엔드 개발자입니다!</p>
         </div>
 
-        <div className="card">
-          <img src={jsyPNG} alt="프로필 사진" className="photo" />
+        <div className={styles["card"]}>
+          <img src={jsyPNG} alt="프로필 사진" className={styles["photo"]} />
           <h2>정서윤</h2>
-          <span className="frontend">Frontend</span>
+          <span className={styles["frontend"]}>Frontend</span>
           <p>열심히 배워가고있는 프론트엔드 개발자입니다!</p>
         </div>
       </section>
 
-      <section className="detailcardpack">
-        <div className="detailcard">
+      <section className={styles["detailcardpack"]}>
+        <div className={styles["detailcard"]}>
           <h2>김주완</h2>
-          <span className="frontend">Frontend</span>
-          <p className="dsis">동아리명 : 디스이즈</p>
+          <span className={styles["frontend"]}>Frontend</span>
+          <p className={styles["dsis"]}>동아리명 : 디스이즈</p>
           <p>LION TRACK</p>
           <br></br>
           <h3>자기소개</h3>
@@ -94,10 +94,10 @@ export default function Week2Page() {
           <p>성실히 배워서 웹개발 마스터가 되고 싶습니다.</p>
         </div>
 
-        <div className="detailcard">
+        <div className={styles["detailcard"]}>
           <h2>임도영</h2>
-          <span className="frontend">Frontend</span>
-          <p className="dsis">동아리명 : 디스이즈</p>
+          <span className={styles["frontend"]}>Frontend</span>
+          <p className={styles["dsis"]}>동아리명 : 디스이즈</p>
           <p>LION TRACK</p>
           <br></br>
           <h3>자기소개</h3>
@@ -129,10 +129,10 @@ export default function Week2Page() {
           <p>꾸준히 노력하고 적극적인 참여를 통해 성장하는 개발자가 되겠습니다.</p>
         </div>
 
-        <div className="detailcard">
+        <div className={styles["detailcard"]}>
           <h2>김나함</h2>
-          <span className="frontend">Frontend</span>
-          <p className="dsis">동아리명 : 디스이즈</p>
+          <span className={styles["frontend"]}>Frontend</span>
+          <p className={styles["dsis"]}>동아리명 : 디스이즈</p>
           <p>LION TRACK</p>
           <br></br>
           <h3>자기소개</h3>
@@ -157,10 +157,10 @@ export default function Week2Page() {
           <p>부족한 점은 많지만 포기하지 않고 계속 노력하여 성장하는 아기사자가 되겠습니다!</p>
         </div>
 
-        <div className="detailcard">
+        <div className={styles["detailcard"]}>
           <h2>백태우</h2>
-          <span className="frontend">Frontend</span>
-          <p className="dsis">동아리명 : 디스이즈</p>
+          <span className={styles["frontend"]}>Frontend</span>
+          <p className={styles["dsis"]}>동아리명 : 디스이즈</p>
           <p>LION TRACK</p>
           <br></br>
           <h3>자기소개</h3>
@@ -184,10 +184,10 @@ export default function Week2Page() {
           <p>모두가 원하는 개발자가 되어보겠습니다.</p>
         </div>
 
-        <div className="detailcard">
+        <div className={styles["detailcard"]}>
           <h2>정소민</h2>
-          <span className="frontend">Frontend</span>
-          <p className="dsis">동아리명 : 디스이즈</p>
+          <span className={styles["frontend"]}>Frontend</span>
+          <p className={styles["dsis"]}>동아리명 : 디스이즈</p>
           <p>LION TRACK</p>
           <br></br>
           <h3>자기소개</h3>
@@ -212,10 +212,10 @@ export default function Week2Page() {
           <p>열심히 하겠습니다.</p>
         </div>
 
-        <div className="detailcard">
+        <div className={styles["detailcard"]}>
           <h2>이도은</h2>
-          <span className="frontend">Frontend</span>
-          <p className="dsis">동아리명 : 디스이즈</p>
+          <span className={styles["frontend"]}>Frontend</span>
+          <p className={styles["dsis"]}>동아리명 : 디스이즈</p>
           <p>LION TRACK</p>
           <br></br>
           <h3>자기소개</h3>
@@ -239,10 +239,10 @@ export default function Week2Page() {
           <p>팀원들에게 든든한 개발자가 되고싶습니다.</p>
         </div>
 
-        <div className="detailcard">
+        <div className={styles["detailcard"]}>
           <h2>정서윤</h2>
-          <span className="frontend">Frontend</span>
-          <p className="dsis">동아리명 : 디스이즈</p>
+          <span className={styles["frontend"]}>Frontend</span>
+          <p className={styles["dsis"]}>동아리명 : 디스이즈</p>
           <p>LION TRACK</p>
           <br></br>
           <h3>자기소개</h3>
@@ -258,7 +258,7 @@ export default function Week2Page() {
             <li>Phone : 010-3846-5638</li>
             <li>link : <a
                 href="https://github.com/dkjksd"
-                class="contact-list__value"
+                className={styles["contact-list__value"]}
                 target="_blank"
                 rel="noopener noreferrer"
               >
