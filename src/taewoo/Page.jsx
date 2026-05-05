@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import "./Page.css";
+import styles from "./Page.module.css";
 import Week1Page from "./week1/Page";
 import Week2Page from "./week2/Page";
 import Week3Page from "./week3/Page";
@@ -13,7 +13,7 @@ import Week10Page from "./week10/Page";
 
 export default function TaewooPage() {
   return (
-    <div className="taewoo-page">
+    <div className={styles["taewoo-page"]}>
       <Routes>
         <Route index element={<h2>백태우</h2>} />
         <Route path="week1" element={<Week1Page />} />
