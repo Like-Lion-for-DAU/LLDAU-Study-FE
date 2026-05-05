@@ -13,7 +13,6 @@ export default function Week2Page() {
                 <article class="summary-card me">
                     <div class="image-wrapper">
                         
-                        <img src="profile.jpg" alt="내 프로필 사진">
                         <span class="badge">Frontend</span>
                     </div>
                     <div class="card-content">
@@ -26,7 +25,6 @@ export default function Week2Page() {
                 
                 <article class="summary-card">
                     <div class="image-wrapper">
-                        <img src="profile2.jpg" alt="동료 사진">
                         <span class="badge">Frontend</span>
                     </div>
                     <div class="card-content">
@@ -39,7 +37,6 @@ export default function Week2Page() {
                 
                 <article class="summary-card">
                     <div class="image-wrapper">
-                        <img src="profile3.jpg" alt="동료 사진">
                         <span class="badge">Frontend</span>
                     </div>
                     <div class="card-content">
@@ -51,7 +48,6 @@ export default function Week2Page() {
 
               <article class="summary-card">
                     <div class="image-wrapper">
-                        <img src="profile3.jpg" alt="동료 사진">
                         <span class="badge">Backend</span>
                     </div>
                     <div class="card-content">
@@ -63,7 +59,6 @@ export default function Week2Page() {
               
               <article class="summary-card">
                     <div class="image-wrapper">
-                        <img src="profile3.jpg" alt="동료 사진">
                         <span class="badge">Backend</span>
                     </div>
                     <div class="card-content">
@@ -75,7 +70,6 @@ export default function Week2Page() {
               
               <article class="summary-card">
                     <div class="image-wrapper">
-                        <img src="profile3.jpg" alt="동료 사진">
                         <span class="badge">Backend</span>
                     </div>
                     <div class="card-content">
@@ -87,7 +81,6 @@ export default function Week2Page() {
               
               <article class="summary-card">
                     <div class="image-wrapper">
-                        <img src="profile3.jpg" alt="동료 사진">
                         <span class="badge">Backend</span>
                     </div>
                     <div class="card-content">
@@ -99,7 +92,6 @@ export default function Week2Page() {
               
               <article class="summary-card">
                     <div class="image-wrapper">
-                        <img src="profile3.jpg" alt="동료 사진">
                         <span class="badge">기획</span>
                     </div>
                     <div class="card-content">
@@ -111,7 +103,6 @@ export default function Week2Page() {
               
               <article class="summary-card">
                     <div class="image-wrapper">
-                        <img src="profile3.jpg" alt="동료 사진">
                         <span class="badge">기획</span>
                     </div>
                     <div class="card-content">
@@ -205,7 +196,6 @@ export default function Week2Page() {
                 <p class="contact">이메일: dbs@gmail.com </p>
                 
             </article>
-          </article>
           <article class="detail-card">
                 <h2>서멋사</h2>
                 <p class="affiliation">멋쟁이사자처럼 14기 / 백엔드 파트</p>
@@ -269,9 +259,7 @@ export default function Week2Page() {
                 <p class="contact">이메일: cjftn@gmail.com </p>
                 
             </article>
-        </section>
     </main>
 </body>
-</html>
   );
 }
