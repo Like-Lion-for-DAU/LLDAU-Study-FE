@@ -17,49 +17,49 @@ export default function Week2Page() {
         <div className="card">
           <img src={jGif} alt="프로필 사진" className="photo" />
           <h2>김주완</h2>
-          <span>Frontend</span>
+          <span className="frontend">Frontend</span>
           <p>성실히 배우고 싶은 학생입니다.</p>
         </div>
 
         <div className="card">
           <img src={idyJPG} alt="프로필 사진" className="photo" />
           <h2>임도영</h2>
-          <span>Frontend</span>
+          <span className="frontend">Frontend</span>
           <p className="myname">아기사자 14기 프론트엔드 임도영 입니다.</p>
         </div>
 
         <div className="card">
           <img src={hPNG} alt="프로필 사진" className="photo" />
           <h2>김나함</h2>
-          <span>Frontend</span>
+          <span className="frontend">Frontend</span>
           <p>분야를 넘나들며 성장하는 개발자입니다.</p>
         </div>
 
         <div className="card">
           <img src={bJPG} alt="프로필 사진" className="photo" />
           <h2>백태우</h2>
-          <span>Frontend</span>
+          <span className="frontend">Frontend</span>
           <p>I'm Empty Stack Junior</p>
         </div>
 
         <div className="card">
           <img src={jsmPNG} alt="프로필 사진" className="photo" />
           <h2>정소민</h2>
-          <span>Frontend</span>
+          <span className="frontend">Frontend</span>
           <p>컴퓨터공학과 25학번 정소민입니다.</p>
         </div>
 
         <div className="card">
           <img src={iJPEG} alt="프로필 사진" className="photo" />
           <h2>이도은</h2>
-          <span>Frontend</span>
+          <span className="frontend">Frontend</span>
           <p>열심히 배우는 프론트엔드 개발자입니다!</p>
         </div>
 
         <div className="card">
           <img src={jsyPNG} alt="프로필 사진" className="photo" />
           <h2>정서윤</h2>
-          <span>Frontend</span>
+          <span className="frontend">Frontend</span>
           <p>열심히 배워가고있는 프론트엔드 개발자입니다!</p>
         </div>
       </section>
@@ -67,7 +67,7 @@ export default function Week2Page() {
       <section className="detailcardpack">
         <div className="detailcard">
           <h2>김주완</h2>
-          <span>Frontend</span>
+          <span className="frontend">Frontend</span>
           <p className="dsis">동아리명 : 디스이즈</p>
           <p>LION TRACK</p>
           <br></br>
@@ -96,7 +96,7 @@ export default function Week2Page() {
 
         <div className="detailcard">
           <h2>임도영</h2>
-          <span>Frontend</span>
+          <span className="frontend">Frontend</span>
           <p className="dsis">동아리명 : 디스이즈</p>
           <p>LION TRACK</p>
           <br></br>
@@ -131,7 +131,7 @@ export default function Week2Page() {
 
         <div className="detailcard">
           <h2>김나함</h2>
-          <span>Frontend</span>
+          <span className="frontend">Frontend</span>
           <p className="dsis">동아리명 : 디스이즈</p>
           <p>LION TRACK</p>
           <br></br>
@@ -159,7 +159,7 @@ export default function Week2Page() {
 
         <div className="detailcard">
           <h2>백태우</h2>
-          <span>Frontend</span>
+          <span className="frontend">Frontend</span>
           <p className="dsis">동아리명 : 디스이즈</p>
           <p>LION TRACK</p>
           <br></br>
@@ -186,7 +186,7 @@ export default function Week2Page() {
 
         <div className="detailcard">
           <h2>정소민</h2>
-          <span>Frontend</span>
+          <span className="frontend">Frontend</span>
           <p className="dsis">동아리명 : 디스이즈</p>
           <p>LION TRACK</p>
           <br></br>
@@ -214,7 +214,7 @@ export default function Week2Page() {
 
         <div className="detailcard">
           <h2>이도은</h2>
-          <span>Frontend</span>
+          <span className="frontend">Frontend</span>
           <p className="dsis">동아리명 : 디스이즈</p>
           <p>LION TRACK</p>
           <br></br>
@@ -241,7 +241,7 @@ export default function Week2Page() {
 
         <div className="detailcard">
           <h2>정서윤</h2>
-          <span>Frontend</span>
+          <span className="frontend">Frontend</span>
           <p className="dsis">동아리명 : 디스이즈</p>
           <p>LION TRACK</p>
           <br></br>
