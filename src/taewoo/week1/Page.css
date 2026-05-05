@@ -6,3 +6,33 @@
   font-size: 1.5rem;
   font-weight: 700;
 }
+
+.blue { color : blue; }
+.name { font-size: 20px; }
+.space { font-size: 2px; }
+
+.round_table {
+  border-collapse: separate; /* border-collapse: collapse;와 함께 사용 불가 */
+  border-spacing: 1;
+  border-radius: 8px; /* 원하는 둥근 정도 */
+  border: 2px solid black; /* 테이블 테두리 */
+  overflow: hidden; /* 테두리 밖 배경색 숨김 */
+}
+
+.profil_image{
+  height: 250px;
+  width: 270px;
+}
+
+.book_detail {
+  width: 140px;
+  height: 160px;
+  border: 1px solid black;
+  border-radius: 0px;
+}
+
+.mark_size{
+  width: 40px;
+  height: 40px;
+  margin: 5px;
+}

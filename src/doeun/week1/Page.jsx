@@ -1,5 +1,5 @@
 import "./Page.css";
-import logo from "./talk_potato.jpg"
+import logo from "./talk_potato.jpg";
 
 export default function Week1Page() {
   return (
@@ -7,6 +7,7 @@ export default function Week1Page() {
       <div className="profile-card">
         <img
           src={logo}
+          alt="profile"
           className="profile-img"
         />
         <h2>이도은 아기사자</h2>
@@ -25,7 +26,7 @@ export default function Week1Page() {
           <section className="info">
             <h3>자기소개</h3>
             <p>
-              모르는게 너무 많은 말하는감자입니다. 잘부탁드립니다. 배움에는 끝이없다..!
+              안녕하세요! 말하는 감자입니다. 잘부탁드립니다. 배움에는 끝이없다..!
             </p>
           </section>
 

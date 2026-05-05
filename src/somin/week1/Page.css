@@ -1,8 +1,103 @@
 .week-page {
-  padding: 32px;
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
 }
 
-.week-page h2 {
-  font-size: 1.5rem;
+.intro {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 320px;
+}
+
+.profileimg {
+  width: 100%;
+}
+
+.intro-name {
+  font-size: 20px;
   font-weight: 700;
+  margin-top: 4px;
+}
+
+.end {
+  font-size: 14px;
+  font-weight: 600;
+  color: blue;
+}
+
+
+.detail {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  padding: 36px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+}
+
+.club {
+  font-size: 15px;
+  color: grey;
+}
+
+/* 각 섹션 공통 */
+.introduce,
+.contact,
+.interest,
+.gako {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 연락처 */
+.contact ul {
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.contact ul li {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.contact ul li a {
+  color: pink;
+}
+
+/* 관심 기술 */
+.interest ul {
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.interest ul li {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* 각오 한 마디 */
+.gako {
+  font-size: 14px;
+  line-height: 1.8;
 }
