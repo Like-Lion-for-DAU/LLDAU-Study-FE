@@ -1,29 +1,29 @@
-import "./Page.css";
+import styles from "./Page.module.css";
 import logo from "./talk_potato.jpg";
 
 export default function Week1Page() {
   return (
-    <div className="week-page">
-      <div className="profile-card">
+    <div className={styles["week-page"]}>
+      <div className={styles["profile-card"]}>
         <img
           src={logo}
           alt="profile"
-          className="profile-img"
+          className={styles["profile-img"]}
         />
         <h2>이도은 아기사자</h2>
         <strong>Frontend</strong>
         <p>열심히 배우는 프론트엔드 개발자입니다!</p>
       </div>
 
-      <div className="detail-card">
-        <header className="detail-H">
+      <div className={styles["detail-card"]}>
+        <header className={styles["detail-H"]}>
           <h1>이도은</h1>
           <strong>Frontend</strong>
           <p>LION TRACK</p>
         </header>
 
-        <main className="detail">
-          <section className="info">
+        <main className={styles["detail"]}>
+          <section className={styles["info"]}>
             <h3>자기소개</h3>
             <p>
               안녕하세요! 말하는 감자입니다. 잘부탁드립니다. 배움에는 끝이없다..!
@@ -31,7 +31,7 @@ export default function Week1Page() {
           </section>
 
           <footer>
-            <section className="number">
+            <section className={styles["number"]}>
               <h3>연락처</h3>
               <ul>
                 <li> Email: dodo55860@gmail.com</li>
@@ -44,7 +44,7 @@ export default function Week1Page() {
               </ul>
             </section>
 
-          <section className="skill">
+          <section className={styles["skill"]}>
             <h3>관심 기술</h3>
             <ul>
               <li>HTML / CSS</li>
@@ -53,7 +53,7 @@ export default function Week1Page() {
             </ul>
           </section>
 
-          <section className="word">
+          <section className={styles["word"]}>
             <h3>한 마디</h3>
             <p>팀원들에게 든든한 개발자가 되고싶습니다.</p>
           </section>
