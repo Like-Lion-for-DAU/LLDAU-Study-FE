@@ -64,6 +64,8 @@ export default function Week2Page() {
         </div>
       </section>
 
+      <br></br>
+
       <section className={styles["detailcardpack"]}>
         <div className={styles["detailcard"]}>
           <h2>김주완</h2>
