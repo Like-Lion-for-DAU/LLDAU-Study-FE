@@ -1,21 +1,12 @@
 import "./Page.css";
+import nahamprofile from "./profileimg.png";
 
 export default function Week1Page() {
   return (
-   
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>자기소개 - 김나함</title>
+  <div className="container">
 
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="container">
-
-    
-    <div class="card">
+    <img src={nahamprofile} alt="김나함 프로필 사진"></img>
+    <div className="card">
       <h2>김나함</h2>
       <p class="position">Frontend</p>
       <p class="slogan">분야를 넘나들며 성장하는 개발자입니다.</p>
@@ -62,7 +53,5 @@ export default function Week1Page() {
     </div>
 
   </div>
-</body>
-</html>
   );
 }
