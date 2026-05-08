@@ -22,6 +22,12 @@
 
 - 따라서 camelCase로 명명 하는 것을 추천합니다. "week2SummaryCard"
 
+```
+<div className={styles.week2SummaryCard}>
+```
+
+- camelCase사용하면 이런식으로 css 사용 가능합니다.
+
 - camelCase == 첫 번째 글자 소문자, 띄어쓰기 기준으로 대문자
 
 ## 2. 빈 이미지 url은 깨진 이미지 표시 됨
