@@ -1,10 +1,10 @@
-.week-page {
+.weekPage {
   max-width: 1200px;
   margin: 0 auto;
   padding: 24px
 }
 
-.card-intro {
+.cardIntro {
   display: grid;
   gap: 24px;
   grid-template-columns: repeat(3, 1fr);
@@ -19,7 +19,7 @@
   min-height: 520px;
   background-color: white;
   border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
   padding: 24px 20px;
   display: flex;
   flex-direction: column;
@@ -27,18 +27,8 @@
   box-sizing: border-box;
 }
 
-.card-me {
-  width: 100%;
-  max-width: 360px;
-  min-height: 520px;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.6);
-  padding: 24px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  box-sizing: border-box;
+.cardMe {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
 }
 
 .profileimg {
@@ -163,11 +153,10 @@
 
 /* 태블릿 */
 @media (max-width: 1000px) {
-  .card-intro {
+  .cardIntro {
     grid-template-columns: repeat(2, 1fr);
   }
-  .card,
-  .card-me {
+  .card{
     min-height: 480px;
     padding: 20px;
   }
@@ -175,9 +164,8 @@
 
 /* 모바일 */
 @media (max-width: 600px) {
-  .card-intro { grid-template-columns: 1fr; }
-  .card,
-  .card-me {
+  .cardIntro { grid-template-columns: 1fr; }
+  .card{
     max-width: 100%;
     min-height: auto;
     padding: 12px;
