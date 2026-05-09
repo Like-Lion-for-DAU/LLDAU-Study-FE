@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아기사자 대시보드</title>
+    <link rel="stylesheet" href="Page.module.css">
+</head>
+<body>
+    <main class="container">
+        <section class="control-section">
+            <div class="control-buttons">
+                <button id="open-add-modal">아기 사자 추가</button>
+                <button id="delete-last-btn">마지막 아기 사자 삭제</button>
+                <span class="total-status">총 <span id="total-count">0</span>명</span>
+            </div>
+        </section>
+
+        <section class="summary-section">
+            <div id="card-grid" class="card-grid"></div>
+        </section>
+
+        <div id="modal-overlay" class="modal-overlay hidden">
+            <div class="modal-content">
+                <form id="add-lion-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>이름</label>
+                            <input type="text" id="name" placeholder="예: 홍아기사자" required>
+                        </div>
+                        <div class="form-group">
+                            <label>파트</label>
+                            <select id="part" required>
+                                <option value="Frontend">Frontend</option>
+                                <option value="Backend">Backend</option>
+                                <option value="Design">Design</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>관심 기술 (쉼표로 구분)</label>
+                        <input type="text" id="skills" placeholder="예: JavaScript, React, HTML/CSS" required>
+                    </div>
+                    <div class="form-group">
+                        <label>한 줄 소개 (요약 카드)</label>
+                        <input type="text" id="intro" placeholder="예: 3주차 DOM 조작 연습 중!" required>
+                    </div>
+                    <div class="form-group">
+                        <label>자기소개 (상세 카드)</label>
+                        <textarea id="bio" placeholder="자기소개 내용을 입력해주세요" required></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="email" placeholder="예: lion@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone</label>
+                            <input type="tel" id="phone" placeholder="예: 010-1234-5678" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Website</label>
+                        <input type="url" id="website" placeholder="예: https://example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>한 마디</label>
+                        <input type="text" id="note" placeholder="예: 데이터 바꾸면 화면도 바뀐다!" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="submit-btn">추가하기</button>
+                        <button type="button" id="close-modal" class="cancel-btn">취소</button>
+                    </div>
+                </form>
+                <div id="detail-view" class="hidden">
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>

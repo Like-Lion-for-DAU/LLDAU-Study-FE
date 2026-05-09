@@ -1,4 +1,4 @@
-import "./Page.css";
+import "./Page.module.css";
 import nahamprofile from "./nhprofile.png";
 import juwanprofile from "./jwprofile.gif";
 import doyoungprofile from "./dyprofile.png";
