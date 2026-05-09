@@ -10,7 +10,7 @@
 
 /* 버튼 스타일 */
 
-.add-button {
+.addButton {
   background-color: darkblue;
   color: white;
   border: none;
@@ -22,12 +22,12 @@
   margin-right: 2px;
 }
 
-.add-button:hover {
+.addButton:hover {
   background-color: rgb(0, 0, 139, 0.2);
   color: black;
 }
 
-.remove-button {
+.removeButton {
   background-color: darkblue;
   color: white;
   border: none;
@@ -39,12 +39,12 @@
   margin-right: 2px;
 }
 
-.remove-button:hover {
+.removeButton:hover {
   background-color: rgb(0, 0, 139, 0.2);
   color: black;
 }
 
-.count_lion {
+.countLion {
   font-size: 0.7rem;
   background-color: darkblue;
   color: white;
@@ -56,7 +56,7 @@
 
 /* 그리드 스타일 */
 
-.grid-container{
+.gridContainer{
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
@@ -66,27 +66,27 @@
 }
 
 @media(max-width: 1960px) {
-  .grid-container {
+  .gridContainer {
     grid-template-columns: repeat(3, 1fr); /* 태블릿: 2열 */
     max-width: 100%;
   }
 }
 
 @media (max-width: 880px) {
-  .grid-container {
+  .gridContainer {
     grid-template-columns: repeat(2, 1fr); /* 태블릿: 2열 */
     max-width: 100%;
   }
 }
 
 @media (max-width: 480px) {
-  .grid-container {
+  .gridContainer {
     grid-template-columns: 1fr; /* 모바일: 1열 */
     max-width: 100%;
   }
 }
 
-.main_profile {
+.mainProfile {
   display: flex;
   flex-direction: column;
   position: relative;
@@ -98,7 +98,7 @@
   box-shadow: 3px 3px 5px gainsboro
 }
 
-.main_profile:hover {
+.mainProfile:hover {
   transform: translateY(-4px);
   display: flex;
   flex-direction: column;
@@ -115,7 +115,7 @@
 
 /* 프로필 스타일 */
 
-.profile_image{
+.profileImage{
   max-width: 220px;
   height: 220px;
   margin: auto;
@@ -124,7 +124,7 @@
   overflow: hidden;
 }
 
-.badge_space{
+.badgeSpace{
   background-color: gainsboro;
   border-radius: 12px;
   padding: 2px 8px;
@@ -141,7 +141,7 @@
 
 /* main_profile 글자 스타일 */
 
-.blue_rule {
+.blueRule {
   color : blue;
   padding-inline: 10px;
   font-size: 18px;
@@ -152,15 +152,14 @@
   overflow: auto;
 }
 
-.line_introduce{
+.lineIntroduce{
   padding-inline: 11px;
   overflow: auto;
 }
 
-
 /* 자기소개 모달 스타일 */
 
-.modal_overlay {
+.modalOverlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -173,7 +172,7 @@
   z-index: 1000;
 }
 
-.modal_content {
+.modalContent {
   position: relative;
   background-color: #fff;
   border-radius: 10px;
@@ -186,60 +185,46 @@
   padding-left: 10px;
 }
 
-.modal_content::-webkit-scrollbar {
+.modalContent::-webkit-scrollbar {
   display: none;
   overflow: hidden;
 }
 
-.modal_divider {
+.modalDivider {
   border: none;
   border-top: 2px solid black;  /* 구분선 */
   margin-right: 10px;
 }
 
 /* 모달 자기소개 스타일 */
-.introduce_title{
+.introduceTitle{
   padding-inline: 3px;
   margin-top: 3px;
 }
 
-.introduce_last{
+.introduceLast{
   padding-inline: 12px;
 }
 
-.mark_size{
-  width: 20px;
-  height: 20px;
-}
-
-.sub_title{
-  padding-top: 10px;
-}
-
-.line_introduce{
-  padding-inline: 11px;
-  overflow: auto;
-}
-
-.list_style{
+.listStyle{
   margin-left: 30px;
 }
 
-.introduce_myself{
+.introduceMyself{
   margin-top: 3px;
   margin-bottom: 2px;
   padding-inline: 12px;
 }
 
-.join_club{
+.joinClub{
   padding-inline: 10px;
   color: #000;
   font-weight: bold;
   margin-bottom: 10px;
 }
 
-/* 추가 모달 */
-.push_lion {
+/* 아기 사자 추가 모달 */
+.pushLion {
   position: fixed;
   top: 0;
   left: 0;
@@ -252,21 +237,137 @@
   z-index: 1000;
 }
 
-.push_lion_content {
+.pushLionContent {
   position: relative;
   background-color: #fff;
   border-radius: 10px;
   width: 90%;
   max-width: 1000px;
-  max-height: 800px;
+  max-height: 1000px;
   overflow-y: auto;
   box-shadow: 0 0 20px black;
   scrollbar-width: none;
   padding-left: 10px;
-  padding-bottom: 20px;
+  padding-bottom: 50px;
 }
 
-.push_lion_content::-webkit-scrollbar {
+.pushLionContent::-webkit-scrollbar {
   display: none;
   overflow: hidden;
+}
+
+.pushLionAddButton {
+  position: absolute;
+  right: 70px;
+  bottom: 3%;
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-right: 2px;
+}
+
+.pushLionAddButton:hover:not(:disabled) {
+  background-color: gainsboro;
+  color: black;
+}
+
+/* 입력 검사 스타일 */
+.pushLionAddButton:disabled {
+  background-color: #e0e0e0;
+  color: #aaa;
+  border-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pushLionCancelButton {
+  position: absolute;
+  right: 20px;
+  bottom: 3%;
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.pushLionCancelButton:hover {
+  background-color: gainsboro;
+  color: black;
+}
+
+.pushLionTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.inputName {
+  color: black;
+  border: 2px solid gainsboro;
+  border-radius: 4px;
+  padding: 2%;
+  width: 95%;
+}
+
+.inputPart {
+  color: black;
+  border: 2px solid gainsboro;
+  border-radius: 4px;
+  padding: 2%;
+  width: 95%;
+}
+
+.inputLongtype {
+  color: black;
+  border: 2px solid gainsboro;
+  border-radius: 4px;
+  padding: 1%;
+  width: 97.5%;
+}
+
+.inputIntroduce {
+  display: block;
+  color: black;
+  border: 2px solid gainsboro;
+  border-radius: 4px;
+  height: 90px;
+  padding-left: 1%;
+  padding-top: 0.5%;
+  width: 97.5%;
+  font-family: inherit;
+  resize: none;
+}
+
+.inputEmail {
+  color: black;
+  border: 2px solid gainsboro;
+  border-radius: 4px;
+  padding: 2%;
+  width: 95%;
+}
+
+.inputPhone {
+  color: black;
+  border: 2px solid gainsboro;
+  border-radius: 4px;
+  padding: 2%;
+  width: 95%;
+}
+
+.inputWarning {
+  position: absolute;
+  bottom: -16px;
+  right: 20px;
+  padding: 2px;
+  font-size: 12px;
+  color: #e53935;
+  border: 1px solid orange;
+  background-color: rgba(255, 255, 224, 0.5);
 }

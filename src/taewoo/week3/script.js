@@ -1,5 +1,37 @@
 import idyJPG from "../../assets/doyoung/week2/idy.jpg";
 import jsmPNG from "../../assets/doyoung/week2/jsm.png";
+import { useState, useEffect } from "react";
+
+const emptyForm = { name: "", part: "Frontend", skills: "", introduce: "", introduceDetail: "", email: "", phone: "", website: "", last: "" };
+
+const validateEmail   = (v) => v.includes("@");
+const validateWebsite = (v) => /^https?:\/\/.+\..+/.test(v);
+const validatePhone   = (v) => (v.match(/-/g) || []).length === 2 && v.length <= 13;
+const validators = { email: validateEmail, website: validateWebsite, phone: validatePhone };
+
+export function useFormData() {
+  const [formData, setFormData] = useState(emptyForm);
+  const [touched, setTouched] = useState({});
+
+  const handleInput = (field) => (e) => {
+    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
+  const isFormValid =
+    Object.values(formData).every((v) => v.trim() !== "") &&
+    validateEmail(formData.email) &&
+    validateWebsite(formData.website) &&
+    validatePhone(formData.phone);
+
+  const warn = (field) => touched[field] && !formData[field].trim();
+  const warnFormat = (field) =>
+    touched[field] && !!formData[field].trim() && validators[field] && !validators[field](formData[field]);
+
+  const reset = () => { setFormData(emptyForm); setTouched({}); };
+
+  return { formData, handleInput, isFormValid, warn, warnFormat, reset };
+}
 
 export const members = [
   {
@@ -58,7 +90,7 @@ export const members = [
     badge: "React",
     image: jsmPNG,
     introduce: ["컴퓨터공학과 25학번 정소민입니다. 프론트엔드를 맡고 있습니다."],
-    contact: { email: "sominjung1116@gmail.com", phone: "010-5615-8474", website: { label: "https://www.instagram.com/__z1siim", url: "https://www.instagram.com/__z1siim" }, github: "https://github.com/TW1OO" },
+    contact: { email: "sominjung1116@gmail.com", phone: "010-5615-8474", website: { label: "https://www.instagram.com/__z1siim", url: "https://www.instagram.com/__z1siim" } },
     skills: ["React", "ReactNative", "JavaScript"],
     last: "열심히 하겠습니다.",
   },
@@ -111,3 +143,19 @@ export const members = [
     last: null,
   },
 ];
+
+export function Page_Scroll_Down([selected, setSelected]) {
+  useEffect(() => {
+    if (!selected) return;
+    const handleEsc = (e) => {
+      if (e.key === "Escape") setSelected(null);
+    };
+    window.addEventListener("keydown", handleEsc);
+    const original = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+      document.documentElement.style.overflow = original;
+    };
+  }, [selected]);
+}
