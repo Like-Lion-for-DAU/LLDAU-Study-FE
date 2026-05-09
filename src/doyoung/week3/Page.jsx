@@ -1,6 +1,6 @@
 import styles from "./Page.module.css";
-import { members } from "./members";
-import "./script.js"
+import { members} from "./members";
+import {handleDeleteLast, toggleForm, handleCancle} from "./script.js"
 
 //태엽님의 코드 참고
 function SummaryCard({ member }) {
@@ -90,13 +90,13 @@ export default function Week3Page() {
       <h2>3주차</h2>
       <section>
         <div className={styles["controlInner"]}>
-          <button id="btnAdd" className={styles["btn"]}>
+          <button id="btnAdd" className={styles["btn"]} onClick={toggleForm}>
             <p className={styles["btnIcon"]}>아기 사자 추가</p>
           </button>
-          <button id="btnDel" className={styles["btn"]}>
+          <button id="btnDel" className={styles["btn"]} onClick={handleDeleteLast}>
             <p className={styles["btnIcon"]}>마지막 아기 사자 삭제</p>
           </button>
-          <span className={styles["count"]}>총 <span id="total"></span>명</span>
+          <span className={styles["count"]}>총 {members.length}명</span>
         </div>
       </section>
 
@@ -148,7 +148,7 @@ export default function Week3Page() {
             <button className={styles["btn"]} id="add">
               <p className={styles["btnIcon"]} id="add">추가하기</p>
             </button>
-            <button className={styles["btn"]} id="btnCancle">
+            <button className={styles["btn"]} onClick={handleCancle}>
               <p className={styles["btnIcon"]} id="cancle">취소</p>
             </button>
           </div>
