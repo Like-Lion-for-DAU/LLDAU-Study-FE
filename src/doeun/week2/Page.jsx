@@ -1,84 +1,116 @@
+import { useState } from "react";
 import styles from "./Page.module.css";
+import { memberspro, members } from "./member.js";
+import noprofile from "./default-profile.jpg";
+
+function MemberCard({ member, onClick }) {
+  return (
+    <div
+      className={`${styles.week2SummaryCard} ${
+        member.isMe ? styles.myCard : ""
+      }`}
+      onClick={onClick}
+      style={{ cursor: "pointer" }}
+    >
+      <div className={styles.week2CardImageWrap}>
+        <img
+          src={member.image || noprofile}
+          alt={member.name}
+          className={styles.week2CardImage}
+          onError={(e) => {
+            e.target.src = noprofile;
+          }}
+        />
+
+        <span className={styles.week2CardBadge}>
+          {member.tech}
+        </span>
+
+        {member.isMe && (
+          <span className={styles.week2MyBadge}>나</span>
+        )}
+      </div>
+
+      <div className={styles.week2CardBody}>
+        <h3 className={styles.week2CardName}>{member.name}</h3>
+        <p className={styles.week2CardPart}>{member.part}</p>
+        <p className={styles.week2CardIntro}>{member.intro}</p>
+      </div>
+    </div>
+  );
+}
 
 export default function Week2Page() {
+  const [selectedMember, setSelectedMember] = useState(null);
+
+  const handleCardClick = (member) => {
+    const detail = members.find((m) => m.name === member.name);
+    setSelectedMember(detail);
+  };
+
   return (
-    <div className={styles["week-page"]}>
-        <div className={styles["week2-card-grid"]}>
-          
-          <div className={styles["week2-summary-card my-card"]}>
-            <div className={styles["week2-card-image-wrap"]}>
-              <img src="https://i.pinimg.com/originals/4f/6a/e8/4f6ae87f63609f8d7f1f38b3617cbe1c.jpg" alt="이도은" className={styles["week2-card-image"]} />
-              <span className={styles["week2-card-badge"]}>HTML / CSS</span>
-              <span className={styles["week2-my-badge"]}>나</span>
-            </div>
-            <div className={styles["week2-card-body"]}>
-              <h3 className={styles["week2-card-name"]}>이도은</h3>
-              <p className={styles["week2-card-part"]}>Frontend</p>
-              <p className={styles["week2-card-intro"]}>열심히 배우는 프론트엔드 개발자입니다!</p>
-            </div>
-          </div>
+    <div className={styles.weekPage}>
+      {/* 카드 영역 */}
+      <div className={styles.week2CardGrid}>
+        {memberspro.map((member) => (
+          <MemberCard
+            key={member.name}
+            member={member}
+            onClick={() => handleCardClick(member)}
+          />
+        ))}
+      </div>
 
-          <div className={styles["week2-summary-card"]}>
-            <div className={styles["week2-card-image-wrap"]}>
-              <img src="https://i.namu.wiki/i/eThT8CYFzrGi-QEREijNJdiceYKYXYjArupDY07S2Gxlo0CZDO2cQyWWnDXHfqemvizFtSh0SRScxaIpKR-xZA.gif" alt="김주완" className={styles["week2-card-image"]} />
-              <span className={styles["week2-card-badge"]}>HTML/CSS</span>
-            </div>
-            <div className={styles["week2-card-body"]}>
-              <h3 className={styles["week2-card-name"]}>김주완</h3>
-              <p className={styles["week2-card-part"]}>Frontend</p>
-              <p className={styles["week2-card-intro"]}>성실히 배우고 싶은 학생입니다.</p>
-            </div>
-          </div>
+      {/* 모달 */}
+      {selectedMember && (
+        <div
+          className={styles.modalOverlay}
+          onClick={() => setSelectedMember(null)}
+        >
+          <div
+            className={styles.modalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2>{selectedMember.name}</h2>
 
-          <div className={styles["week2-summary-card"]}>
-            <div className={styles["week2-card-image-wrap"]}>
-              <img src="" alt="김나함" className={styles["week2-card-image"]} />
-              <span className={styles["week2-card-badge"]}>HTML / CSS</span>
-            </div>
-            <div className={styles["week2-card-body"]}>
-              <h3 className={styles["week2-card-name"]}>김나함</h3>
-              <p className={styles["week2-card-part"]}>Frontend</p>
-              <p className={styles["week2-card-intro"]}>분야를 넘나들며 성장하는 개발자입니다.</p>
-            </div>
-          </div>
+            <p><b>파트:</b> {selectedMember.part}</p>
+            <p><b>트랙:</b> {selectedMember.track}</p>
 
-          <div className={styles["week2-summary-card"]}>
-            <div className={styles["week2-card-image-wrap"]}>
-              <img src="https://i.pinimg.com/236x/4d/95/31/4d9531cd97ec55ed7ec35448fbe0e41d.jpg" alt="임도영" className={styles["week2-card-image"]} />
-              <span className={styles["week2-card-badge"]}>HTML / CSS</span>
-            </div>
-            <div className={styles["week2-card-body"]}>
-              <h3 className={styles["week2-card-name"]}>임도영</h3>
-              <p className={styles["week2-card-part"]}>Frontend</p>
-              <p className={styles["week2-card-intro"]}>아기사자 14기 프론트엔드 임도영입니다.</p>
-            </div>
-          </div>
+            <p><b>소개:</b> {selectedMember.intro}</p>
 
-          <div className={styles["week2-summary-card"]}>
-            <div className={styles["week2-card-image-wrap"]}>
-              <img src="" alt="정소민" className={styles["week2-card-image"]} />
-              <span className={styles["week2-card-badge"]}>React</span>
-            </div>
-            <div className={styles["week2-card-body"]}>
-              <h3 className={styles["week2-card-name"]}>정소민</h3>
-              <p className={styles["week2-card-part"]}>Frontend</p>
-              <p className={styles["week2-card-intro"]}>컴퓨터공학과 25학번 정소민입니다.</p>
-            </div>
-          </div>
+            <p><b>Email:</b> {selectedMember.email || "없음"}</p>
+            <p><b>Phone:</b> {selectedMember.phone || "없음"}</p>
 
-          <div className={styles["week2-summary-card"]}>
-            <div className={styles["week2-card-image-wrap"]}>
-              <img src="https://i.pinimg.com/236x/ab/58/35/ab58355b3cc43e8649ef972985205330.jpg" alt="백태우" className={styles["week2-card-image"]} />
-              <span className={styles["week2-card-badge"]}>NLU / NLG</span>
-            </div>
-            <div className={styles["week2-card-body"]}>
-              <h3 className={styles["week2-card-name"]}>백태우</h3>
-              <p className={styles["week2-card-part"]}>Frontend</p>
-              <p className={styles["week2-card-intro"]}>I'm Empty Stack Junior :(</p>
-            </div>
-          </div>
+            <p>
+              <b>Link:</b>{" "}
+              {selectedMember.link ? (
+                <a href={selectedMember.link} target="_blank" rel="noreferrer">
+                  {selectedMember.link}
+                </a>
+              ) : (
+                "없음"
+              )}
+            </p>
 
+            <div>
+              <b>Skills:</b>
+              <ul>
+                {Array.isArray(selectedMember.skills) ? (
+                  selectedMember.skills.map((skill, i) => (
+                    <li key={i}>{skill}</li>
+                  ))
+                ) : selectedMember.skills ? (
+                  <li>{selectedMember.skills}</li>
+                ) : (
+                  <li>없음</li>
+                )}
+              </ul>
+            </div>
+
+            <p><b>한마디:</b> {selectedMember.word || "없음"}</p>
+          </div>
         </div>
+      )}
     </div>
   );
 }
