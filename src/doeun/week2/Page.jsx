@@ -43,7 +43,6 @@ function MemberCard({ member, onClick }) {
 export default function Week2Page() {
   const [selectedMember, setSelectedMember] = useState(null);
 
-  // 🔥 카드 클릭 시: name으로 상세 데이터 찾기
   const handleCardClick = (member) => {
     const detail = members.find((m) => m.name === member.name);
     setSelectedMember(detail);
