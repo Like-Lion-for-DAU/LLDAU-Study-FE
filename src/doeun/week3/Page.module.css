@@ -11,8 +11,8 @@
 .week3controls {
   display: flex;
   align-items: center;
-  gap: 12px; /* 버튼과 텍스트 사이 간격 */
-  margin-bottom: 25px;
+  gap: 15px; /* 버튼과 텍스트 사이 간격 */
+  margin-bottom: 15px;
 }
 
 /* 데스크톱: 3열 */
@@ -43,7 +43,7 @@
   background: #ffffff;
   font-size: 13px;
   font-weight: 500;
-  cursor: pointer;
+  cursor: pointer; /* 손가락 커서로 변경 */
   color: #444;
   transition: all 0.2s ease;
 }
@@ -130,4 +130,82 @@
   line-height: 1.5;
   display: -webkit-box;
   overflow: hidden;
+}
+
+/* ====== 폼 작성 ======*/
+.formContainer {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  border: 1px solid #eee;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 이름/파트, 이메일/번호 처럼 한 줄에 두 개 있는 경우 */
+.formRow {
+  display: flex;
+  gap: 20px;
+}
+
+.formRow .formGroup {
+  flex: 1; /* 반반씩 나눠 가짐 */
+}
+
+/* 입력창 그룹 */
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formGroup label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+}
+
+.formGroup input, 
+.formGroup select, 
+.formGroup textarea {
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: #fafafa;
+}
+
+.formGroup textarea {
+  height: 100px;
+  resize: none; /* 크기 조절 방지 */
+}
+
+/* 버튼 영역 */
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.submitBtn {
+  background-color: #333;
+  color: white;
+  padding: 10px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.cancelBtn {
+  background-color: #f1f1f1;
+  color: #666;
+  padding: 10px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
 }
