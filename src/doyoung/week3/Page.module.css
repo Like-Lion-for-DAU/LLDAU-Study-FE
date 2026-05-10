@@ -1,8 +1,201 @@
 .week-page {
   padding: 32px;
+  background-color: #f1f2f6;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 }
+
 
 .week-page h2 {
   font-size: 1.5rem;
   font-weight: 700;
+}
+
+.cardpack {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+  .cardpack {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .cardpack {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  width: 100%;
+  padding: 40px;
+  background-color: white;
+  border-radius: 15px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.my-card {
+  border: 3px solid var(--color-primary);
+  box-shadow: 0 4px 16px rgba(0, 51, 100, 0.15);
+}
+
+.frontend {
+  color: var(--color-primary);
+  font-weight: bold;
+}
+
+.photo {
+  width: 100%;
+  max-width: 300px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.detailcardpack {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.detailcard {
+  width: 100%;
+  padding: 40px;
+  background-color: white;
+  border-radius: 15px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detailcard h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.detailcard h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.dsis {
+  font-weight: bold;
+  color: var(--color-primary);
+}
+
+.section {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.section ul {
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.section a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.section a:hover/*마우스를 올린 상태일때라는 뜻 */{
+  text-decoration: underline; /*글자 밑줄 표시*/
+}
+
+.controlInner {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.controlOut{
+  grid-column-start: 1; /* 지정된 그리드 아이템 열에 시작을 지정*/
+  grid-column-end: 3; /* 지정된 그리드 아이템 열에끄틀 지정*/
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.btn{
+  background-color: white;
+  border : none;
+  cursor: pointer;
+}
+
+.btnIcon {
+  padding: 5px 12px;
+  border: 1px solid #d9d9d9;
+  background-color: white;
+  border-radius: 10px;
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: 600;
+  user-select: none;
+}
+
+.formSection{
+  display: none;
+}
+
+.count {
+  color: gray;
+  font-size: 0.95rem;
+  font-weight: 600;;
+}
+
+.formSection {
+  background-color: white;
+  border-radius: 15px;
+  margin: 16px 32px;
+}
+
+.formInner{
+  padding: 32px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 560px) {
+  .formInner{
+    grid-template-columns: 1fr;
+  }
+}
+
+.form, 
+.part{
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  background-color: #ffffff;
+  outline: none;
+  box-sizing: border-box;
+}
+
+
+
+.text {
+  color : gray;
+  font-weight: 600;
+}
+
+.Width {
+  grid-column-start: 1;
+  grid-column-end: 3;
 }
