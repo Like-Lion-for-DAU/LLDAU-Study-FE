@@ -11,6 +11,30 @@ export default function Week3Page() {
     usePageScrollDown(selected, () => setSelected(null));
     usePageScrollDown(showAdd, () => setShowAdd(false));
 
+  const handleAddSubmit = (e) => {
+    e.preventDefault();
+    const skillList = formData.skills.split(",").map((s) => s.trim()).filter(Boolean);
+    const newMember = {
+      name: formData.name,
+      part: formData.part,
+      intro: formData.introduce,
+      club: "DAU_DSIS",
+      badge: skillList[0] || "신규",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2QuItPJLx65Rb2kqBsMRU7t3BmKc8jn98lw&s",
+      introduce: [formData.introduceDetail],
+      contact: {
+        email: formData.email,
+        phone: formData.phone,
+        website: { label: formData.website, url: formData.website },
+      },
+      skills: skillList,
+      last: formData.last,
+    };
+    setMemberList((prev) => [...prev, newMember]);
+    setShowAdd(false);
+    reset();
+  }
+
   return (
     <div className={styles["week-page"]}>
       <h2>3주차</h2>
@@ -47,7 +71,7 @@ export default function Week3Page() {
         <div className={styles["pushLion"]} onClick={() => setShowAdd(false)}>
           <div className={styles["pushLionContent"]}
           onClick={(e) => e.stopPropagation()}>
-            <form className={styles["pushLionGrid"]}>
+            <form className={styles["pushLionGrid"]} onSubmit={handleAddSubmit}>
               <div className={styles["pushLionRow"]}>
                 <div className={styles["field"]}>
                   <div className={styles["halfWidth"]}>
@@ -135,34 +159,14 @@ export default function Week3Page() {
                   {warn("last") && <span className={styles["inputWarning"]}><b>!</b> 입력란이 비어있습니다 <b>!</b></span>}
               </div>
 
+              <button type="submit" className={styles["pushLionAddButton"]}
+              disabled={!isFormValid}>추가</button>
+              <button type="button" className={styles["pushLionCancelButton"]}
+              onClick={() => setShowAdd(false)}>취소</button>
 
             </form>
             {/* 모든 입력란이 채워져야 활성화 */}
-            <button className={styles["pushLionAddButton"]}
-            disabled={!isFormValid}
-            onClick={() => {
-              const skillList = formData.skills.split(",").map((s) => s.trim()).filter(Boolean);
-              const newMember = {
-                name: formData.name,
-                part: formData.part,
-                intro: formData.introduce,
-                club: "DAU_DSIS",
-                badge: skillList[0] || "신규",
-                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2QuItPJLx65Rb2kqBsMRU7t3BmKc8jn98lw&s",
-                introduce: [formData.introduceDetail],
-                contact: {
-                  email: formData.email,
-                  phone: formData.phone,
-                  website: { label: formData.website, url: formData.website },
-                },
-                skills: skillList,
-                last: formData.last,
-              };
-              setMemberList((prev) => [...prev, newMember]);
-              setShowAdd(false);
-            }}>
-            추가</button>
-            <button className={styles["pushLionCancelButton"]} onClick={() => setShowAdd(false)}>취소</button>
+            
 
           </div>
         </div>

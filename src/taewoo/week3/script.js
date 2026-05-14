@@ -33,6 +33,30 @@ export function useFormData() {
   return { formData, handleInput, isFormValid, warn, warnFormat, reset };
 }
 
+const handleAddSubmit = (e) => {
+  e.preventDefault();
+  const skillList = formData.skills.split(",").map((s) => s.trim()).filter(Boolean);
+  const newMember = {
+    name: formData.name,
+    part: formData.part,
+    intro: formData.introduce,
+    club: "DAU_DSIS",
+    badge: skillList[0] || "신규",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2QuItPJLx65Rb2kqBsMRU7t3BmKc8jn98lw&s",
+    introduce: [formData.introduceDetail],
+    contact: {
+      email: formData.email,
+      phone: formData.phone,
+      website: { label: formData.website, url: formData.website },
+    },
+    skills: skillList,
+    last: formData.last,
+  };
+  setMemberList((prev) => [...prev, newMember]);
+  setShowAdd(false);
+  reset();
+}
+
 export const members = [
   {
     name: "김주완",
