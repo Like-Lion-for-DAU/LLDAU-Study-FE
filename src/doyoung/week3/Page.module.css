@@ -131,11 +131,6 @@
   gap: 8px;
 }
 
-.btn{
-  background-color: white;
-  border : none;
-  cursor: pointer;
-}
 
 .btnIcon {
   padding: 5px 12px;
@@ -148,9 +143,6 @@
   user-select: none;
 }
 
-.formSection{
-  display: none;
-}
 
 .count {
   color: gray;

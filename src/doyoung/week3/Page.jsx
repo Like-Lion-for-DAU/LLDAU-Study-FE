@@ -1,13 +1,13 @@
 import styles from "./Page.module.css";
-import { members} from "./members";
-import {handleDeleteLast, toggleForm, handleCancle} from "./script.js"
+import { members as initialMembers} from "./members";
+import { useEffect, useRef, useState } from "react";
 
 //태엽님의 코드 참고
-function SummaryCard({ member }) {
+function SummaryCard({ member, onClick }) {
   return (
     <div
-      className={`${styles["card"]} ${member.isMe ? styles["my-card"] : ""}`}
-    >
+      className={`${styles["card"]} ${member.isMe ? styles["my-card"] : ""}`} onClick={onClick}
+      >
       <img src={member.image} alt={`${member.name} 프로필`} className={styles["photo"]}/>
       <h3>{member.name}</h3>
       <span className={styles["frontend"]}>{member.role}</span>
@@ -48,9 +48,13 @@ function ContactList({contact}) {
   );
 }
 
-function DetailCard({ member }) {
+function DetailCard({ 
+  member,
+  isFocused,
+  innerRef,
+}) {
   return (
-    <div className={styles["detailcard"]}>
+    <div ref = {innerRef} className={`${styles["detailcard"]} ${isFocused ? styles["isFocused"] : ""}`}>
       <h3>{member.name}</h3>
       <span className={styles["frontend"]}>{member.role}</span>
       <p className={styles["dsis"]}>동아리명 : {member.club}</p>
@@ -78,93 +82,360 @@ function DetailCard({ member }) {
 
       <section className={styles["section"]}>
         <h4>한 마디</h4>
-        <p>{member.motto}</p>
+        <p>{member.tell}</p>
       </section>
     </div>
   );
 }
 
 export default function Week3Page() {
+
+  const [members, setMembers] =
+  useState(initialMembers);
+
+  const [showForm, setShowForm] =
+  useState(false);
+
+  const [focusedId, setFocusedId] =
+    useState(null);
+
+  const[partFilter, setPartFilter] =
+  useState("ALL");
+
+  const detailRefs = useRef({});
+
+  const [memberInput, setmemberInput] = 
+  useState({
+    name : "",
+    part : "",
+    skills : "",
+    intro : "",
+    detail : "",
+    email : "",
+    phone : "",
+    web: "",
+    tell : "",
+  });
+
+  useEffect(() => {
+    if(!showForm) return;
+
+    const handleEsc = (e) => {
+      if(e.key === "Escape") {
+        setShowForm(false);
+      }
+    };
+
+    window.addEventListener(
+      "keydown",
+      handleEsc
+    );
+
+    return () => {
+      window.removeEventListener(
+        "keydown",
+        handleEsc
+      );
+    };
+  }, [showForm]);
+
+  function handleInputChange(field, event) {
+    setmemberInput((prevState) => ({
+      ...prevState,
+      [field] : event.target.value,
+    }));
+  }
+
+  function handleRemoveLast() {
+    if (members.length === 0) return;
+
+    setMembers((prev) =>
+    prev.slice(0, -1));
+  }
+
+  function handleCardClick(name) {
+    detailRefs.current[name]?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+
+    setTimeout(() =>{
+      setFocusedId(null);
+    }, 1000);
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    const newMember = {
+      name : memberInput.name,
+      role : memberInput.role,
+      intro : memberInput.intro,
+      club : "DSIS",
+      image: "/lion.png",
+      bio : [memberInput.detail],
+      skills : memberInput.skills
+      .split(",")
+      .map((skill) => skill.trim()),
+      tell: memberInput.tell,
+      contact: {
+        email: memberInput.email,
+        phone: memberInput.phone,
+        link: {
+          label:"웹사이트",
+          url: memberInput.web,
+        },
+      },
+    };
+
+    setMembers((prev) => [
+      ...prev,
+      newMember,
+    ]);
+
+    setmemberInput({
+      name: "",
+      part: "",
+      skills: "",
+      intro: "",
+      detail: "",
+      email: "",
+      phone: "",
+      web: "",
+      tell: "",
+    });
+    setShowForm(false);
+  }
+
+  const visibleMembers = members.filter(
+    (member) =>
+      partFilter === "ALL" || member.role === partFilter
+  );
+
   return (
+
+
     <div className={styles["week-page"]}>
       <h2>3주차</h2>
       <section>
         <div className={styles["controlInner"]}>
-          <button id="btnAdd" className={styles["btn"]} onClick={toggleForm}>
-            <p className={styles["btnIcon"]}>아기 사자 추가</p>
+          <button type = "button"
+          className={styles["btnIcon"]}
+          onClick={() => setShowForm(true)
+          }>
+            <span>아기 사자 추가</span>
           </button>
-          <button id="btnDel" className={styles["btn"]} onClick={handleDeleteLast}>
-            <p className={styles["btnIcon"]}>마지막 아기 사자 삭제</p>
+          <button type="button"
+          className={styles["btnIcon"]}
+          onClick={handleRemoveLast}>
+            <span>마지막 아기 사자 삭제</span>
           </button>
-          <span className={styles["count"]}>총 {members.length}명</span>
+          <select value={partFilter}
+          onChange={(e) => setPartFilter(e.target.value)} className={styles["btnIcon"]}>
+            <option value="ALL">전체</option>
+            <option value="Frontend">Frontend</option>
+            <option value="Backend">Backend</option>
+            <option value="Design">Design</option>
+          </select>
+          <span className={styles["count"]}> 총 {visibleMembers.length}명</span>
         </div>
       </section>
 
-      <section className={styles["formSection"]} id="formSection">
-        <div className={styles["formInner"]}>
+      {showForm && (
+        <section className={styles["formSection"]}>
           <div>
-            <p className={styles["text"]}>이름</p>
-            <input type="text" className={styles["form"]} id="name" placeholder="예: 홍아기사자"></input>
-          </div>
-          <div>
-            <p className={styles["text"]}>파트</p>
-            <select className={styles["part"]} id="part">
-              <option value="">파트를 선택하세요</option>
-              <option value="Frontend">Frontend</option>
-              <option value="Backend">Backend</option>
-              <option value="Design">Design</option>
-            </select>
-            
-          </div>
-          <div className={styles["Width"]}>
-            <p className={styles["text"]}>관심 기술 (쉼표로 구성)</p>
-            <input type="text" className={styles["form"]} id="skills" placeholder="예: JavaScript, React, HTML/CSS"></input>
-          </div>
-          <div className={styles["Width"]}>
-            <p className={styles["text"]}>한 줄 소개(요약 카드)</p>
-            <input type="text" className={styles["form"]} id="intro" placeholder="예: 3주차 DOM 조작 연습 중!"></input>
-          </div>
-          <div className={styles["Width"]}>
-            <p className={styles["text"]}>자기소개 (상세카드)</p>
-            <textarea rows="5" cols="30" className={styles["form"]} id="detail" placeholder="예: HTML/CSS로 구조를 만들고, JS로 데이터를 바꾸면 화면이 바뀌는 경험을 하고 있습니다."></textarea>
-          </div>
-          <div>
-            <p className={styles["text"]}>Email</p>
-            <input type="text" className={styles["form"]} id="email" placeholder="예: lion@example.com"></input>
-          </div>
-          <div>
-            <p className={styles["text"]}>Phone</p>
-            <input type="text" className={styles["form"]} id="phone" placeholder="예: 010-1234-5678"></input>
-          </div>
-          <div className={styles["Width"]}>
-            <p className={styles["textWidth"]}>Website</p>
-            <input type="text" className={styles["form"]} id="web" placeholder="예: https://example.com"></input>
-          </div>
-          <div className={styles["Width"]}>
-            <p className={styles["text"]}>한 마디</p>
-            <input type="text" className={styles["form"]} id="tell" placeholder="예: 데이터 바꾸면 화면도 바뀐다!"></input>
-          </div>
-          <div className={styles["controlOut"]}>
-            <button className={styles["btn"]} id="add">
-              <p className={styles["btnIcon"]} id="add">추가하기</p>
-            </button>
-            <button className={styles["btn"]} onClick={handleCancle}>
-              <p className={styles["btnIcon"]} id="cancle">취소</p>
-            </button>
-          </div>
-          
-        </div>
-      </section>
+            <form onSubmit={handleSubmit} className={styles["formInner"]}>
+              <div className={styles["controlInner"]}>
+                <label htmlFor="name" className={styles["text"]}>이름</label>
+                <input id="name"
+                type="text"
+                className={styles["form"]}
+                onChange={(event) => handleInputChange("name", event)}
+                placeholder="예: 홍아기사자" required></input>
+              </div>
+              <div className={styles["controlInner"]}>
+                <label htmlFor="part" className={styles["text"]}>
+                파트
+              </label>
 
-      <section className={styles["cardpack"]}>
-        {members.map((member) => (
-          <SummaryCard key={member.name} member={member} />
-        ))}
-      </section>
+              <select
+                id="part"
+                className={styles["part"]}
+                value={memberInput.part}
+                onChange={(e) =>
+                  handleInputChange("part", event)
+                }
+                required>
+                  <option value="">
+                  파트를 선택하세요
+                  </option>
+
+                  <option value="Frontend">
+                    Frontend
+                  </option>
+
+                  <option value="Backend">
+                    Backend
+                  </option>
+
+                  <option value="Design">
+                    Design
+                  </option>
+
+                </select>
+              </div>
+
+              <div className={styles["Width"]}>
+                <label htmlFor="skills" className={styles["text"]}>
+                  관심 기술 (쉼표로 구성)
+                </label>
+
+                <input
+                  id="skills"
+                  type="text"
+                  className={styles["form"]}
+                  value={memberInput.skills}
+                  onChange={(event) =>
+                    handleInputChange("skills", event)
+                  }
+                  placeholder="예: JavaScript, React, HTML/CSS" required/>
+              </div>
+              <div className={styles["Width"]}>
+                <label htmlFor="intro" className={styles["text"]}>
+                  한 줄 소개 (요약 카드)
+                </label>
+
+                <input
+                  id="intro"
+                  type="text"
+                  className={styles["form"]}
+                  value={memberInput.intro}
+                  onChange={(event) =>
+                    handleInputChange("intro", event)
+                  }
+                  placeholder="예: 3주차 DOM 조작 연습 중!" required/>
+              </div>
+              <div className={styles["Width"]}>
+                <label htmlFor="detail" className={styles["text"]}>
+                  자기소개 (상세 카드)
+                </label>
+
+                <textarea
+                  id="detail"
+                  rows="5"
+                  cols="30"
+                  value={memberInput.detail}
+                  className={styles["form"]}
+                  onChange={(event) =>
+                    handleInputChange("detail", event)
+                  }
+                  placeholder="예: HTML/CSS로 구조를 만들고, JS로 데이터를 바꾸면 화면이 바뀌는 경험을 하고 있습니다." required/>
+              </div>
+              <div className={styles["controlInner"]}>
+                <label htmlFor="email" className={styles["text"]}>
+                  Email
+                </label>
+
+                <input
+                  id="email"
+                  type="email"
+                  className={styles["form"]}
+                  value={memberInput.email}
+                  onChange={(event) =>
+                    handleInputChange("email", event)
+                  }
+                  reqplaceholder="예: lion@example.com" required/>
+              </div>
+              <div className={styles["controlInner"]}>
+                <label htmlFor="phone" className={styles["text"]}>
+                  Phone
+                </label>
+
+                <input
+                  id="phone"
+                  type="text"
+                  className={styles["form"]}
+                  value={memberInput.phone}
+                  onChange={(event) =>
+                    handleInputChange("phone", event)
+                  }
+                  placeholder="예: 010-1234-5678" required/>
+              </div>
+              <div className={styles["Width"]}>
+                <label htmlFor="web" className={styles["textWidth"]}>
+                  Website
+                </label>
+
+                <input
+                  id="web"
+                  type="text"
+                  className={styles["form"]} 
+                  value={memberInput.web}
+                  onChange={(event) =>
+                    handleInputChange("web", event)
+                  }
+                  placeholder="예: https://example.com" required/>
+              </div>
+              <div className={styles["Width"]}>
+                <label htmlFor="tell" className={styles["text"]}>
+                  한 마디
+                </label>
+
+                <input
+                  id="tell"
+                  type="text"
+                  className={styles["form"]}
+                  value={memberInput.tell}
+                  onChange={(event) =>
+                    handleInputChange("tell", event)
+                  } placeholder="예: 데이터 바꾸면 화면도 바뀐다!" required/>
+              </div>
+              <div className={styles["controlOut"]}>
+                <button
+                  type="submit"
+                  className={styles["btnIcon"]}
+                >
+                  추가하기
+                </button>
+
+                <button
+                  type="button"
+                  className={styles["btnIcon"]}
+                  onClick={() =>
+                    setShowForm(false)}>
+                  취소
+                </button>
+                </div>
+            </form>
+          </div>
+        </section>
+      )}
+
+      {visibleMembers.length === 0 ? (
+        <p>조건에 맞는 아기사자가 없습니다.</p>
+      ) : (
+        <section className={styles["cardpack"]}>
+          {visibleMembers.map((member) => (
+            <SummaryCard 
+            key={member.name}
+            member={member}
+            onClick={() => handleCardClick(member.name)} />
+          ))}
+        </section>
+      )}
 
       <section className={styles["detailcardpack"]}>
         {members.map((member) => (
-          <DetailCard key={member.name} member={member} />
+          <DetailCard
+          key={member.name}
+          member={member}
+          isFocused={focusedId === member.name}
+          innerRef={(el) => {
+            if (el) {
+              detailRefs.current[
+                member.name
+              ] = el;
+            }
+          }}/>
         ))}
       </section>
     </div>
