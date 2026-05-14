@@ -144,18 +144,18 @@ export const members = [
   },
 ];
 
-export function Page_Scroll_Down([selected, setSelected]) {
+export function usePageScrollDown(selected, setSelected) {
   useEffect(() => {
     if (!selected) return;
     const handleEsc = (e) => {
       if (e.key === "Escape") setSelected(null);
     };
     window.addEventListener("keydown", handleEsc);
-    const original = document.documentElement.style.overflow;
-    document.documentElement.style.overflow = "hidden";
+    const original = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     return () => {
       window.removeEventListener("keydown", handleEsc);
-      document.documentElement.style.overflow = original;
+      document.body.style.overflow = original;
     };
   }, [selected]);
 }

@@ -1,5 +1,5 @@
 import styles from "./Page.module.css";
-import { members as initialMembers, Page_Scroll_Down, useFormData } from "./script.js";
+import { members as initialMembers, usePageScrollDown, useFormData } from "./script.js";
 import { useState, useEffect } from "react";
 
 export default function Week3Page() {
@@ -8,8 +8,8 @@ export default function Week3Page() {
   const [showAdd, setShowAdd] = useState(false);
   const { formData, handleInput, isFormValid, warn, warnFormat, reset } = useFormData();
   
-    Page_Scroll_Down([selected, setSelected]);
-    Page_Scroll_Down([showAdd, setShowAdd]);
+    usePageScrollDown(selected, () => setSelected(null));
+    usePageScrollDown(showAdd, () => setShowAdd(false));
 
   return (
     <div className={styles["week-page"]}>
@@ -29,15 +29,15 @@ export default function Week3Page() {
       </div>
 
       <div className={styles["gridContainer"]}>
-        {memberList.map((members) => (
-          <div onClick={() => setSelected(members)} className={styles["mainProfile"]}>
+        {memberList.map((member) => (
+          <div onClick={() => setSelected(member)} className={styles["mainProfile"]}>
             <p className={styles["badge"]}>
-              <span className={styles["badgeSpace"]}>{members.badge}</span>
+              <span className={styles["badgeSpace"]}>{member.badge}</span>
             </p>
-            <img className={styles["profileImage"]} src={members.image} />
-            <h2 className={styles["name"]}>{members.name}</h2>
-            <b className={styles["blueRule"]}>{members.part}</b>
-            <p className={styles["lineIntroduce"]}>{members.intro}</p>
+            <img className={styles["profileImage"]} src={member.image} />
+            <h2 className={styles["name"]}>{member.name}</h2>
+            <b className={styles["blueRule"]}>{member.part}</b>
+            <p className={styles["lineIntroduce"]}>{member.intro}</p>
           </div>
         ))}
       </div>
@@ -47,98 +47,96 @@ export default function Week3Page() {
         <div className={styles["pushLion"]} onClick={() => setShowAdd(false)}>
           <div className={styles["pushLionContent"]}
           onClick={(e) => e.stopPropagation()}>
-            <table className={styles["pushLionTable"]}>
-              <tr>
-                <td><p>이름</p>
-                  <div style={{ position: "relative" }}>
+            <form className={styles["pushLionGrid"]}>
+              <div className={styles["pushLionRow"]}>
+                <div className={styles["field"]}>
+                  <div className={styles["halfWidth"]}>
+                    <label htmlFor="name">이름</label>
                     <input id="name" type="text" className={styles["inputName"]}
                     placeholder="예: 홍아기사자"
                     value={formData.name} onChange={handleInput("name")}/>
                     {warn("name") && <span className={styles["inputWarning"]}><b>!</b> 입력란이 비어있습니다 <b>!</b></span>}
                   </div>
-                </td>
-
-                <td><p>파트</p>
+                </div>
+                <div className={styles["field"]}>
+                  <label htmlFor="part" className={styles["pushLabel"]}>파트</label>
                   <select id="part" size={1} className={styles["inputPart"]}
                   value={formData.part} onChange={handleInput("part")}>
                     <option value="Frontend">Frontend</option>
                     <option value="Backend">Backend</option>
                     <option value="PM">PM</option>
                   </select>
-                </td>
-              </tr>
-              <tr>
-                <td colspan='2'><p>관심기술 (쉼표로 구분)</p>
-                <div style={{ position: "relative" }}>
-                  <input id="skills" type="text" className={styles["inputLongtype"]}
-                  placeholder="예: JavaScript, React, HTML/CSS"
-                  value={formData.skills} onChange={handleInput("skills")}/>
-                  {warn("skills") && <span className={styles["inputWarning"]}><b>!</b> 입력란이 비어있습니다 <b>!</b></span>}
-                </div></td>
-              </tr>
+                </div>
+              </div>
+              <div className={`${styles["pushLionRow"]} ${styles["fullWidth"]}`}>
+                <label htmlFor="skills">관심기술 (쉼표로 구분)</label>
+                <input id="skills" name="skills" className={styles["inputLongtype"]}
+                placeholder="예: JavaScript, React, HTML/CSS"
+                value={formData.skills} onChange={handleInput("skills")}/>
+                {warn("skills") && <span className={styles["inputWarning"]}><b>!</b> 입력란이 비어있습니다 <b>!</b></span>}
 
-              <tr>
-                <td colspan='2'><p>한 줄 소개(요약 카드)</p>
-                <div style={{ position: "relative" }}>
-                  <input id="introduce" type="text" className={styles["inputLongtype"]}
-                  placeholder="예: 3주차 DOM 조작 연습 중"
-                  value={formData.introduce} onChange={handleInput("introduce")}/>
-                  {warn("introduce") && <span className={styles["inputWarning"]}><b>!</b> 입력란이 비어있습니다 <b>!</b></span>}
-                </div></td>
-              </tr>
+              </div>
 
-              <tr>
-                <td colspan='2'><p>자기소개 (상세 카드)</p>
-                <div style={{ position: "relative" }}>
+              <div className={`${styles["pushLionRow"]} ${styles["fullWidth"]}`}>
+                <label htmlFor="introduce" className={styles["pushLabel"]}>한 줄 소개(요약 카드)</label>
+                <input id="introduce" type="text" className={styles["inputLongtype"]}
+                placeholder="예: 3주차 DOM 조작 연습 중"
+                value={formData.introduce} onChange={handleInput("introduce")}/>
+                {warn("introduce") && <span className={styles["inputWarning"]}><b>!</b> 입력란이 비어있습니다 <b>!</b></span>}
+              </div>
+
+              <div className={`${styles["pushLionRow"]} ${styles["fullWidth"]}`}>
+                <label htmlFor="introduceDetail" className={styles["pushLabel"]}>자기소개 (상세 카드)</label>
+                <div style={styles}>
                   <textarea id="introduceDetail" className={styles["inputIntroduce"]}
                   placeholder="예: HTML/CSS로 구조를 만들고, JS로 데이터를 바꾸면 화면이 바뀌는 경험을 하고 있습니다."
                   value={formData.introduceDetail} onChange={handleInput("introduceDetail")}/>
                   {warn("introduceDetail") && <span className={styles["inputWarning"]}><b>!</b> 입력란이 비어있습니다 <b>!</b></span>}
-                </div></td>
-              </tr>
+                </div>
+              </div>
 
-              <tr>
-                <td><p>Email</p>
-                <div style={{ position: "relative" }}>
-                  <input id="email" type="text" className={styles["inputEmail"]}
-                  placeholder="예: lion@example.com"
-                  value={formData.email} onChange={handleInput("email")}/>
-                  {warn("email") && <span className={styles["inputWarning"]}><b>!</b> 입력란이 비어있습니다 <b>!</b></span>}
-                  {warnFormat("email") && <span className={styles["inputWarning"]}><b>!</b> '@' 가 포함되어야 합니다 <b>!</b></span>}
-                </div></td>
-                <td><p>Phone</p>
-                <div style={{ position: "relative" }}>
-                  <input id="phone" type="text" className={styles["inputPhone"]}
-                  placeholder="예: 010-1234-5678"
-                  value={formData.phone} onChange={handleInput("phone")}/>
-                  {warn("phone") && <span className={styles["inputWarning"]}><b>!</b> 입력란이 비어있습니다 <b>!</b></span>}
-                  {warnFormat("phone") && <span className={styles["inputWarning"]}><b>!</b> 예시의 형식을 따라주세요 <b>!</b></span>}
-                </div></td>
-              </tr>
+              <div className={styles["pushLionRow"]}>
+                <div className={styles["field"]}>
+                  <label htmlFor="email" className={styles["pushLabel"]}>Email</label>
+                  <div className={styles["halfWidth"]}>
+                    <input id="email" type="text" className={styles["inputEmail"]}
+                    placeholder="예: lion@example.com"
+                    value={formData.email} onChange={handleInput("email")}/>
+                    {warn("email") && <span className={styles["inputWarning"]}><b>!</b> 입력란이 비어있습니다 <b>!</b></span>}
+                    {warnFormat("email") && <span className={styles["inputWarning"]}><b>!</b> '@' 가 포함되어야 합니다 <b>!</b></span>}
+                  </div>
+                </div>
+                <div className={styles["field"]}>
+                  <label htmlFor="phone" className={styles["pushLabel"]}>Phone</label>
+                  <div className={styles["halfWidth"]}>
+                    <input id="phone" type="text" className={styles["inputPhone"]}
+                    placeholder="예: 010-1234-5678"
+                    value={formData.phone} onChange={handleInput("phone")}/>
+                    {warn("phone") && <span className={styles["inputWarning"]}><b>!</b> 입력란이 비어있습니다 <b>!</b></span>}
+                    {warnFormat("phone") && <span className={styles["inputWarning"]}><b>!</b> 예시의 형식을 따라주세요 <b>!</b></span>}
+                  </div>
+                </div>
+              </div>
 
-              <tr>
-                <td colspan='2'><p>Website</p>
-                <div style={{ position: "relative" }}>
+              <div className={`${styles["pushLionRow"]} ${styles["fullWidth"]}`}>
+                <label htmlFor="website" className={styles["pushLabel"]}>Website</label>
                   <input id="website" type="text" className={styles["inputLongtype"]}
                   placeholder="예: https://www.example.com"
                   value={formData.website} onChange={handleInput("website")}/>
                   {warn("website") && <span className={styles["inputWarning"]}><b>!</b> 입력란이 비어있습니다 <b>!</b></span>}
                   {warnFormat("website") && <span className={styles["inputWarning"]}><b>!</b> http:// 또는 https:// 로 시작하는 URL이어야 합니다 <b>!</b></span>}
-                </div></td>
-              </tr>
+              </div>
 
-              <tr>
-                <td colspan='2'><p>한 마디</p>
-                <div style={{ position: "relative" }}>
+              <div className={`${styles["pushLionRow"]} ${styles["fullWidth"]}`}>
+                <label htmlFor="last" className={styles["pushLabel"]}>한 마디</label>
                   <input id="last" type="text" className={styles["inputLongtype"]}
                   placeholder="예: 데이터 바꾸면 화면도 바뀐다!"
                   value={formData.last} onChange={handleInput("last")}/>
                   {warn("last") && <span className={styles["inputWarning"]}><b>!</b> 입력란이 비어있습니다 <b>!</b></span>}
-                </div></td>
-              </tr>
+              </div>
 
 
-            </table>
+            </form>
             {/* 모든 입력란이 채워져야 활성화 */}
             <button className={styles["pushLionAddButton"]}
             disabled={!isFormValid}
