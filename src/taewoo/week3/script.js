@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 
 const emptyForm = { name: "", part: "Frontend", skills: "", introduce: "", introduceDetail: "", email: "", phone: "", website: "", last: "" };
 
-const validateEmail   = (v) => v.includes("@");
+const validateEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 const validateWebsite = (v) => /^https?:\/\/.+\..+/.test(v);
-const validatePhone   = (v) => (v.match(/-/g) || []).length === 2 && v.length <= 13;
+const validatePhone = (v) => /^010-\d{3,4}-\d{4}$/.test(v);
 const validators = { email: validateEmail, website: validateWebsite, phone: validatePhone };
 
 export function useFormData() {
@@ -33,29 +33,7 @@ export function useFormData() {
   return { formData, handleInput, isFormValid, warn, warnFormat, reset };
 }
 
-const handleAddSubmit = (e) => {
-  e.preventDefault();
-  const skillList = formData.skills.split(",").map((s) => s.trim()).filter(Boolean);
-  const newMember = {
-    name: formData.name,
-    part: formData.part,
-    intro: formData.introduce,
-    club: "DAU_DSIS",
-    badge: skillList[0] || "신규",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2QuItPJLx65Rb2kqBsMRU7t3BmKc8jn98lw&s",
-    introduce: [formData.introduceDetail],
-    contact: {
-      email: formData.email,
-      phone: formData.phone,
-      website: { label: formData.website, url: formData.website },
-    },
-    skills: skillList,
-    last: formData.last,
-  };
-  setMemberList((prev) => [...prev, newMember]);
-  setShowAdd(false);
-  reset();
-}
+
 
 export const members = [
   {
@@ -175,11 +153,11 @@ export function usePageScrollDown(selected, setSelected) {
       if (e.key === "Escape") setSelected(null);
     };
     window.addEventListener("keydown", handleEsc);
-    const original = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const original = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
     return () => {
       window.removeEventListener("keydown", handleEsc);
-      document.body.style.overflow = original;
+      document.documentElement.style.overflow = original;
     };
   }, [selected]);
 }

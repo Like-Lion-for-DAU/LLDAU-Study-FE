@@ -15,6 +15,7 @@ export default function Week3Page() {
     e.preventDefault();
     const skillList = formData.skills.split(",").map((s) => s.trim()).filter(Boolean);
     const newMember = {
+      id: Date.now(),
       name: formData.name,
       part: formData.part,
       intro: formData.introduce,
@@ -158,16 +159,12 @@ export default function Week3Page() {
                   value={formData.last} onChange={handleInput("last")}/>
                   {warn("last") && <span className={styles["inputWarning"]}><b>!</b> 입력란이 비어있습니다 <b>!</b></span>}
               </div>
-
+              {/*모든 입력란이 채워져야 활성화 */}
               <button type="submit" className={styles["pushLionAddButton"]}
               disabled={!isFormValid}>추가</button>
               <button type="button" className={styles["pushLionCancelButton"]}
               onClick={() => setShowAdd(false)}>취소</button>
-
             </form>
-            {/* 모든 입력란이 채워져야 활성화 */}
-            
-
           </div>
         </div>
       )}
@@ -191,8 +188,8 @@ export default function Week3Page() {
               <>
 
             <h3 className={styles["introduceTitle"]}>자기소개</h3>
-            {selected.introduce.map((text, i) => (
-              <p key={i} className={styles["introduceMyself"]}>{text}</p>
+            {selected.introduce.map((text) => (
+              <p key={text.name} className={styles["introduceMyself"]}>{text}</p>
             ))}
 
             {(selected.contact.email || selected.contact.phone || selected.contact.website) && (
