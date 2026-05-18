@@ -3,6 +3,7 @@ import jsmPNG from "../../assets/doyoung/week2/jsm.png";
 import { useState, useEffect } from "react";
 
 const emptyForm = { name: "", part: "Frontend", skills: "", introduce: "", introduceDetail: "", email: "", phone: "", website: "", last: "" };
+const randomParts = ["Frontend", "Backend", "PM", "Design"];
 
 const validateEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 const validateWebsite = (v) => /^https?:\/\/.+\..+/.test(v);
@@ -33,7 +34,27 @@ export function useFormData() {
   return { formData, handleInput, isFormValid, warn, warnFormat, reset };
 }
 
+export async function randomResult(number) {
+  const fetchURL = `https://randomuser.me/api/?results=${number}&nat=us,gb,ca,au,nz`;
+  const res = await fetch(fetchURL);
+  const data = await res.json();
+  return data.results;
+}
 
+export function randomNewMember(user) {
+  const randomPart = randomParts[Math.floor(Math.random() * randomParts.length)];
+  return {
+    name: `${user.name.first} ${user.name.last}`,
+    part: randomPart,
+    intro: `${randomPart} · ${user.location.country} ${user.location.state}에서 합류했어요!`,
+    badge: "Random User",
+    image: user.picture.large,
+    introduce: [`${user.name.first} ${user.name.last}입니다.`, `저는 ${randomPart}입니다.`, `현재 ${user.location.country} ${user.location.state}에 살고 있습니다.`],
+    contact: { email: user.email, phone: user.phone, website: { label: "Random User Profile", url: user.picture.large } },
+    skills: ["Random Skill 1", "Random Skill 2", "Random Skill 3"],
+    last: "랜덤하게 합류한 새로운 멤버입니다!",
+  };
+}
 
 export const members = [
   {
