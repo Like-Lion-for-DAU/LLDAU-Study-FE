@@ -28,10 +28,128 @@ main {
   padding: 2rem 1.5rem;
 }
 
+/* ── 컨트롤 영역 ── */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.total-count {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+/* ── 버튼 ── */
+.btn {
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1.5px solid #1a1a2e;
+  background-color: #fff;
+  color: #1a1a2e;
+  transition: background-color 0.15s, color 0.15s;
+  font-family: inherit;
+}
+
+.btn:hover {
+  background-color: #1a1a2e;
+  color: #fff;
+}
+
+.btn-primary {
+  background-color: #3a5bd9;
+  color: #fff;
+  border-color: #3a5bd9;
+}
+
+.btn-primary:hover {
+  background-color: #2a49c7;
+  border-color: #2a49c7;
+  color: #fff;
+}
+
+/* ── 추가 폼 ── */
+.form-wrapper {
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 1.5rem;
+}
+
+@media (max-width: 560px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-full {
+  grid-column: 1 / -1;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 8px 12px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-family: inherit;
+  color: #1a1a2e;
+  background-color: #fff;
+  transition: border-color 0.15s;
+  resize: vertical;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #3a5bd9;
+}
+
+.error-msg {
+  font-size: 0.78rem;
+  color: #dc2626;
+  min-height: 1em;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+/* ── 섹션 공통 ── */
 .section-title {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
   color: #1a1a2e;
 }
 
@@ -43,6 +161,7 @@ main {
   margin-bottom: 3rem;
 }
 
+/* ── 요약 카드 그리드 ── */
 .card-grid {
   list-style: none;
   display: grid;
@@ -120,8 +239,11 @@ main {
 .card-part {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #3a5bd9;
 }
+
+.card-part--frontend  { color: #16a34a; }
+.card-part--backend   { color: #3a5bd9; }
+.card-part--design    { color: #9333ea; }
 
 .card-intro {
   font-size: 0.875rem;
@@ -129,6 +251,7 @@ main {
   margin-top: 4px;
 }
 
+/* ── 상세 카드 목록 ── */
 .detail-list {
   list-style: none;
   display: flex;
@@ -161,8 +284,11 @@ main {
 .detail-part {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #3a5bd9;
 }
+
+.detail-part--frontend { color: #16a34a; }
+.detail-part--backend  { color: #3a5bd9; }
+.detail-part--design   { color: #9333ea; }
 
 .detail-club {
   font-size: 0.875rem;
