@@ -187,6 +187,12 @@ export default function Week4Page() {
   const [lastRequest, setLastRequest] =
   useState(null);
 
+  const [sortType, setSortType] =
+  useState("recent");
+
+  const [search, setSearch] =
+  useState("")
+
   const [members, setMembers] =
   useState(initialMembers);
 
@@ -213,6 +219,27 @@ export default function Week4Page() {
     web :"",
     tell :"",
   }); 
+
+  const visibleMembers = [...members]
+  .filter((member) => {
+    const matchPart =
+    partFilter === "ALL" ||
+    member.role === partFilter;
+
+    const matchSearch =
+    member.name
+    .toLowerCase()
+    .includes(search.toLowerCase());
+
+    return matchPart && matchSearch;
+  })
+
+  .sort((a,b) => {
+    if (sortType === "name") {
+      return a.name.localeCompare(b.name);
+    }
+    return 0;
+  });
 
   useEffect(() => {
     const handleEsc = (e) => {
@@ -298,10 +325,6 @@ export default function Week4Page() {
     setShowForm(false);
   }
 
-  const visibleMembers = members.filter(
-    (member) =>
-      partFilter === "ALL" || member.role === partFilter
-  );
 
   return (
     <div className={styles["week-page"]}>
@@ -379,7 +402,7 @@ export default function Week4Page() {
             {fetchStatus === "error" && (
               <div>
                 <p className={styles["text"]}>
-                  불러오기 실패 :
+                  불러오기 실패 : 
                   {statusMessage}
                 </p>
 
@@ -392,23 +415,27 @@ export default function Week4Page() {
             )}
           </div>
           
-          {/* <div>
-            <span>정렬</span>
+          <div>
+            <span className={styles["text"]}>정렬</span>
             <select
-            value={cardArray}
-            className={styles["selectBtn"]}>
+            value={partFilter}
+            className={styles["btnIcon"]}
+            onChange={(e) =>
+              setSortType(e.target.value)
+            }>
               <option value="recent">최신추가순</option>
-              <option value="nameArray">이름순</option>
+              <option value="name">이름순</option>
             </select>
           </div>
-          <div>
-            <span>검색</span>
+          <div>   
+            <span className={styles["text"]}>검색</span>
             <input
+            type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className={styles["search"]}
+            className={styles["nametext"]}
             placeholder="이름으로 검색"/>
-          </div> */}
+          </div>
         </div>
       </section>
 
