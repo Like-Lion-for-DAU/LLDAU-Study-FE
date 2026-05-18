@@ -89,6 +89,104 @@ function DetailCard({
 
 export default function Week4Page() {
 
+  const fetchRandomUsers = async (count, type = "add") => {
+    try {
+      setLastRequest({
+        count,
+        type,
+      });
+      setFetchStatus("loading");
+      const response = await fetch(
+        `https://randomuser.me/api/?results=${count}&nat=us,gb,ca,au,nz`
+      );
+      if (!response.ok) {
+          throw new Error("API 요청 실패");
+      }
+      const data = await response.json();
+
+      const parts = ["Frontend", "Backend", "Design",];
+
+      const newMember = data.results.map(
+        (user, index) => ({
+          name: `${user.name.first} ${user.name.last}`,
+          role:
+          parts[
+            Math.floor(Math.random() * parts.length)
+          ],
+
+          intro: "랜덤 유저입니다.",
+
+          bio: [
+            `${user.location.country}에서 온 사용자`,
+          ],
+
+          skills: [
+            "React",
+            "JavaScript",
+            "CSS",
+          ],
+
+          tell: "잘 부탁드립니다!",
+
+          image: user.picture.large,
+
+          email: user.email,
+
+          phone: user.phone,
+
+          link: {
+            label: "Profile",
+            url: user.picture.large,
+          },
+        })
+      );
+
+      if (type === "refresh") {
+        const myCards = members.filter(
+          (member) => member.isMe
+        );
+
+        setMembers([
+          ...myCards,
+          ...newMember,
+        ]);
+      } else {
+        setMembers((prev) => [
+          ...newMember,
+          ...prev
+        ]);
+      }
+
+      setFetchStatus("success");
+
+      setTimeout(() => {
+        setFetchStatus("idle");
+      }, 2000);
+    }catch (error) {
+      setFetchStatus("error");
+
+      setStatusMessage(error.message);
+    }
+  };
+
+  const handleRetry = () => {
+    if (!lastRequest) return;
+
+    fetchRandomUsers(
+      lastRequest.count,
+      lastRequest.type
+    );
+  };
+
+  const [fetchStatus, setFetchStatus] =
+  useState("idle");
+
+  const [statusMessage, setStatusMessage] =
+  useState("");
+
+  const [lastRequest, setLastRequest] =
+  useState(null);
+
   const [members, setMembers] =
   useState(initialMembers);
 
@@ -227,24 +325,30 @@ export default function Week4Page() {
           className={styles["count"]}>
             총 {visibleMembers.length}명
           </span>
-          {/* <button
+          <button
           type="button"
           className={styles["btnIcon"]}
-          onClick={() => fetchnewData(1)}>
+          onClick={() => fetchRandomUsers(1, "add")}>
             랜덤 1명 추가
           </button>
           <button
           type="button"
           className={styles["btnIcon"]}
-          onClick={() => fetchnewData(5)}>
+          onClick={() => fetchRandomUsers(5, "add")}>
             랜덤 5명 추가
           </button>
           <button
           type="button"
-          className={styles["btonIcon"]}
-          onClick={() => doFetch({ type : "refresh" })}>
+          className={styles["btnIcon"]}
+          onClick={() =>
+            fetchRandomUsers(
+              members.filter((m) => !m.isMe)
+              .length,
+              "refresh"
+            )
+          }>
             전체 새로고침
-          </button> */}
+          </button>
           <div>
             <span className = {styles["text"]}>파트</span>
             <select
@@ -256,6 +360,36 @@ export default function Week4Page() {
               <option value="Backend">Backend</option>
               <option value="Design">Design</option>
             </select>
+          </div>
+
+          <div
+          className={styles["txet"]}>
+            {fetchStatus === "idle" && (
+              <p className={styles["text"]}>준비 완료</p>
+            )}
+
+            {fetchStatus === "loading" && (
+              <p className={styles["text"]}>불러오는 중...</p>
+            )}
+
+            {fetchStatus === "success" && (
+              <p className={styles["text"]}>완료!</p>
+            )}
+
+            {fetchStatus === "error" && (
+              <div>
+                <p className={styles["text"]}>
+                  불러오기 실패 :
+                  {statusMessage}
+                </p>
+
+                <button
+                className={styles["btnIcon"]}
+                onClick={handleRetry}>
+                  재시도
+                </button>
+              </div>
+            )}
           </div>
           
           {/* <div>
