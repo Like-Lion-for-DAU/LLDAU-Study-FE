@@ -13,6 +13,20 @@ const SKILLS_BY_PART = {
   Design:   ['Figma', 'Sketch', 'Adobe XD', 'Zeplin', 'Framer', 'Principle', 'Lottie', 'InVision'],
 };
 
+const ABOUT_PRESETS = [
+  '4주차 미션에서 fetch로 데이터를 불러와 상태(lions)를 업데이트하는 연습을 하고 있습니다. 비동기(async/await)로 받아온 데이터를 map으로 변환해 UI에 반영하는 흐름을 이해하려고 합니다. 목표는 "데이터가 바뀌면 UI를 다시 그리는 구조"를 자연스럽게 체득하는 것입니다.',
+  '외부 API를 활용해 동적으로 데이터를 불러오는 방식을 학습하고 있습니다. 비동기 처리와 상태 관리의 중요성을 배우면서, 더 나은 사용자 경험을 만드는 개발자가 되려고 노력하고 있습니다.',
+  'JavaScript의 비동기 처리 방식인 Promise와 async/await를 깊이 이해하고 싶습니다. fetch API를 통해 실시간 데이터를 화면에 반영하는 흐름을 익히는 중입니다.',
+  '데이터 중심의 UI 설계에 관심이 생겼습니다. 서버에서 받아온 정보를 가공해 화면에 뿌려주는 과정이 재미있고, 앞으로 더 다양한 API를 다뤄보고 싶습니다.',
+];
+
+const QUOTE_PRESETS = [
+  '데이터가 바뀌면 UI도 바뀐다!',
+  '비동기를 정복하면 웹이 살아 숨쉰다!',
+  '코드보다 흐름을 이해하자.',
+  '작은 기능 하나가 큰 경험을 만든다.',
+];
+
 const INTROS_BY_PART = {
   Frontend: ['구조적인 UI를 고민하는 개발자입니다.', '컴포넌트 단위 설계에 흥미가 있습니다.', '반응형 웹 구현을 연습 중입니다.'],
   Backend:  ['안정적인 서버 구조에 관심이 많습니다.', 'API 설계의 일관성을 중요하게 생각합니다.', '확장 가능한 아키텍처를 지향합니다.'],
@@ -27,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-cancel').addEventListener('click', closeForm);
   document.getElementById('add-form').addEventListener('submit', handleSubmit);
 
+  document.getElementById('btn-fill-random').addEventListener('click', fillFormWithRandom);
   document.getElementById('btn-add1').addEventListener('click', () => fetchAndAdd(1));
   document.getElementById('btn-add5').addEventListener('click', () => fetchAndAdd(5));
   document.getElementById('btn-refresh').addEventListener('click', fetchAndRefresh);
@@ -235,17 +250,51 @@ function handleSubmit(e) {
   closeForm();
 }
 
+async function fillFormWithRandom() {
+  const fillBtn = document.getElementById('btn-fill-random');
+  fillBtn.disabled = true;
+  fillBtn.textContent = '불러오는 중...';
+
+  try {
+    const res = await fetch('https://randomuser.me/api/?results=1&nat=us,gb,ca,au,nz');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const user = data.results[0];
+
+    const part    = PARTS[Math.floor(Math.random() * PARTS.length)];
+    const skills  = [...SKILLS_BY_PART[part]].sort(() => Math.random() - 0.5).slice(0, 3);
+    const country = user.location.country;
+    const city    = user.location.city;
+
+    document.getElementById('f-name').value    = `${user.name.first} ${user.name.last}`;
+    document.getElementById('f-part').value    = part;
+    document.getElementById('f-skills').value  = skills.join(', ');
+    document.getElementById('f-intro').value   = `${part} · ${country} ${city}에서 합류했어요!`;
+    document.getElementById('f-about').value   = ABOUT_PRESETS[Math.floor(Math.random() * ABOUT_PRESETS.length)];
+    document.getElementById('f-email').value   = user.email;
+    document.getElementById('f-phone').value   = user.phone;
+    document.getElementById('f-website').value = `https://example.com/${user.login.username}`;
+    document.getElementById('f-quote').value   = QUOTE_PRESETS[Math.floor(Math.random() * QUOTE_PRESETS.length)];
+  } catch (err) {
+    alert(`랜덤 값 채우기 실패: ${err.message}`);
+  } finally {
+    fillBtn.disabled    = false;
+    fillBtn.textContent = '랜덤 값 채우기';
+  }
+}
+
 function mapApiUser(user) {
   const part    = PARTS[Math.floor(Math.random() * PARTS.length)];
   const skills  = [...SKILLS_BY_PART[part]].sort(() => Math.random() - 0.5).slice(0, 3);
-  const intros  = INTROS_BY_PART[part];
-  const intro   = intros[Math.floor(Math.random() * intros.length)];
   const name    = `${user.name.first} ${user.name.last}`;
+  const country = user.location.country;
+  const city    = user.location.city;
+  const intro   = `${part} · ${country} ${city}에서 합류했어요!`;
 
   return {
     id:      Date.now() + Math.random() * 1000,
     name, part, intro,
-    about:   `안녕하세요, ${name}입니다. ${intro}`,
+    about:   `안녕하세요, ${name}입니다. ${country} ${city} 출신으로 ${part} 분야에서 활동 중입니다.`,
     skills,
     badge:   skills[0],
     email:   user.email,

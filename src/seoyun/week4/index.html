@@ -10,14 +10,12 @@
 
   <main>
 
-    <!-- 컨트롤 1행: 명단 조작 -->
     <div class="controls">
       <button id="btn-toggle-form" class="btn">아기 사자 추가</button>
       <button id="btn-delete-last" class="btn">마지막 아기 사자 삭제</button>
       <span id="total-count" class="total-count">총 0명</span>
     </div>
 
-    <!-- 컨트롤 2행: 외부 데이터 불러오기 -->
     <div class="controls">
       <button id="btn-add1" class="btn btn-fetch">랜덤 1명 추가</button>
       <button id="btn-add5" class="btn btn-fetch">랜덤 5명 추가</button>
@@ -26,7 +24,6 @@
       <button id="btn-retry" class="btn btn-retry" hidden>재시도</button>
     </div>
 
-    <!-- 보기 옵션: 필터 / 정렬 / 검색 -->
     <div class="view-options">
       <label class="view-option">
         <span>파트</span>
@@ -107,6 +104,7 @@
 
         </div>
         <div class="form-actions">
+          <button type="button" id="btn-fill-random" class="btn">랜덤 값 채우기</button>
           <button type="submit" class="btn btn-primary">추가하기</button>
           <button type="button" id="btn-cancel" class="btn">취소</button>
         </div>
