@@ -82,7 +82,7 @@ function DetailCard({
 
       <section className={styles["section"]}>
         <h4>한 마디</h4>
-        <p>{member.tell}</p>
+        <p>{member.motto}</p>
       </section>
     </div>
   );
@@ -176,7 +176,7 @@ export default function Week3Page() {
       skills : memberInput.skills
       .split(",")
       .map((skill) => skill.trim()),
-      tell: memberInput.tell,
+      motto: memberInput.tell,
       contact: {
         email: memberInput.email,
         phone: memberInput.phone,
@@ -247,6 +247,7 @@ export default function Week3Page() {
               <div className={styles["controlInner"]}>
                 <label htmlFor="name" className={styles["text"]}>이름</label>
                 <input id="name"
+                value={memberInput.name}
                 type="text"
                 className={styles["form"]}
                 onChange={(event) => handleInputChange("name", event)}
