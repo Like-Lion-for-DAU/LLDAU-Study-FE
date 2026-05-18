@@ -107,7 +107,7 @@ export default function Week4Page() {
       )
     .filter((member) => sortPart === "all" || member.part === sortPart)
     .sort((a, b) => {
-      if (sortType === "newest") return b.id - a.id;
+      if (sortType === "newest") return a.id - b.id;
       if (sortType === "nameAsc") return a.name.localeCompare(b.name);
       if (sortType === "nameDesc") return b.name.localeCompare(a.name);
       return 0;

@@ -243,7 +243,7 @@
   background-color: #fff;
   border-radius: 10px;
   width: 90%;
-  height: 620px;
+  height: 640px;
   max-width: 1000px;
   overflow-y: auto;
   box-shadow: 0 0 20px black;
@@ -270,6 +270,7 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
   margin-right: 2px;
+  margin-top: 10px;
 }
 
 .pushLionAddButton:hover:not(:disabled) {
