@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "./Page.module.css";
 import { members as initialMembers } from "./members.js";
 
 // 요약 카드
-function SummaryCard({ member }) {
+function SummaryCard({ member, onClick }) { 
   return (
-    <div className={styles.card}>
+    <div
+      className={`${styles.card} ${member.isMe ? styles.myCard : ""}`}
+      onClick={onClick}
+      style={{ cursor: "pointer" }}
+    >
       <div className={styles.profileimg}>
         {member.image && <img src={member.image} alt={member.name} />}
         <span className={styles.badge}>{member.badge || "New"}</span>
@@ -18,9 +22,12 @@ function SummaryCard({ member }) {
 }
 
 // 상세 카드
-function DetailCard({ member }) {
+function DetailCard({ member, detailRef, focused }) { 
   return (
-    <div className={styles.detail}>
+    <div
+      className={`${styles.detail} ${focused ? styles.focused : ""}`}
+      ref={detailRef}
+    >
       <div className={styles.main}>
         <p className={styles.name}>{member.name}</p>
         <p className={styles.end}>{member.role}</p>
@@ -35,9 +42,12 @@ function DetailCard({ member }) {
         <ul>
           <li>email : {member.email}</li>
           <li>phone : {member.phone}</li>
-          {member.website && (
+          {member.website && member.website.trim() && (
             <li>
-              website : <a href={member.website}>{member.website}</a>
+              website :{" "}
+              <a href={member.website} target="_blank" rel="noopener noreferrer">
+                {member.website}
+              </a>
             </li>
           )}
         </ul>
@@ -61,14 +71,33 @@ function DetailCard({ member }) {
 export default function Week3Page() {
   const [membersList, setMembersList] = useState(initialMembers || []);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [partFilter, setPartFilter] = useState("ALL"); 
+  const [focusedName, setFocusedName] = useState(null); 
+  const detailRefs = useRef({}); 
+  const visibleMembers = membersList.filter(
+    (m) => partFilter === "ALL" || m.role === partFilter
+  );
+
+  useEffect(() => {
+    if (!isFormOpen) return;
+    const handleEsc = (e) => {
+      if (e.key === "Escape") setIsFormOpen(false);
+    };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc); // cleanup
+  }, [isFormOpen]);
+
+  const handleCardClick = (name) => {
+    detailRefs.current[name]?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setFocusedName(name);
+    setTimeout(() => setFocusedName(null), 900);
+  };
 
   const toggleForm = () => setIsFormOpen(!isFormOpen);
 
   const deleteLast = () => {
     if (membersList.length === 0) return;
-    const newList = [...membersList];
-    newList.pop();
-    setMembersList(newList);
+    setMembersList((prev) => prev.slice(0, -1));
   };
 
   const handleSubmit = (e) => {
@@ -77,11 +106,14 @@ export default function Week3Page() {
     const skillsRaw = formData.get("skills").split(",");
     const skills = skillsRaw.map((s) => s.trim()).filter((s) => s !== "");
 
+    const nextId = Date.now(); 
+
     const newMember = {
+      id: nextId, 
       name: formData.get("name").trim(),
       role: formData.get("part"),
       intro: formData.get("intro").trim(),
-      badge: skills[0] || "",
+      badge: skills[0] || "New",
       club: formData.get("club").trim(),
       bio: formData.get("bio").trim(),
       email: formData.get("email").trim(),
@@ -89,6 +121,8 @@ export default function Week3Page() {
       website: formData.get("website").trim(),
       skills: skills,
       motto: formData.get("motto").trim(),
+      image: `https://picsum.photos/seed/${nextId}/200/200`,
+      isMe: false,
     };
 
     if (!newMember.name || !newMember.role) {
@@ -96,7 +130,7 @@ export default function Week3Page() {
       return;
     }
 
-    setMembersList([...membersList, newMember]);
+    setMembersList((prev) => [...prev, newMember]);
     setIsFormOpen(false);
     e.target.reset();
   };
@@ -120,9 +154,9 @@ export default function Week3Page() {
       </div>
 
       {isFormOpen && (
-          <form className={styles.formSection} style={{ display: "block" }} onSubmit={handleSubmit}>
-            <div className={styles.formInner}>
-              <h2 className={styles.formTitle}>새 아기사자 추가</h2>
+        <form className={styles.formSection} onSubmit={handleSubmit}>
+          <div className={styles.formInner}>
+            <h2 className={styles.formTitle}>새 아기사자 추가</h2>
             <div className={styles.formGrid}>
               <div className={styles.formGroup}>
                 <label>이름 <span className={styles.required}>*</span></label>
@@ -192,22 +226,31 @@ export default function Week3Page() {
                 </button>
               </div>
             </div>
-            </div>
-          </form>
+          </div>
+        </form>
       )}
 
       <section className={styles.cardSection}>
-        <div className={styles.cardIntro}>
-          {membersList.map((member, index) => (
-            <SummaryCard key={index} member={member} />
-          ))}
-        </div>
+          <div className={styles.cardIntro}>
+            {visibleMembers.map((member) => (
+              <SummaryCard
+                key={member.id || member.name}
+                member={member}
+                onClick={() => handleCardClick(member.name)} 
+              />
+            ))}
+          </div>
       </section>
 
       <section className={styles.cardSection}>
         <div className={styles.cardDetail}>
-          {membersList.map((member, index) => (
-            <DetailCard key={index} member={member} />
+          {visibleMembers.map((member) => (
+            <DetailCard
+              key={member.id || member.name}
+              member={member}
+              detailRef={(el) => { if (el) detailRefs.current[member.name] = el; }}
+              focused={focusedName === member.name} 
+            />
           ))}
         </div>
       </section>
