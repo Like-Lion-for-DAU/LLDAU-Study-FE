@@ -38,7 +38,6 @@ function toggleForm() {
 function closeForm() {
   document.getElementById('form-wrapper').hidden = true;
   document.getElementById('add-form').reset();
-  clearErrors();
 }
 
 function deleteLast() {
@@ -68,20 +67,6 @@ function handleSubmit(e) {
   const website = document.getElementById('f-website').value.trim();
   const quote   = document.getElementById('f-quote').value.trim();
 
-  clearErrors();
-
-  let valid = true;
-  if (!name)   { showError('err-name',   '이름을 입력하세요.');       valid = false; }
-  if (!part)   { showError('err-part',   '파트를 선택하세요.');        valid = false; }
-  if (!skills) { showError('err-skills', '관심 기술을 입력하세요.');   valid = false; }
-  if (!intro)  { showError('err-intro',  '한 줄 소개를 입력하세요.');  valid = false; }
-  if (!about)  { showError('err-about',  '자기소개를 입력하세요.');    valid = false; }
-  if (!email)  { showError('err-email',  '이메일을 입력하세요.');      valid = false; }
-  if (!phone)  { showError('err-phone',  '전화번호를 입력하세요.');    valid = false; }
-  if (!quote)  { showError('err-quote',  '한 마디를 입력하세요.');     valid = false; }
-
-  if (!valid) return;
-
   const skillArr = skills.split(',').map(s => s.trim()).filter(Boolean);
 
   const member = {
@@ -100,14 +85,6 @@ function handleSubmit(e) {
   appendDetailCard(member);
   updateCount();
   closeForm();
-}
-
-function showError(id, msg) {
-  document.getElementById(id).textContent = msg;
-}
-
-function clearErrors() {
-  document.querySelectorAll('.error-msg').forEach(el => (el.textContent = ''));
 }
 
 function appendSummaryCard(member) {

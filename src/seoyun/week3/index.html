@@ -9,75 +9,64 @@
 <body>
 
   <main>
-
-    <!-- 컨트롤 영역 -->
     <div class="controls">
       <button id="btn-toggle-form" class="btn">아기 사자 추가</button>
       <button id="btn-delete-last" class="btn">마지막 아기 사자 삭제</button>
       <span id="total-count" class="total-count">총 0명</span>
     </div>
 
-    <!-- 추가 폼 (초기 숨김) -->
     <div id="form-wrapper" class="form-wrapper" hidden>
-      <form id="add-form" class="add-form" novalidate>
+      <form id="add-form" class="add-form">
         <div class="form-grid">
 
           <div class="form-group">
             <label for="f-name">이름</label>
-            <input type="text" id="f-name" placeholder="이름을 입력하세요" />
-            <span class="error-msg" id="err-name"></span>
+            <input type="text" id="f-name" placeholder="예: 홍아기사자" required />
           </div>
 
           <div class="form-group">
             <label for="f-part">파트</label>
-            <select id="f-part">
+            <select id="f-part" required>
               <option value="">선택하세요</option>
               <option value="Frontend">Frontend</option>
               <option value="Backend">Backend</option>
               <option value="Design">Design</option>
             </select>
-            <span class="error-msg" id="err-part"></span>
           </div>
 
           <div class="form-group form-full">
             <label for="f-skills">관심 기술 (쉼표로 구분)</label>
-            <input type="text" id="f-skills" placeholder="React, TypeScript, ..." />
-            <span class="error-msg" id="err-skills"></span>
+            <input type="text" id="f-skills" placeholder="예: JavaScript, React, HTML/CSS" required />
           </div>
 
           <div class="form-group form-full">
-            <label for="f-intro">한 줄 소개</label>
-            <input type="text" id="f-intro" placeholder="요약 카드에 표시될 한 줄 소개" />
-            <span class="error-msg" id="err-intro"></span>
+            <label for="f-intro">한 줄 소개 (요약 카드)</label>
+            <input type="text" id="f-intro" placeholder="예: 3주차 DOM 조작 연습 중!" required />
           </div>
 
           <div class="form-group form-full">
-            <label for="f-about">자기소개</label>
-            <textarea id="f-about" rows="3" placeholder="상세 카드에 표시될 자기소개를 입력하세요"></textarea>
-            <span class="error-msg" id="err-about"></span>
+            <label for="f-about">자기소개 (상세 카드)</label>
+            <textarea id="f-about" rows="3" placeholder="자기소개를 자유롭게 작성하세요" required></textarea>
           </div>
 
           <div class="form-group">
             <label for="f-email">이메일</label>
-            <input type="email" id="f-email" placeholder="email@example.com" />
-            <span class="error-msg" id="err-email"></span>
+            <input type="email" id="f-email" placeholder="예: lion@example.com" required />
           </div>
 
           <div class="form-group">
             <label for="f-phone">전화번호</label>
-            <input type="tel" id="f-phone" placeholder="010-0000-0000" />
-            <span class="error-msg" id="err-phone"></span>
+            <input type="tel" id="f-phone" placeholder="예: 010-0000-0000" required />
           </div>
 
           <div class="form-group form-full">
             <label for="f-website">웹사이트</label>
-            <input type="text" id="f-website" placeholder="https://..." />
+            <input type="text" id="f-website" placeholder="예: https://github.com/username" />
           </div>
 
           <div class="form-group form-full">
             <label for="f-quote">한 마디</label>
-            <input type="text" id="f-quote" placeholder="각오 한 마디를 입력하세요" />
-            <span class="error-msg" id="err-quote"></span>
+            <input type="text" id="f-quote" placeholder="예: 열심히 하겠습니다!" required />
           </div>
 
         </div>
@@ -92,7 +81,6 @@
     <section class="summary-section">
       <ul class="card-grid" id="card-grid">
 
-        <!-- 내 카드 (강조) -->
         <li class="summary-card summary-card--mine">
           <div class="card-image-wrap">
             <img
