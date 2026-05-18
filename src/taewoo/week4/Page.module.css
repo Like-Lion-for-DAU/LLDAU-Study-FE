@@ -277,6 +277,21 @@
   color: black;
 }
 
+.pushRandomButton{
+  position: absolute;
+  right: 70px;
+  bottom: 3%;
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-right: 55px;
+}
+
 /* 입력 검사 스타일 */
 .pushLionAddButton:disabled {
   background-color: #e0e0e0;
@@ -421,6 +436,11 @@
   box-shadow: 3px 3px 4px gainsboro;
 }
 
+.randomOneButton:disabled {
+  background-color: gainsboro;
+  cursor: not-allowed;
+}
+
 .randomFiveButton {
   background-color: white;
   color: black;
@@ -431,6 +451,11 @@
   cursor: pointer;
   margin-right: 2px;
   box-shadow: 3px 3px 4px gainsboro;
+}
+
+.randomFiveButton:disabled {
+  background-color: gainsboro;
+  cursor: not-allowed;
 }
 
 .refrashButton {
@@ -444,9 +469,44 @@
   cursor: pointer;
 }
 
+.refrashButton:disabled {
+  background-color: gainsboro;
+  cursor: not-allowed;
+}
+
 .refrashState {
   font-size:medium;
   color: #aaa;
   margin-left: 5px;
   padding-top: 0.4%;
+}
+
+.sortLabelRow{
+  display: flex;
+}
+
+.sortSelect {
+  font-size: 0.8rem;
+  margin-left: 8px;
+  padding: 4px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+}
+
+.firstSortLabel {
+  color: gray;
+}
+
+.sortLabel{
+  margin-left: 15px;
+  color: gray;
+}
+
+.noResult {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 1.5rem;
+  color: #aaa;
+  margin-top: 50px;
 }

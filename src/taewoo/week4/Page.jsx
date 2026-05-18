@@ -1,15 +1,27 @@
 import styles from "./Page.module.css";
-import { members as initialMembers, usePageScrollDown, useFormData, randomResult, randomNewMember } from "./script.js";
+import { members as initialMembers, pushRandomMembers, usePageScrollDown, useFormData, randomResult, randomNewMember} from "./script.js";
 import { useState, useEffect } from "react";
 
 export default function Week4Page() {
   const [memberList, setMemberList] = useState(initialMembers);
   const [selected, setSelected] = useState(null);
   const [showAdd, setShowAdd] = useState(false);
-  const { formData, handleInput, isFormValid, warn, warnFormat, reset } = useFormData();
-  
-    usePageScrollDown(selected, () => setSelected(null));
-    usePageScrollDown(showAdd, () => setShowAdd(false));
+  const { formData, setFormData, handleInput, isFormValid, warn, warnFormat, reset } = useFormData();
+  const [fetching, setFetching] = useState("ready");
+  const [sortPart, setSortPart] = useState("all");
+  const [sortType, setSortType] = useState("newest");
+  const [sortSearch, setSortSearch] = useState("");
+
+
+  usePageScrollDown(selected, () => setSelected(null));
+  usePageScrollDown(showAdd, () => setShowAdd(false));
+
+  const fetchMessage = {
+    ready: "준비 완료!",
+    loading: "요청 중...",
+    success: "작업을 완료하였습니다!",
+    error: "실패하였습니다. 잠시 후 다시 시도해주세요.",
+  }
 
   const handleAddSubmit = (e) => {
     e.preventDefault();
@@ -37,15 +49,74 @@ export default function Week4Page() {
   }
 
   const handleFetchRandom = async () => {
-    const user = await randomResult(1);
-    const newMember = randomNewMember(user[0]);
-    setMemberList((prev) => [...prev, newMember]);
-  }
+    setFetching("loading");
+    try {
+      const user = await randomResult(1);
+      const newMember = randomNewMember(user[0]);
+      setMemberList((prev) => [...prev, newMember]);
+      setFetching("success");
+    } catch{
+      setFetching("error");
+    } finally {
+      setTimeout(() => setFetching("ready"), 2000);
+    }
+  };
+
   const handleFetchFiveRandom = async () => {
-    const users = await randomResult(5);
-    const newMembers = users.map(randomNewMember);
-    setMemberList((prev) => [...prev, ...newMembers]);
+    setFetching("loading");
+    try {
+      const users = await randomResult(5);
+      const newMembers = users.map(randomNewMember);
+      setMemberList((prev) => [...prev, ...newMembers]);
+      setFetching("success");
+    } catch {
+      setFetching("error");
+    } finally {
+      setTimeout(() => setFetching("ready"), 2000);
+    }
   }
+
+  const handleRefresh = async () => {
+    setFetching("loading");
+    try {
+      const myProfile = memberList.find((member) => member.name === "백태우");
+      const lionCount = memberList.length-1;
+      const users = await randomResult(lionCount);
+      const newMembers = users.map(randomNewMember);
+      setMemberList([myProfile, ...newMembers]);
+      setFetching("success");
+    } catch {
+      setFetching("error");
+    } finally {
+      setTimeout(() => setFetching("ready"), 2000);
+    }
+  }
+
+  const displayList = memberList
+    .filter((member) => sortSearch === ""
+      || (member.name?.includes(sortSearch)
+      || member.part?.includes(sortSearch)
+      || member.intro?.includes(sortSearch)
+      || member.club?.includes(sortSearch)
+      || member.introduce?.some((text) => text.includes(sortSearch))
+      || member.contact?.email.includes(sortSearch)
+      || member.contact?.phone.includes(sortSearch)
+      || member.contact?.website?.label.includes(sortSearch)
+      || member.skills?.some((skill) => skill.includes(sortSearch))
+      || member.last?.includes(sortSearch))
+      )
+    .filter((member) => sortPart === "all" || member.part === sortPart)
+    .sort((a, b) => {
+      if (sortType === "newest") return b.id - a.id;
+      if (sortType === "nameAsc") return a.name.localeCompare(b.name);
+      if (sortType === "nameDesc") return b.name.localeCompare(a.name);
+      return 0;
+    });
+
+  const handlePushRandom = async () => {
+    const randomData = await pushRandomMembers();
+    setFormData(randomData);
+  };
 
   return (
     <div className={styles["week-page"]}>
@@ -66,29 +137,59 @@ export default function Week4Page() {
 
       <div className={styles["randomButtonsRow"]}>
         <button className={styles["randomOneButton"]}
+        disabled={fetching === "loading" || fetching === "error"}
         onClick={handleFetchRandom}>
         랜덤 1명 추가</button>
         <button className={styles["randomFiveButton"]}
+        disabled={fetching === "loading" || fetching === "error"}
         onClick={handleFetchFiveRandom}>랜덤 5명 추가</button>
         <button className={styles["refrashButton"]}
-        onClick={()=>{}}>전체 새로고침</button>
+        disabled={fetching === "loading" || fetching === "error"}
+        onClick={handleRefresh}>전체 새로고침</button>
         <span className={styles["refrashState"]}>
-          준비 완료
+          {fetchMessage[fetching]}
         </span>
       </div>
 
+      <div className={styles["sortLabelRow"]}>
+        <label className={styles["firstSortLabel"]}>파트</label>
+        <select name="sortPart" id="sortPart" className={styles["sortSelect"]}
+        value={sortPart} onChange={(e) => setSortPart(e.target.value)}>
+          <option value="all">전체</option>
+          <option value="Frontend">Frontend</option>
+          <option value="Backend">Backend</option>
+          <option value="PM">PM</option>
+          <option value="Design">Design</option>
+        </select>
+        <label className={styles["sortLabel"]}>정렬</label>
+        <select name="sortType" id="sortType" className={styles["sortSelect"]}
+        value={sortType} onChange={(e) => setSortType(e.target.value)}>
+          <option value="newest">최신 업데이트순</option>
+          <option value="nameAsc">이름 오름차순</option>
+          <option value="nameDesc">이름 내림차순</option>
+        </select>
+        <label className={styles["sortLabel"]}>검색</label>
+        <input type="text" id="searchInput" 
+        placeholder="이름으로 검색" className={styles["sortSelect"]}
+        value={sortSearch} onChange={(e) => setSortSearch(e.target.value)}/>
+      </div>
+
       <div className={styles["gridContainer"]}>
-        {memberList.map((member) => (
-          <div onClick={() => setSelected(member)} className={styles["mainProfile"]}>
-            <p className={styles["badge"]}>
-              <span className={styles["badgeSpace"]}>{member.badge}</span>
-            </p>
-            <img className={styles["profileImage"]} src={member.image} />
-            <h2 className={styles["name"]}>{member.name}</h2>
-            <b className={styles["blueRule"]}>{member.part}</b>
-            <p className={styles["lineIntroduce"]}>{member.intro}</p>
-          </div>
-        ))}
+        {displayList.length === 0 ? (
+          <p className={styles["noResult"]}>조건에 맞는 아기 사자가 없습니다.</p>
+        ) : (
+          displayList.map((member) => (
+            <div onClick={() => setSelected(member)} className={styles["mainProfile"]}>
+              <p className={styles["badge"]}>
+                <span className={styles["badgeSpace"]}>{member.badge}</span>
+              </p>
+              <img className={styles["profileImage"]} src={member.image} />
+              <h2 className={styles["name"]}>{member.name}</h2>
+              <b className={styles["blueRule"]}>{member.part}</b>
+              <p className={styles["lineIntroduce"]}>{member.intro}</p>
+            </div>
+            ))
+          )}
       </div>
 
       {/* 아기 사자 추가 모달 */}
@@ -114,6 +215,7 @@ export default function Week4Page() {
                     <option value="Frontend">Frontend</option>
                     <option value="Backend">Backend</option>
                     <option value="PM">PM</option>
+                    <option value="Design">Design</option>
                   </select>
                 </div>
               </div>
@@ -184,6 +286,8 @@ export default function Week4Page() {
                   {warn("last") && <span className={styles["inputWarning"]}><b>!</b> 입력란이 비어있습니다 <b>!</b></span>}
               </div>
               {/*모든 입력란이 채워져야 활성화 */}
+              <button type="button" className={styles["pushRandomButton"]}
+              onClick={handlePushRandom}>랜덤 값 채우기</button>
               <button type="submit" className={styles["pushLionAddButton"]}
               disabled={!isFormValid}>추가</button>
               <button type="button" className={styles["pushLionCancelButton"]}

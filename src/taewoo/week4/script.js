@@ -4,6 +4,17 @@ import { useState, useEffect } from "react";
 
 const emptyForm = { name: "", part: "Frontend", skills: "", introduce: "", introduceDetail: "", email: "", phone: "", website: "", last: "" };
 const randomParts = ["Frontend", "Backend", "PM", "Design"];
+const randomSkills = ["HTML / CSS", "JavaScript", "React", "Node.js", "Python", "Django", "Flask", "TypeScript", "GraphQL", "Docker"];
+const randomLast = [
+  "열심히 배우고 있습니다!",
+  "프론트엔드 개발자로 성장하고 싶습니다.",
+  "팀원들과 함께 멋진 프로젝트를 만들고 싶습니다.",
+]
+const randomIntroduce = [
+  "안녕하세요! 새로운 멤버입니다. 잘 부탁드립니다!",
+  "프론트엔드 개발에 관심이 많습니다. 열심히 배우겠습니다!",
+  "멋쟁이사자처럼에서 좋은 경험 쌓고 싶습니다.",
+]
 
 const validateEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 const validateWebsite = (v) => /^https?:\/\/.+\..+/.test(v);
@@ -31,29 +42,7 @@ export function useFormData() {
 
   const reset = () => { setFormData(emptyForm); setTouched({}); };
 
-  return { formData, handleInput, isFormValid, warn, warnFormat, reset };
-}
-
-export async function randomResult(number) {
-  const fetchURL = `https://randomuser.me/api/?results=${number}&nat=us,gb,ca,au,nz`;
-  const res = await fetch(fetchURL);
-  const data = await res.json();
-  return data.results;
-}
-
-export function randomNewMember(user) {
-  const randomPart = randomParts[Math.floor(Math.random() * randomParts.length)];
-  return {
-    name: `${user.name.first} ${user.name.last}`,
-    part: randomPart,
-    intro: `${randomPart} · ${user.location.country} ${user.location.state}에서 합류했어요!`,
-    badge: "Random User",
-    image: user.picture.large,
-    introduce: [`${user.name.first} ${user.name.last}입니다.`, `저는 ${randomPart}입니다.`, `현재 ${user.location.country} ${user.location.state}에 살고 있습니다.`],
-    contact: { email: user.email, phone: user.phone, website: { label: "Random User Profile", url: user.picture.large } },
-    skills: ["Random Skill 1", "Random Skill 2", "Random Skill 3"],
-    last: "랜덤하게 합류한 새로운 멤버입니다!",
-  };
+  return { formData, setFormData, handleInput, isFormValid, warn, warnFormat, reset };
 }
 
 export const members = [
@@ -181,4 +170,51 @@ export function usePageScrollDown(selected, setSelected) {
       document.documentElement.style.overflow = original;
     };
   }, [selected]);
+}
+
+
+
+export async function randomResult(number) {
+  const fetchURL = `https://randomuser.me/api/?results=${number}&nat=us,gb,ca,au,nz`;
+  const res = await fetch(fetchURL);
+  const data = await res.json();
+  return data.results;
+}
+
+export function randomNewMember(user) {
+  const randomPart = randomParts[Math.floor(Math.random() * randomParts.length)];
+  const skillspoint = parseInt(Math.random() * (randomSkills.length - 3)) + 1;
+  return {
+    name: `${user.name.first} ${user.name.last}`,
+    part: randomPart,
+    intro: `${randomPart} · ${user.location.country} ${user.location.state}에서 합류했어요!`,
+    club: "랜덤 유저 클럽",
+    badge: randomSkills[skillspoint],
+    image: user.picture.large,
+    introduce: [`${user.name.first} ${user.name.last}입니다.`, `저는 ${randomPart}입니다.`, `현재 ${user.location.country} ${user.location.state}에 살고 있습니다.`],
+    contact: { email: user.email, phone: user.phone, website: { label: "Random User Profile", url: user.picture.large } },
+    skills: randomSkills.slice(skillspoint, skillspoint + 3),
+    last: randomLast[parseInt(Math.random() * randomLast.length)],
+  };
+}
+
+export async function pushRandomMembers() {
+  const users = await randomResult(1);
+  const user = users[0];
+  const randomPart = randomParts[parseInt(Math.random() * randomParts.length)];
+  const skillspoint = parseInt(Math.random() * (randomSkills.length - 3));
+  const selectedSkills = randomSkills.slice(skillspoint, skillspoint + 3);
+  const randomPhone = `010-${String(parseInt(Math.random() * 9000) + 1000)}-${String(parseInt(Math.random() * 9000) + 1000)}`;
+
+  return {
+    name: `${user.name.first} ${user.name.last}`,
+    part: randomPart,
+    skills: selectedSkills.join(", "),
+    introduce: randomIntroduce[parseInt(Math.random() * randomIntroduce.length)],
+    introduceDetail: `${user.location.city}에서 왔습니다. ${randomPart} 분야에 관심이 많습니다.`,
+    email: user.email,
+    phone: randomPhone,
+    website: `https://randomuser.me`,
+    last: randomLast[parseInt(Math.random() * randomLast.length)],
+  };
 }
