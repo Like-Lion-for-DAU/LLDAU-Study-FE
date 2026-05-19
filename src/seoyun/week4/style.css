@@ -1,26 +1,31 @@
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-  font-family: "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
   background-color: #f0f2f5;
   color: #1a1a2e;
   line-height: 1.6;
 }
 
-.container *,
-.container *::before,
-.container *::after {
-  box-sizing: border-box;
-}
-
-.container a {
+a {
   color: #3a5bd9;
   text-decoration: none;
 }
 
-.container a:hover {
+a:hover {
   text-decoration: underline;
+}
+
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
 }
 
 /* ── 컨트롤 영역 ── */
@@ -52,7 +57,7 @@
   font-family: inherit;
 }
 
-.btn:hover:not(:disabled) {
+.btn:hover {
   background-color: #1a1a2e;
   color: #fff;
 }
@@ -62,13 +67,18 @@
   cursor: not-allowed;
 }
 
+.btn:disabled:hover {
+  background-color: #fff;
+  color: #1a1a2e;
+}
+
 .btn-primary {
   background-color: #3a5bd9;
   color: #fff;
   border-color: #3a5bd9;
 }
 
-.btn-primary:hover:not(:disabled) {
+.btn-primary:hover {
   background-color: #2a49c7;
   border-color: #2a49c7;
   color: #fff;
@@ -92,15 +102,9 @@
   color: #555;
 }
 
-.fetch-status[data-state="loading"] {
-  color: #3a5bd9;
-}
-.fetch-status[data-state="success"] {
-  color: #16a34a;
-}
-.fetch-status[data-state="error"] {
-  color: #dc2626;
-}
+.fetch-status[data-state="loading"] { color: #3a5bd9; }
+.fetch-status[data-state="success"] { color: #16a34a; }
+.fetch-status[data-state="error"]   { color: #dc2626; }
 
 /* ── 보기 옵션 ── */
 .view-options {
@@ -126,8 +130,7 @@
 }
 
 .view-option select,
-.view-option input[type="text"],
-.view-option input[type="search"] {
+.view-option input[type="text"] {
   padding: 6px 12px;
   border: 1.5px solid #d1d5db;
   border-radius: 8px;
@@ -139,8 +142,7 @@
 }
 
 .view-option select:focus,
-.view-option input[type="text"]:focus,
-.view-option input[type="search"]:focus {
+.view-option input[type="text"]:focus {
   outline: none;
   border-color: #3a5bd9;
 }
@@ -241,8 +243,6 @@
 /* ── 요약 카드 그리드 ── */
 .card-grid {
   list-style: none;
-  padding: 0;
-  margin: 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
@@ -313,36 +313,26 @@
   font-size: 1.1rem;
   font-weight: 700;
   color: #1a1a2e;
-  margin: 0;
 }
 
 .card-part {
   font-size: 0.875rem;
   font-weight: 600;
-  margin: 0;
 }
 
-.card-part--frontend {
-  color: #16a34a;
-}
-.card-part--backend {
-  color: #3a5bd9;
-}
-.card-part--design {
-  color: #9333ea;
-}
+.card-part--frontend  { color: #16a34a; }
+.card-part--backend   { color: #3a5bd9; }
+.card-part--design    { color: #9333ea; }
 
 .card-intro {
   font-size: 0.875rem;
   color: #555;
-  margin: 4px 0 0;
+  margin-top: 4px;
 }
 
 /* ── 상세 카드 목록 ── */
 .detail-list {
   list-style: none;
-  padding: 0;
-  margin: 0;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -368,31 +358,22 @@
   font-size: 1.5rem;
   font-weight: 700;
   color: #1a1a2e;
-  margin: 0;
 }
 
 .detail-part {
   font-size: 0.9rem;
   font-weight: 600;
-  margin: 0;
 }
 
-.detail-part--frontend {
-  color: #16a34a;
-}
-.detail-part--backend {
-  color: #3a5bd9;
-}
-.detail-part--design {
-  color: #9333ea;
-}
+.detail-part--frontend { color: #16a34a; }
+.detail-part--backend  { color: #3a5bd9; }
+.detail-part--design   { color: #9333ea; }
 
 .detail-club {
   font-size: 0.875rem;
   color: #888;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin: 0;
 }
 
 .detail-section-inner {
@@ -407,20 +388,16 @@
   color: #1a1a2e;
   border-bottom: 1px solid #e5e7eb;
   padding-bottom: 0.25rem;
-  margin: 0;
 }
 
 .detail-section-inner p {
   font-size: 0.9rem;
   color: #444;
   line-height: 1.75;
-  margin: 0;
 }
 
 .contact-list {
   list-style: none;
-  padding: 0;
-  margin: 0;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -434,7 +411,6 @@
 .skill-list {
   list-style: disc;
   padding-left: 1.25rem;
-  margin: 0;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -445,15 +421,10 @@
   color: #444;
 }
 
-.container blockquote {
+blockquote {
   font-size: 0.9rem;
   color: #555;
   font-style: italic;
   border-left: 3px solid #3a5bd9;
   padding-left: 1rem;
-  margin: 0;
-}
-
-.container address {
-  font-style: normal;
 }
