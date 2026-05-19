@@ -1,6 +1,13 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./Page.module.css";
-import { initialMembers, PARTS, SKILLS_BY_PART, DEFAULT_IMAGES } from "./lions";
+import {
+  initialMembers,
+  PARTS,
+  SKILLS_BY_PART,
+  ABOUT_PRESETS,
+  QUOTE_PRESETS,
+  DEFAULT_IMAGES,
+} from "./lions";
 
 const TIMEOUT_MS = 5000;
 
@@ -62,18 +69,87 @@ export default function Week4Page() {
   const [searchName, setSearchName] = useState("");
   const [fetchStatus, setFetchStatus] = useState("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isFilling, setIsFilling] = useState(false);
 
   const nextIdRef = useRef(Math.max(...initialMembers.map((m) => m.id)) + 1);
   const latestRequestIdRef = useRef(0);
   const latestControllerRef = useRef(null);
   const lastFetchActionRef = useRef(null);
   const statusResetTimerRef = useRef(null);
+  const nameInputRef = useRef(null);
+  const addBtnRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (statusResetTimerRef.current) clearTimeout(statusResetTimerRef.current);
+      if (latestControllerRef.current) latestControllerRef.current.abort();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (showForm) nameInputRef.current?.focus();
+  }, [showForm]);
+
+  useEffect(() => {
+    if (!showForm) return;
+    const onEsc = (e) => {
+      if (e.key === "Escape") {
+        setShowForm(false);
+        setFormData(EMPTY_FORM);
+        addBtnRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", onEsc);
+    return () => window.removeEventListener("keydown", onEsc);
+  }, [showForm]);
 
   const handleToggleForm = () => setShowForm((prev) => !prev);
 
   const handleCloseForm = () => {
     setShowForm(false);
     setFormData(EMPTY_FORM);
+    addBtnRef.current?.focus();
+  };
+
+  const handleFillRandom = async () => {
+    if (isFilling) return;
+    setIsFilling(true);
+    const controller = new AbortController();
+    let timedOut = false;
+    const timeoutId = setTimeout(() => {
+      timedOut = true;
+      controller.abort();
+    }, TIMEOUT_MS);
+    try {
+      const users = await fetchRandomUsers(1, controller.signal);
+      clearTimeout(timeoutId);
+      const user = users[0];
+      if (!user) throw new Error("유저를 불러오지 못했습니다.");
+      const part = pickRandom(PARTS);
+      const skills = [...SKILLS_BY_PART[part]].sort(() => Math.random() - 0.5).slice(0, 3);
+      const country = user.location?.country || "";
+      const city = user.location?.city || "";
+      setFormData({
+        name: `${user.name.first} ${user.name.last}`,
+        part,
+        skills: skills.join(", "),
+        intro: `${part} · ${country} ${city}에서 합류했어요!`,
+        about: pickRandom(ABOUT_PRESETS),
+        email: user.email || "",
+        phone: user.phone || "",
+        website: `https://example.com/${user.login?.username || "lion"}`,
+        quote: pickRandom(QUOTE_PRESETS),
+      });
+    } catch (err) {
+      clearTimeout(timeoutId);
+      if (err?.name === "AbortError" && timedOut) {
+        alert("랜덤 값 채우기 실패: 시간 초과");
+      } else if (err?.name !== "AbortError") {
+        alert(`랜덤 값 채우기 실패: ${err?.message}`);
+      }
+    } finally {
+      setIsFilling(false);
+    }
   };
 
   const handleDeleteLast = () => setMembers((prev) => prev.slice(0, -1));
@@ -197,7 +273,7 @@ export default function Week4Page() {
   return (
     <main className={styles["container"]}>
       <div className={styles["controls"]}>
-        <button type="button" className={styles["btn"]} onClick={handleToggleForm}>
+        <button ref={addBtnRef} type="button" className={styles["btn"]} onClick={handleToggleForm}>
           아기 사자 추가
         </button>
         <button type="button" className={styles["btn"]} onClick={handleDeleteLast}>
@@ -286,6 +362,7 @@ export default function Week4Page() {
               <div className={styles["form-group"]}>
                 <label htmlFor="f-name">이름</label>
                 <input
+                  ref={nameInputRef}
                   id="f-name" type="text" placeholder="예: 홍아기사자"
                   value={formData.name} onChange={handleInput("name")} required
                 />
@@ -358,6 +435,14 @@ export default function Week4Page() {
             </div>
 
             <div className={styles["form-actions"]}>
+              <button
+                type="button"
+                className={styles["btn"]}
+                onClick={handleFillRandom}
+                disabled={isFilling}
+              >
+                {isFilling ? "불러오는 중..." : "랜덤 값 채우기"}
+              </button>
               <button type="submit" className={`${styles["btn"]} ${styles["btn-primary"]}`}>
                 추가하기
               </button>
@@ -384,7 +469,15 @@ export default function Week4Page() {
                 className={`${styles["summary-card"]} ${m.isMine ? styles["summary-card--mine"] : ""}`}
               >
                 <div className={styles["card-image-wrap"]}>
-                  <img src={m.image} alt={`${m.name} 프로필 이미지`} className={styles["card-image"]} />
+                  <img
+                    src={m.image}
+                    alt={`${m.name} 프로필 이미지`}
+                    className={styles["card-image"]}
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = `https://picsum.photos/seed/${m.id}/400/280`;
+                    }}
+                  />
                   <span className={styles["badge"]}>{m.badge}</span>
                 </div>
                 <div className={styles["card-body"]}>
