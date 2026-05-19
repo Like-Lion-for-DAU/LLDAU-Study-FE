@@ -15,12 +15,14 @@ export default function Week3Page() {
   const [lions, setLions] = useState(initialLions);
   const [partFilter, setPartFilter] = useState("ALL");
   const [showForm, setShowForm] = useState(false);
-  const [selectedLion, setSelectedLion] = useState(null);
+  const [focusedDetailId, setFocusedDetailId] = useState(null);
+  const detailRefs = useRef({});
   const nameInputRef = useRef(null);
   const addBtnRef = useRef(null);
+  const focusTimerRef = useRef(null);
 
   const visibleLions = lions.filter(
-    (lion) => partFilter === "ALL" || lion.part === partFilter
+    (lion) => partFilter === "ALL" || lion.part === partFilter,
   );
 
   const isTrulyEmpty = lions.length === 0;
@@ -30,7 +32,7 @@ export default function Week3Page() {
     ? "아직 등록된 아기사자가 없습니다."
     : "조건에 맞는 아기사자가 없습니다.";
 
-  // 폼 ESC 키
+  // 폼 열렸을 때 ESC 키로 닫기
   useEffect(() => {
     if (!showForm) return;
     const handleEsc = (e) => {
@@ -50,20 +52,14 @@ export default function Week3Page() {
     }
   }, [showForm]);
 
-  // 모달 ESC 키 + body scroll lock
+  // 컴포넌트 unmount 시 타이머 정리
   useEffect(() => {
-    if (!selectedLion) return;
-    const handleEsc = (e) => {
-      if (e.key === "Escape") setSelectedLion(null);
-    };
-    window.addEventListener("keydown", handleEsc);
-    const original = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
     return () => {
-      window.removeEventListener("keydown", handleEsc);
-      document.body.style.overflow = original;
+      if (focusTimerRef.current) {
+        window.clearTimeout(focusTimerRef.current);
+      }
     };
-  }, [selectedLion]);
+  }, []);
 
   const handleToggleForm = () => {
     setShowForm((prev) => !prev);
@@ -129,6 +125,20 @@ export default function Week3Page() {
   const handleRemoveLion = () => {
     if (lions.length === 0) return;
     setLions((prev) => prev.slice(0, -1));
+  };
+
+  const handleCardClick = (id) => {
+    const target = detailRefs.current[id];
+    if (!target) return;
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    setFocusedDetailId(id);
+    if (focusTimerRef.current) {
+      window.clearTimeout(focusTimerRef.current);
+    }
+    focusTimerRef.current = window.setTimeout(() => {
+      setFocusedDetailId(null);
+    }, 900);
   };
 
   return (
@@ -244,10 +254,7 @@ export default function Week3Page() {
             <div
               className={`${styles["form-row"]} ${styles["form-row--full"]}`}
             >
-              <label
-                className={styles["form-label"]}
-                htmlFor="lionDescription"
-              >
+              <label className={styles["form-label"]} htmlFor="lionDescription">
                 자기소개 (상세 카드)
               </label>
               <textarea
@@ -343,13 +350,12 @@ export default function Week3Page() {
           </p>
         ) : (
           visibleLions.map((lion) => (
-            <button
+            <article
               key={lion.id}
-              type="button"
               className={`${styles["profile-card"]} ${
                 lion.isMe ? styles["is-me"] : ""
               }`}
-              onClick={() => setSelectedLion(lion)}
+              onClick={() => handleCardClick(lion.id)}
             >
               <figure className={styles["profile-image"]}>
                 <span className={styles["profile-badge"]}>
@@ -362,114 +368,76 @@ export default function Week3Page() {
                 <p className={styles["part"]}>{lion.part}</p>
                 <p className={styles["introduction"]}>{lion.oneLineIntro}</p>
               </section>
-            </button>
+            </article>
           ))
         )}
       </section>
 
-      {selectedLion && (
-        <div
-          className={styles["modal-overlay"]}
-          onClick={() => setSelectedLion(null)}
-        >
-          <div
-            className={styles["modal"]}
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="modal-title"
-          >
-            <button
-              type="button"
-              className={styles["modal-close"]}
-              onClick={() => setSelectedLion(null)}
-              aria-label="닫기"
+      <section className={styles["profile-detail-list"]}>
+        {showEmpty ? (
+          <p className={styles["empty-state"]} role="status">
+            {emptyMessage}
+          </p>
+        ) : (
+          visibleLions.map((lion) => (
+            <section
+              key={lion.id}
+              ref={(el) => {
+                if (el) detailRefs.current[lion.id] = el;
+              }}
+              className={`${styles["profile-detail"]} ${
+                focusedDetailId === lion.id ? styles["is-focused"] : ""
+              }`}
             >
-              ×
-            </button>
-
-            <header className={styles["modal-header"]}>
-              <figure className={styles["modal-image"]}>
-                <span className={styles["profile-badge"]}>
-                  {selectedLion.skills[0] || "JavaScript"}
-                </span>
-                <img
-                  src={selectedLion.imgSrc}
-                  alt={`${selectedLion.name} 프로필 이미지`}
-                />
-              </figure>
-              <div className={styles["modal-name-area"]}>
-                <h2 id="modal-title" className={styles["modal-name"]}>
-                  {selectedLion.name}
-                </h2>
-                <span className={styles["modal-part"]}>{selectedLion.part}</span>
-                <p className={styles["modal-organization"]}>
-                  {selectedLion.organization}
+              <header className={styles["detail-header"]}>
+                <h1 className={styles["detail-name"]}>{lion.name}</h1>
+                <span className={styles["detail-part"]}>{lion.part}</span>
+                <p className={styles["detail-organization"]}>
+                  {lion.organization}
                 </p>
-              </div>
-            </header>
+              </header>
 
-            <div className={styles["modal-body"]}>
-              <section className={styles["modal-section"]}>
+              <section className={styles["detail-section"]}>
                 <h3>자기소개</h3>
-                <p>
-                  {selectedLion.description || "새로 추가된 아기 사자입니다."}
-                </p>
+                <p>{lion.description || "새로 추가된 아기 사자입니다."}</p>
               </section>
 
-              <section className={styles["modal-section"]}>
-                <h3>관심 기술</h3>
-                <div className={styles["skill-badges"]}>
-                  {(selectedLion.skills || []).map((skill) => (
-                    <span key={skill} className={styles["skill-badge"]}>
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </section>
-
-              <section className={styles["modal-section"]}>
+              <section className={styles["detail-section"]}>
                 <h3>연락처</h3>
                 <ul className={styles["contact-list"]}>
-                  <li>
-                    <span className={styles["contact-label"]}>Email</span>
-                    <a href={`mailto:${selectedLion.contacts?.email}`}>
-                      {selectedLion.contacts?.email}
-                    </a>
-                  </li>
-                  <li>
-                    <span className={styles["contact-label"]}>Phone</span>
-                    <a
-                      href={`tel:${(selectedLion.contacts?.phone || "").replace(/-/g, "")}`}
-                    >
-                      {selectedLion.contacts?.phone}
-                    </a>
-                  </li>
-                  {selectedLion.contacts?.website && (
+                  <li>Email: {lion.contacts?.email || ""}</li>
+                  <li>Phone: {lion.contacts?.phone || ""}</li>
+                  {lion.contacts?.website && (
                     <li>
-                      <span className={styles["contact-label"]}>Website</span>
                       <a
-                        href={selectedLion.contacts.website}
+                        href={lion.contacts.website}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        {selectedLion.contacts.website}
+                        {lion.contacts.website}
                       </a>
                     </li>
                   )}
                 </ul>
               </section>
 
-              <section className={styles["modal-section"]}>
-                <h3>한 마디</h3>
-                <p className={styles["modal-motto"]}>
-                  "{selectedLion.oneWord}"
-                </p>
+              <section className={styles["detail-section"]}>
+                <h3>관심 기술</h3>
+                <ul className={styles["skill-list"]}>
+                  {(lion.skills || []).map((skill) => (
+                    <li key={skill}>{skill}</li>
+                  ))}
+                </ul>
               </section>
-            </div>
-          </div>
-        </div>
-      )}
+
+              <section className={styles["detail-section"]}>
+                <h3>한 마디</h3>
+                <p>{lion.oneWord}</p>
+              </section>
+            </section>
+          ))
+        )}
+      </section>
     </main>
   );
 }
