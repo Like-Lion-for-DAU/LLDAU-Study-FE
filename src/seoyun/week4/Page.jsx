@@ -1,17 +1,73 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styles from "./Page.module.css";
-import { initialMembers } from "./lions";
+import { initialMembers, PARTS, DEFAULT_IMAGES } from "./lions";
+
+const EMPTY_FORM = {
+  name: "",
+  part: "",
+  skills: "",
+  intro: "",
+  about: "",
+  email: "",
+  phone: "",
+  website: "",
+  quote: "",
+};
 
 export default function Week4Page() {
   const [members, setMembers] = useState(initialMembers);
   const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState(EMPTY_FORM);
+
+  const nextIdRef = useRef(
+    Math.max(...initialMembers.map((m) => m.id)) + 1
+  );
 
   const handleToggleForm = () => {
     setShowForm((prev) => !prev);
   };
 
+  const handleCloseForm = () => {
+    setShowForm(false);
+    setFormData(EMPTY_FORM);
+  };
+
   const handleDeleteLast = () => {
     setMembers((prev) => prev.slice(0, -1));
+  };
+
+  const handleInput = (field) => (e) => {
+    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const skillArr = formData.skills
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    const id = nextIdRef.current++;
+    setMembers((prev) => [
+      ...prev,
+      {
+        id,
+        name: formData.name.trim(),
+        part: formData.part,
+        intro: formData.intro.trim(),
+        about: formData.about.trim(),
+        quote: formData.quote.trim(),
+        skills: skillArr,
+        badge: skillArr[0] || "",
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        website: formData.website.trim(),
+        image: DEFAULT_IMAGES[members.length % DEFAULT_IMAGES.length],
+        club: "LION TRACK",
+        isMine: false,
+      },
+    ]);
+    handleCloseForm();
   };
 
   return (
@@ -33,6 +89,142 @@ export default function Week4Page() {
         </button>
         <span className={styles["total-count"]}>총 {members.length}명</span>
       </div>
+
+      {showForm && (
+        <div className={styles["form-wrapper"]}>
+          <form className={styles["add-form"]} onSubmit={handleSubmit}>
+            <div className={styles["form-grid"]}>
+              <div className={styles["form-group"]}>
+                <label htmlFor="f-name">이름</label>
+                <input
+                  id="f-name"
+                  type="text"
+                  placeholder="예: 홍아기사자"
+                  value={formData.name}
+                  onChange={handleInput("name")}
+                  required
+                />
+              </div>
+
+              <div className={styles["form-group"]}>
+                <label htmlFor="f-part">파트</label>
+                <select
+                  id="f-part"
+                  value={formData.part}
+                  onChange={handleInput("part")}
+                  required
+                >
+                  <option value="">선택하세요</option>
+                  {PARTS.map((p) => (
+                    <option key={p} value={p}>
+                      {p}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className={`${styles["form-group"]} ${styles["form-full"]}`}>
+                <label htmlFor="f-skills">관심 기술 (쉼표로 구분)</label>
+                <input
+                  id="f-skills"
+                  type="text"
+                  placeholder="예: JavaScript, React, HTML/CSS"
+                  value={formData.skills}
+                  onChange={handleInput("skills")}
+                  required
+                />
+              </div>
+
+              <div className={`${styles["form-group"]} ${styles["form-full"]}`}>
+                <label htmlFor="f-intro">한 줄 소개 (요약 카드)</label>
+                <input
+                  id="f-intro"
+                  type="text"
+                  placeholder="예: 3주차 DOM 조작 연습 중!"
+                  value={formData.intro}
+                  onChange={handleInput("intro")}
+                  required
+                />
+              </div>
+
+              <div className={`${styles["form-group"]} ${styles["form-full"]}`}>
+                <label htmlFor="f-about">자기소개 (상세 카드)</label>
+                <textarea
+                  id="f-about"
+                  rows={5}
+                  placeholder="예: HTML/CSS로 구조를 만들고, JS로 데이터를 바꾸면 화면이 바뀌는 경험을 하고 있습니다."
+                  value={formData.about}
+                  onChange={handleInput("about")}
+                  required
+                />
+              </div>
+
+              <div className={styles["form-group"]}>
+                <label htmlFor="f-email">Email</label>
+                <input
+                  id="f-email"
+                  type="email"
+                  placeholder="예: lion@example.com"
+                  value={formData.email}
+                  onChange={handleInput("email")}
+                  required
+                />
+              </div>
+
+              <div className={styles["form-group"]}>
+                <label htmlFor="f-phone">Phone</label>
+                <input
+                  id="f-phone"
+                  type="tel"
+                  placeholder="예: 010-1234-5678"
+                  value={formData.phone}
+                  onChange={handleInput("phone")}
+                  required
+                />
+              </div>
+
+              <div className={`${styles["form-group"]} ${styles["form-full"]}`}>
+                <label htmlFor="f-website">Website</label>
+                <input
+                  id="f-website"
+                  type="url"
+                  placeholder="예: https://example.com"
+                  value={formData.website}
+                  onChange={handleInput("website")}
+                />
+              </div>
+
+              <div className={`${styles["form-group"]} ${styles["form-full"]}`}>
+                <label htmlFor="f-quote">한 마디</label>
+                <input
+                  id="f-quote"
+                  type="text"
+                  placeholder="예: 데이터 바꾸면 화면도 바뀐다!"
+                  value={formData.quote}
+                  onChange={handleInput("quote")}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className={styles["form-actions"]}>
+              <button
+                type="submit"
+                className={`${styles["btn"]} ${styles["btn-primary"]}`}
+              >
+                추가하기
+              </button>
+              <button
+                type="button"
+                className={styles["btn"]}
+                onClick={handleCloseForm}
+              >
+                취소
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
       <section className={styles["summary-section"]}>
         <ul className={styles["card-grid"]}>
