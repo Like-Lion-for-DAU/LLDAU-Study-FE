@@ -243,8 +243,8 @@
   background-color: #fff;
   border-radius: 10px;
   width: 90%;
+  height: 620px;
   max-width: 1000px;
-  max-height: 1000px;
   overflow-y: auto;
   box-shadow: 0 0 20px black;
   scrollbar-width: none;
@@ -304,7 +304,9 @@
   color: black;
 }
 
-.pushLionTable {
+.pushLionGrid {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   border-collapse: collapse;
 }
@@ -326,6 +328,7 @@
 }
 
 .inputLongtype {
+  position: relative;
   color: black;
   border: 2px solid gainsboro;
   border-radius: 4px;
@@ -371,4 +374,30 @@
   color: #e53935;
   border: 1px solid orange;
   background-color: rgba(255, 255, 224, 0.5);
+}
+
+.pushLabel {
+  white-space: pre-line;
+}
+
+.pushLionRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fullWidth {
+  grid-template-columns: 1fr;
+  position: relative;
+}
+
+.halfWidth {
+  grid-template-columns: 1fr 1fr;
+  position: relative;
 }
