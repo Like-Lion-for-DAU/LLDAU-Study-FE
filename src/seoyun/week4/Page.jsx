@@ -4,10 +4,33 @@ import { initialMembers } from "./lions";
 
 export default function Week4Page() {
   const [members, setMembers] = useState(initialMembers);
+  const [showForm, setShowForm] = useState(false);
+
+  const handleToggleForm = () => {
+    setShowForm((prev) => !prev);
+  };
+
+  const handleDeleteLast = () => {
+    setMembers((prev) => prev.slice(0, -1));
+  };
 
   return (
     <main className={styles["container"]}>
       <div className={styles["controls"]}>
+        <button
+          type="button"
+          className={styles["btn"]}
+          onClick={handleToggleForm}
+        >
+          아기 사자 추가
+        </button>
+        <button
+          type="button"
+          className={styles["btn"]}
+          onClick={handleDeleteLast}
+        >
+          마지막 아기 사자 삭제
+        </button>
         <span className={styles["total-count"]}>총 {members.length}명</span>
       </div>
 
