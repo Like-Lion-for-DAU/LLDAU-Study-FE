@@ -1,6 +1,45 @@
 import { useRef, useState } from "react";
 import styles from "./Page.module.css";
-import { initialMembers, PARTS, DEFAULT_IMAGES } from "./lions";
+import { initialMembers, PARTS, SKILLS_BY_PART, DEFAULT_IMAGES } from "./lions";
+
+const TIMEOUT_MS = 5000;
+
+function pickRandom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function mapApiUser(user, id) {
+  const part = pickRandom(PARTS);
+  const skills = [...SKILLS_BY_PART[part]].sort(() => Math.random() - 0.5).slice(0, 3);
+  const name = `${user.name.first} ${user.name.last}`;
+  const country = user.location?.country || "";
+  const city = user.location?.city || "";
+  return {
+    id,
+    name,
+    part,
+    intro: `${part} · ${country} ${city}에서 합류했어요!`,
+    about: `안녕하세요, ${name}입니다. ${country} ${city} 출신으로 ${part} 분야에서 활동 중입니다.`,
+    skills,
+    badge: skills[0] || "",
+    email: user.email || "",
+    phone: user.phone || "",
+    website: `https://github.com/${user.login?.username || "lion"}`,
+    image: user.picture?.large || `https://picsum.photos/seed/${id}/200/200`,
+    club: "LION TRACK",
+    isMine: false,
+  };
+}
+
+async function fetchRandomUsers(count, signal) {
+  const res = await fetch(
+    `https://randomuser.me/api/?results=${count}&nat=us,gb,ca,au,nz`,
+    { signal }
+  );
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data = await res.json();
+  return data.results || [];
+}
 
 const EMPTY_FORM = {
   name: "",
@@ -21,10 +60,14 @@ export default function Week4Page() {
   const [filterPart, setFilterPart] = useState("전체");
   const [sortOrder, setSortOrder] = useState("최신추가순");
   const [searchName, setSearchName] = useState("");
+  const [fetchStatus, setFetchStatus] = useState("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const nextIdRef = useRef(
-    Math.max(...initialMembers.map((m) => m.id)) + 1
-  );
+  const nextIdRef = useRef(Math.max(...initialMembers.map((m) => m.id)) + 1);
+  const latestRequestIdRef = useRef(0);
+  const latestControllerRef = useRef(null);
+  const lastFetchActionRef = useRef(null);
+  const statusResetTimerRef = useRef(null);
 
   const handleToggleForm = () => setShowForm((prev) => !prev);
 
@@ -68,6 +111,76 @@ export default function Week4Page() {
     handleCloseForm();
   };
 
+  async function runFetchAction(actionFn) {
+    const requestId = ++latestRequestIdRef.current;
+    lastFetchActionRef.current = actionFn;
+
+    if (latestControllerRef.current) latestControllerRef.current.abort();
+    const controller = new AbortController();
+    latestControllerRef.current = controller;
+
+    let timedOut = false;
+    const timeoutId = setTimeout(() => {
+      timedOut = true;
+      controller.abort();
+    }, TIMEOUT_MS);
+
+    setErrorMessage("");
+    setFetchStatus("loading");
+
+    try {
+      await actionFn({
+        signal: controller.signal,
+        isLatest: () => requestId === latestRequestIdRef.current,
+      });
+
+      if (requestId !== latestRequestIdRef.current) return;
+      clearTimeout(timeoutId);
+      setFetchStatus("success");
+
+      if (statusResetTimerRef.current) clearTimeout(statusResetTimerRef.current);
+      statusResetTimerRef.current = setTimeout(() => {
+        if (requestId === latestRequestIdRef.current) setFetchStatus("idle");
+      }, 2000);
+    } catch (err) {
+      if (requestId !== latestRequestIdRef.current) return;
+      clearTimeout(timeoutId);
+      if (err?.name === "AbortError" && timedOut) {
+        setFetchStatus("error");
+        setErrorMessage("불러오기 실패: 시간 초과");
+        return;
+      }
+      if (err?.name === "AbortError") return;
+      setFetchStatus("error");
+      setErrorMessage(`불러오기 실패: ${err?.message || "알 수 없는 오류"}`);
+    }
+  }
+
+  const handleFetchAdd = (count) =>
+    runFetchAction(async (ctx) => {
+      const users = await fetchRandomUsers(count, ctx.signal);
+      if (!ctx.isLatest()) return;
+      const newOnes = users.map((u) => mapApiUser(u, nextIdRef.current++));
+      setMembers((prev) => [...prev, ...newOnes]);
+    });
+
+  const handleFetchRefresh = () =>
+    runFetchAction(async (ctx) => {
+      const mineMembers = members.filter((m) => m.isMine);
+      const fetchCount = members.length - mineMembers.length;
+      if (fetchCount === 0) return;
+      const users = await fetchRandomUsers(fetchCount, ctx.signal);
+      if (!ctx.isLatest()) return;
+      const newOnes = users.map((u) => mapApiUser(u, nextIdRef.current++));
+      setMembers([...mineMembers, ...newOnes]);
+    });
+
+  const handleRetry = () => {
+    if (typeof lastFetchActionRef.current === "function") {
+      runFetchAction(lastFetchActionRef.current);
+    }
+  };
+
   const visibleMembers = (() => {
     let list = members.slice();
     if (filterPart !== "전체") list = list.filter((m) => m.part === filterPart);
@@ -91,6 +204,51 @@ export default function Week4Page() {
           마지막 아기 사자 삭제
         </button>
         <span className={styles["total-count"]}>총 {members.length}명</span>
+      </div>
+
+      <div className={styles["controls"]}>
+        <button
+          type="button"
+          className={`${styles["btn"]} ${styles["btn-fetch"]}`}
+          onClick={() => handleFetchAdd(1)}
+          disabled={fetchStatus === "loading"}
+        >
+          랜덤 1명 추가
+        </button>
+        <button
+          type="button"
+          className={`${styles["btn"]} ${styles["btn-fetch"]}`}
+          onClick={() => handleFetchAdd(5)}
+          disabled={fetchStatus === "loading"}
+        >
+          랜덤 5명 추가
+        </button>
+        <button
+          type="button"
+          className={`${styles["btn"]} ${styles["btn-fetch"]}`}
+          onClick={handleFetchRefresh}
+          disabled={fetchStatus === "loading"}
+        >
+          전체 새로고침
+        </button>
+        <span
+          className={styles["fetch-status"]}
+          data-state={fetchStatus === "idle" ? "" : fetchStatus}
+        >
+          {fetchStatus === "loading" && "불러오는 중..."}
+          {fetchStatus === "success" && "완료!"}
+          {fetchStatus === "error" && errorMessage}
+          {fetchStatus === "idle" && "준비 완료"}
+        </span>
+        {fetchStatus === "error" && (
+          <button
+            type="button"
+            className={`${styles["btn"]} ${styles["btn-retry"]}`}
+            onClick={handleRetry}
+          >
+            재시도
+          </button>
+        )}
       </div>
 
       <div className={styles["view-options"]}>
