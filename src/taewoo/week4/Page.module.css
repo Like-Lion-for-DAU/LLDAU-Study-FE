@@ -454,11 +454,6 @@
   box-shadow: 3px 3px 4px gainsboro;
 }
 
-.randomFiveButton:disabled {
-  background-color: gainsboro;
-  cursor: not-allowed;
-}
-
 .refrashButton {
   background-color: white;
   color: black;
@@ -473,6 +468,17 @@
 .refrashButton:disabled {
   background-color: gainsboro;
   cursor: not-allowed;
+}
+
+.retryButton {
+  background-color: white;
+  color: brown;
+  border: 1px solid #ccc;
+  box-shadow: 3px 3px 4px gainsboro;
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 0.7rem;
+  cursor: pointer;
 }
 
 .refrashState {
