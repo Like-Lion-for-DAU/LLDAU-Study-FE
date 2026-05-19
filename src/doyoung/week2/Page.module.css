@@ -1,0 +1,76 @@
+.week-page {
+  padding: 32px;
+  background:#f1f2f6;
+}
+
+.week-page h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.cardpack{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+@media(max-width: 900px){
+  .cardpack{
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .cardpack{
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  width: 100%;
+  padding: 40px;
+  background:white;
+  border-radius:15px;
+  overflow: hidden;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.myname {
+  color : #db3434;
+  font-weight: bold;
+}
+
+.frontend {
+  color : blue;
+  font-weight : bold;
+}
+
+.photo {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  overflow: auto;
+}
+
+.detailcardpack{
+  display: flex;
+  flex-direction: column;
+  gap : 40px;
+}
+
+.detailcard{
+  width:100%;
+  padding:40px;
+  background:white;
+  border-radius:15px;
+  box-sizing:border-box;
+}
+
+.dsis{
+  font-weight : bold;
+  color : #29bbd2;
+}
