@@ -454,6 +454,11 @@
   box-shadow: 3px 3px 4px gainsboro;
 }
 
+.randomFiveButton:disabled {
+  background-color: gainsboro;
+  cursor: not-allowed;
+}
+
 .refrashButton {
   background-color: white;
   color: black;

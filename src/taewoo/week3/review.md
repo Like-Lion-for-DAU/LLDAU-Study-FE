@@ -5,7 +5,7 @@ useState, custom hook, controlled component, 폼 검증, 모달 backdrop/ESC 처
 정답에 없는 폼 검증 UX, custom hook 분리까지 추가로 구현했네요.
 다만 React Hook 명명 규칙, 일부 시맨틱, 접근성 이슈를 보완하면 더 좋아질 것 같습니다.
 
-## 1. Custom Hook은 use 접두사로 명명해야 함
+## 1. Custom Hook은 use 접두사로 명명해야 함 / Hook 명명법
 
 ```
 export function Page_Scroll_Down([selected, setSelected]) {
@@ -42,7 +42,7 @@ usePageScrollLock(showAdd, setShowAdd);
 
 - 이름만 바꿔도 React가 정상 인식하고 ESLint 경고도 사라집니다.
 
-## 2. map 콜백의 변수명이 복수형(members)
+## 2. map 콜백의 변수명이 복수형(members) / 단수형 변경
 
 ```
 {memberList.map((members) => (
@@ -65,7 +65,7 @@ usePageScrollLock(showAdd, setShowAdd);
 ))}
 ```
 
-## 3. map에 key prop 누락
+## 3. map에 key prop 누락 / map key 업데이트
 
 ```
 {memberList.map((members) => (
@@ -88,7 +88,7 @@ usePageScrollLock(showAdd, setShowAdd);
 
 - 동명이인이 없다면 name을 key로 써도 되고, id를 별도로 추가하는 것이 더 안전합니다.
 
-## 4. img 태그의 alt 속성 누락
+## 4. img 태그의 alt 속성 누락 / 2주동안 적혀있었는데 안한 레전드 보법 
 
 ```
 <img className={styles["profileImage"]} src={members.image} />
@@ -105,7 +105,7 @@ usePageScrollLock(showAdd, setShowAdd);
 />
 ```
 
-## 5. 새 멤버 이미지가 placeholder URL로 고정
+## 5. 새 멤버 이미지가 placeholder URL로 고정 / 5번 끝
 
 ```
 const newMember = {
@@ -121,7 +121,7 @@ const newMember = {
 image: `https://picsum.photos/seed/${Date.now()}/200/200`,
 ```
 
-## 6. table 태그로 폼 구성
+## 6. table 태그로 폼 구성 / 2주차에 해결해놓음
 
 ```
 <table className={styles["pushLionTable"]}>
@@ -158,7 +158,7 @@ image: `https://picsum.photos/seed/${Date.now()}/200/200`,
 </form>
 ```
 
-## 7. p 태그로 label 대체
+## 7. p 태그로 label 대체 / label로 대체 완료
 
 ```
 <p>이름</p>
@@ -173,7 +173,7 @@ image: `https://picsum.photos/seed/${Date.now()}/200/200`,
 <input id="name" ... />
 ```
 
-## 8. form 태그 미사용 - submit 패턴 활용 안 함
+## 8. form 태그 미사용 - submit 패턴 활용 안 함 / submit 패턴으로 바꿈 
 
 ```
 <button onClick={() => {
@@ -205,7 +205,7 @@ const handleAddSubmit = (e) => {
 };
 ```
 
-## 9. onClick 인라인 핸들러가 너무 길어 가독성 저하
+## 9. onClick 인라인 핸들러가 너무 길어 가독성 저하 / jsx 안으로 함수 추출
 
 ```
 <button onClick={() => {
@@ -262,7 +262,7 @@ const handleAddMember = () => {
 <button onClick={handleAddMember}>추가</button>
 ```
 
-## 10. club 데이터 모두 "DAU_DSIS"로 고정
+## 10. club 데이터 모두 "DAU_DSIS"로 고정 / emptyform에 club key 추가, AddSubmit에서 forData.club 받음
 
 ```
 {
@@ -280,7 +280,7 @@ const handleAddMember = () => {
 - 멤버마다 실제 동아리가 다른데 모두 "DAU_DSIS"로 통일되어 있습니다.
 - 정확한 정보로 분리하는 것이 좋습니다.
 
-## 11. 이메일 검증이 너무 약함
+## 11. 이메일 검증이 너무 약함 / 정규식 변경 완료
 
 ```
 const validateEmail = (v) => v.includes("@");
@@ -295,7 +295,7 @@ const validateEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
 ## 12. 누락된 기능
 
-### 12-a. 파트 필터
+### 12-a. 파트 필터 /구현 완료
 
 - 정답에는 ALL/Frontend/Backend/Design 필터가 있습니다.
 
@@ -316,7 +316,7 @@ const visibleMembers = memberList.filter(
 {visibleMembers.map(...)}
 ```
 
-### 13-b. 빈 상태 메시지
+### 13-b. 빈 상태 메시지 / 필터와 총인원 없을때 안내메시지 구분
 
 - 멤버가 0명이거나 필터 결과가 없을 때 안내 메시지가 없습니다.
 

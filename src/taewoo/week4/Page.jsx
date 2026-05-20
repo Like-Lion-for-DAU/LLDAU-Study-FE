@@ -35,9 +35,9 @@ export default function Week4Page() {
       name: formData.name,
       part: formData.part,
       intro: formData.introduce,
-      club: "DAU_DSIS",
+      club: formData.club,
       badge: skillList[0] || "신규",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2QuItPJLx65Rb2kqBsMRU7t3BmKc8jn98lw&s",
+      image: `https://picsum.photos/seed/${Date.now()}/200/200`,
       introduce: [formData.introduceDetail],
       contact: {
         email: formData.email,
@@ -194,7 +194,7 @@ export default function Week4Page() {
       </div>
 
       <div className={styles["sortLabelRow"]}>
-        <label className={styles["firstSortLabel"]}>파트</label>
+        <label className={styles["firstSortLabel"]} htmlForfor="sortPart">파트</label>
         <select name="sortPart" id="sortPart" className={styles["sortSelect"]}
         value={sortPart} onChange={(e) => setSortPart(e.target.value)}>
           <option value="all">전체</option>
@@ -203,21 +203,23 @@ export default function Week4Page() {
           <option value="PM">PM</option>
           <option value="Design">Design</option>
         </select>
-        <label className={styles["sortLabel"]}>정렬</label>
+        <label className={styles["sortLabel"]} htmlForfor="sortType">정렬</label>
         <select name="sortType" id="sortType" className={styles["sortSelect"]}
         value={sortType} onChange={(e) => setSortType(e.target.value)}>
           <option value="newest">최신 업데이트순</option>
           <option value="nameAsc">이름 오름차순</option>
           <option value="nameDesc">이름 내림차순</option>
         </select>
-        <label className={styles["sortLabel"]}>검색</label>
+        <label className={styles["sortLabel"]} htmlForfor="searchInput">검색</label>
         <input type="text" id="searchInput" 
         placeholder="이름으로 검색" className={styles["sortSelect"]}
         value={sortSearch} onChange={(e) => setSortSearch(e.target.value)}/>
       </div>
 
       <div className={styles["gridContainer"]}>
-        {displayList.length === 0 ? (
+        {memberList.length === 0 ? (
+          <p className={styles["noResult"]}>남은 아기사자가 없습니다 ㅜㅜ</p>
+        ) : displayList.length === 0 ? (
           <p className={styles["noResult"]}>조건에 맞는 아기 사자가 없습니다.</p>
         ) : (
           displayList.map((member) => (
@@ -225,13 +227,13 @@ export default function Week4Page() {
               <p className={styles["badge"]}>
                 <span className={styles["badgeSpace"]}>{member.badge}</span>
               </p>
-              <img className={styles["profileImage"]} src={member.image} />
+              <img className={styles["profileImage"]} src={member.image} alt={`${member.name} 프로필 사진`}/>
               <h2 className={styles["name"]}>{member.name}</h2>
               <b className={styles["blueRule"]}>{member.part}</b>
               <p className={styles["lineIntroduce"]}>{member.intro}</p>
             </div>
-            ))
-          )}
+          ))
+        )}
       </div>
 
       {/* 아기 사자 추가 모달 */}
@@ -271,7 +273,7 @@ export default function Week4Page() {
               </div>
 
               <div className={`${styles["pushLionRow"]} ${styles["fullWidth"]}`}>
-                <label htmlFor="introduce" className={styles["pushLabel"]}>한 줄 소개(요약 카드)</label>
+                <label htmlFor="introduce" className={styles["pushLabel"]} >한 줄 소개(요약 카드)</label>
                 <input id="introduce" type="text" className={styles["inputLongtype"]}
                 placeholder="예: 3주차 DOM 조작 연습 중"
                 value={formData.introduce} onChange={handleInput("introduce")}/>

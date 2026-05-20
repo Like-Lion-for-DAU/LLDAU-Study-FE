@@ -572,16 +572,16 @@ export default function Week3Page() {
 - [v] body scroll lock
 - [v] introduce를 배열로 받아 map 렌더링
 - [v] contact null 케이스 처리
-- [ ] Custom Hook 이름을 use 접두사로 변경
-- [ ] map 콜백 변수명 단수형으로 (members → member)
+- [ ] Custom Hook 이름을 use 접두사로 변경 - o
+- [ ] map 콜백 변수명 단수형으로 (members → member) - o
 - [ ] map에 key prop 추가
 - [ ] img 태그에 alt 속성 추가
 - [ ] table 대신 form + flex/grid 구조
 - [ ] p 태그 label을 label 태그로 변경
-- [ ] form 태그 + onSubmit 패턴
-- [ ] 긴 인라인 핸들러를 함수로 추출
+- [ ] form 태그 + onSubmit 패턴 - o
+- [ ] 긴 인라인 핸들러를 함수로 추출 - o
 - [ ] 새 멤버 image를 picsum.photos로 자동 생성
-- [ ] 이메일 검증 정규식 강화
+- [ ] 이메일 검증 정규식 강화 - o
 - [ ] 파트 필터 구현
 - [ ] 빈 상태 메시지
 
