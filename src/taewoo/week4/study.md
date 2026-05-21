@@ -149,7 +149,7 @@ useEffect(() => {
 }, []);
 ```
 
-## 5. 에러 + 재시도 UI
+## 5. 에러 + 재시도 UI / 재시도 버튼을 함께 노출 및 재시도 버튼 직전 행동 기능 구현
 
 ```
 const lastFetchActionRef = useRef(null);
@@ -178,7 +178,7 @@ const handleRetry = () => {
 
 - `error` 상태에서 버튼을 disabled로 막아두지 않습니다. 명시적 재시도 버튼을 노출합니다.
 
-## 6. 타임아웃 - AbortController와 setTimeout 결합
+## 6. 타임아웃 - AbortController와 setTimeout 결합 / 
 
 ```
 const TIMEOUT_MS = 5000;
@@ -212,7 +212,7 @@ async function fetchWithTimeout(url) {
 - `timedOut` 플래그로 "사용자 취소"와 "타임아웃 취소"를 구별합니다.
 - 사용자가 직접 취소한 경우(다음 요청 시작)는 에러 메시지를 보여주지 않습니다.
 
-## 7. 본인 식별 - 데이터 플래그 사용
+## 7. 본인 식별 - 데이터 플래그 사용 / isMe key 추가
 
 ```
 // Before - 이름 문자열 hard-coding
@@ -241,7 +241,7 @@ const newMembers = users.map((u) => randomNewMember(u, makeNextId()));
 setMemberList([...baseList, ...newMembers]);
 ```
 
-## 8. id 생성 - Date.now() vs useRef 카운터
+## 8. id 생성 - Date.now() vs useRef 카운터 / useRef 카운터 정리
 
 ### Date.now()의 함정
 
@@ -276,7 +276,7 @@ const newMembers = users.map((u) => ({ id: makeNextId(), ... }));
 - 컴포넌트 lifetime 동안 단조 증가 → 절대 충돌 없음.
 - useState가 아닌 useRef인 이유: id 카운터 자체는 화면 갱신과 무관하므로 변경 시 리렌더링 불필요.
 
-## 9. input type 활용
+## 9. input type 활용 / type 모두 바꿈
 
 ### type 별 기본 동작
 
@@ -295,7 +295,7 @@ const newMembers = users.map((u) => ({ id: makeNextId(), ... }));
 
 직접 정규식 검증을 하더라도 type은 함께 적어두는 게 모바일 UX에 도움이 됩니다.
 
-## 10. 이미지 fallback 패턴
+## 10. 이미지 fallback 패턴 / fallback화
 
 ```
 <img

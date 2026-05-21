@@ -1,6 +1,6 @@
 import styles from "./Page.module.css";
 import { members as initialMembers, pushRandomMembers, usePageScrollDown, useFormData, randomResult, randomNewMember} from "./script.js";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, use } from "react";
 
 export default function Week5Page() {
   const [memberList, setMemberList] = useState(initialMembers);
@@ -28,6 +28,14 @@ export default function Week5Page() {
 
   const lastAction = useRef(null);
 
+  const nextIdRef = useRef(initialMembers.length + 1);
+
+  function makeNextId() {
+    const id = nextIdRef.current;
+    nextIdRef.current += 1;
+    return id;
+  }
+
   const resetStatusLater = () => {
     if (statusResetTimerRef.current) clearTimeout(statusResetTimerRef.current);
     statusResetTimerRef.current = setTimeout(() => setFetching("ready"), 2000)
@@ -43,7 +51,7 @@ export default function Week5Page() {
     e.preventDefault();
     const skillList = formData.skills.split(",").map((s) => s.trim()).filter(Boolean);
     const newMember = {
-      id: Date.now(),
+      id: makeNextId(),
       name: formData.name,
       part: formData.part,
       intro: formData.introduce,
@@ -69,7 +77,7 @@ export default function Week5Page() {
     lastAction.current = handleFetchRandom;
     try {
       const user = await randomResult(1);
-      const newMember = randomNewMember(user[0]);
+      const newMember = {...randomNewMember(user[0]), id: makeNextId() };
       setMemberList((prev) => [...prev, newMember]);
       setFetching("success");
 
@@ -85,7 +93,7 @@ export default function Week5Page() {
     lastAction.current = handleFetchFiveRandom;
     try {
       const users = await randomResult(5);
-      const newMembers = users.map(randomNewMember);
+      const newMembers = users.map((u) => ({...randomNewMember(u), id: makeNextId() }));
       setMemberList((prev) => [...prev, ...newMembers]);
       setFetching("success");
       setTimeout(() => setFetching("ready"), 2000);
@@ -99,10 +107,12 @@ export default function Week5Page() {
     setFetching("loading");
     lastAction.current = handleRefresh;
     try {
-      const myProfile = memberList.find((member) => member.name === "백태우");
-      const lionCount = memberList.length-1;
+      const myProfile = memberList.find((m) => m.isMe);
+      const baseList = myProfile ? [myProfile] : [];
+
+      const lionCount = myProfile ? memberList.length-1 : memberList.length;
       const users = await randomResult(lionCount);
-      const newMembers = users.map(randomNewMember);
+      const newMembers = users.map((u) => ({...randomNewMember(u), id: makeNextId()}));
       setMemberList([myProfile, ...newMembers]);
       setFetching("success");
       setTimeout(() => setFetching("ready"), 2000);
@@ -224,7 +234,7 @@ export default function Week5Page() {
           <option value="nameDesc">이름 내림차순</option>
         </select>
         <label className={styles["sortLabel"]} htmlForfor="searchInput">검색</label>
-        <input type="text" id="searchInput" 
+        <input type="search" id="searchInput" 
         placeholder="이름으로 검색" className={styles["sortSelect"]}
         value={sortSearch} onChange={(e) => setSortSearch(e.target.value)}/>
       </div>
@@ -240,7 +250,11 @@ export default function Week5Page() {
               <p className={styles["badge"]}>
                 <span className={styles["badgeSpace"]}>{member.badge}</span>
               </p>
-              <img className={styles["profileImage"]} src={member.image} alt={`${member.name} 프로필 사진`}/>
+              <img className={styles["profileImage"]} src={member.image} alt={`${member.name} 프로필 사진`}
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = "https://picsum.photos/seed/fallback/200/200";
+              }}/>
               <h2 className={styles["name"]}>{member.name}</h2>
               <b className={styles["blueRule"]}>{member.part}</b>
               <p className={styles["lineIntroduce"]}>{member.intro}</p>
@@ -307,7 +321,7 @@ export default function Week5Page() {
                 <div className={styles["field"]}>
                   <label htmlFor="email" className={styles["pushLabel"]}>Email</label>
                   <div className={styles["halfWidth"]}>
-                    <input id="email" type="text" className={styles["inputEmail"]}
+                    <input id="email" type="email" className={styles["inputEmail"]}
                     placeholder="예: lion@example.com"
                     value={formData.email} onChange={handleInput("email")}/>
                     {warn("email") && <span className={styles["inputWarning"]}><b>!</b> 입력란이 비어있습니다 <b>!</b></span>}
@@ -317,7 +331,7 @@ export default function Week5Page() {
                 <div className={styles["field"]}>
                   <label htmlFor="phone" className={styles["pushLabel"]}>Phone</label>
                   <div className={styles["halfWidth"]}>
-                    <input id="phone" type="text" className={styles["inputPhone"]}
+                    <input id="phone" type="phone" className={styles["inputPhone"]}
                     placeholder="예: 010-1234-5678"
                     value={formData.phone} onChange={handleInput("phone")}/>
                     {warn("phone") && <span className={styles["inputWarning"]}><b>!</b> 입력란이 비어있습니다 <b>!</b></span>}
@@ -328,7 +342,7 @@ export default function Week5Page() {
 
               <div className={`${styles["pushLionRow"]} ${styles["fullWidth"]}`}>
                 <label htmlFor="website" className={styles["pushLabel"]}>Website</label>
-                  <input id="website" type="text" className={styles["inputLongtype"]}
+                  <input id="website" type="website" className={styles["inputLongtype"]}
                   placeholder="예: https://www.example.com"
                   value={formData.website} onChange={handleInput("website")}/>
                   {warn("website") && <span className={styles["inputWarning"]}><b>!</b> 입력란이 비어있습니다 <b>!</b></span>}

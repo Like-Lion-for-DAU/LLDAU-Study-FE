@@ -1,6 +1,6 @@
 import idyJPG from "../../assets/doyoung/week2/idy.jpg";
 import jsmPNG from "../../assets/doyoung/week2/jsm.png";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const emptyForm = { name: "", part: "Frontend", club:"", skills: "", introduce: "", introduceDetail: "", email: "", phone: "", website: "", last: "" };
 const randomParts = ["Frontend", "Backend", "PM", "Design"];
@@ -47,7 +47,7 @@ export function useFormData() {
 
 export const members = [
   {
-    id: 0,
+    id: 1,
     name: "김주완",
     part: "Frontend",
     intro: "성실히 배우고 싶은 학생입니다.",
@@ -60,7 +60,7 @@ export const members = [
     last: "성실히 배워서 웹개발 마스터가 되고 싶습니다.",
   },
   {
-    id: 1,
+    id: 2,
     name: "임도영",
     part: "Frontend",
     intro: "아기사자 14기 프론트엔드 임도영입니다.",
@@ -73,7 +73,7 @@ export const members = [
     last: "꾸준히 노력하고 적극적인 참여를 통해 성장하는 개발자가 되겠습니다.",
   },
   {
-    id: 2,
+    id: 3,
     name: "김나함",
     part: "Frontend",
     intro: "분야를 넘나들며 성장하는 개발자입니다.",
@@ -86,7 +86,8 @@ export const members = [
     last: "부족한 점은 많지만 포기하지 않고 계속 노력하여 성장하는 아기사자가 되겠습니다!",
   },
   {
-    id: 3,
+    id: 4,
+    isMe: true,
     name: "백태우",
     part: "Frontend",
     intro: "I'm Empty Stack Junior :(",
@@ -99,7 +100,7 @@ export const members = [
     last: "모두가 원하는 개발자가 되겠습니다.",
   },
   {
-    id: 4,
+    id: 5,
     name: "정소민",
     part: "Frontend",
     intro: "컴퓨터공학과 25학번 정소민입니다.",
@@ -112,7 +113,7 @@ export const members = [
     last: "열심히 하겠습니다.",
   },
   {
-    id: 5,
+    id: 6,
     name: "이도은",
     part: "Frontend",
     intro: "열심히 배우는 프론트엔드 개발자입니다!",
@@ -125,7 +126,7 @@ export const members = [
     last: "팀원들에게 든든한 개발자가 되고싶습니다.",
   },
   {
-    id: 6,
+    id: 7,
     name: "정서윤",
     part: "Frontend",
     intro: "멋사대학 14기 아기사자",
@@ -138,7 +139,7 @@ export const members = [
     last: null,
   },
   {
-    id: 7,
+    id: 8,
     name: "김아기사자",
     part: "Frontend",
     intro: "구조적인 UI를 고민하는 프론트엔드 개발자입니다.",
@@ -151,7 +152,7 @@ export const members = [
     last: null,
   },
   {
-    id: 8,
+    id: 9,
     name: "최아기사자",
     part: "Frontend",
     intro: "컴포넌트 단위 설계에 흥미가 있습니다.",
