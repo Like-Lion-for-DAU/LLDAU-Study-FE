@@ -245,130 +245,182 @@ export default function Week4Page() {
   //입력값을 검증후 members에 새 멤버 추가
   const handleSubmit = (e) => {
     e.preventDefault(); //기본 form subit방지
+
+    //skills문자열을 쉼표로 분리하고 각 항목 앞뒤 공백을 제거하고 빈 문자열을 제거함
     const skillArr = formData.skills
       .split(",")
       .map((s) => s.trim())
       .filter(Boolean);
 
+      //새 멤버에 고유 id 부여후 카운트를 증가함
+      //ref사용해서 리렌더링 없음
     const id = nextIdRef.current++;
+
+    //새 멤버 객체를 배열 끝에 추가해서 불변 업데이트
     setMembers((prev) => [
-      ...prev,
+      ...prev, //기존 멤버 배열 전개
       {
         id,
-        name: formData.name.trim(),
+        name: formData.name.trim(), //앞뒤 공백 제거
         part: formData.part,
         intro: formData.intro.trim(),
         about: formData.about.trim(),
         quote: formData.quote.trim(),
-        skills: skillArr,
-        badge: skillArr[0] || "",
+        skills: skillArr, //배열로 저장
+        badge: skillArr[0] || "", //첫번째 기술을 뱃지로 사용함
         email: formData.email.trim(),
         phone: formData.phone.trim(),
         website: formData.website.trim(),
-        image: DEFAULT_IMAGES[members.length % DEFAULT_IMAGES.length],
+        image: DEFAULT_IMAGES[members.length % DEFAULT_IMAGES.length],//members/length를 DEFALUT_IMAGES길이로 나눈 나머지 순환하며 이미지 배정함
         club: "LION TRACK",
-        isMine: false,
+        isMine: false, //직접 추가한 카드도 내 카드 아님
       },
     ]);
-    handleCloseForm();
+    handleCloseForm(); //폼 닫기 및 입력값 초기화
   };
 
+  //모든 API fetch버튼에 공통 적용되는 fetch 실행함수
+  //경쟁 조건 방지,타임아웃,상태 업데이트를 중앙에서 처리함
+  //실제 fetch및 members업데이트 로직이 담긴 비동기함수
   async function runFetchAction(actionFn) {
-    const requestId = ++latestRequestIdRef.current;
-    lastFetchActionRef.current = actionFn;
+    const requestId = ++latestRequestIdRef.current; //요청 고유번호 발급함
+    lastFetchActionRef.current = actionFn; //재시도시 동일 액션을 재실행할수있도록 저장함
 
-    if (latestControllerRef.current) latestControllerRef.current.abort();
-    const controller = new AbortController();
+    if (latestControllerRef.current) latestControllerRef.current.abort(); //이전에 진행중인 요청이있으면 abort()호출로 즉시 취소함
+    const controller = new AbortController(); //새 요청 전용 새로운 AbortController생성 및 저장
     latestControllerRef.current = controller;
 
-    let timedOut = false;
+    let timedOut = false; //타임아웃 여부 추적용 지역변수
+
+    //TIMEOUT_MS 후 자동 abort
     const timeoutId = setTimeout(() => {
       timedOut = true;
       controller.abort();
     }, TIMEOUT_MS);
 
+
+    //이전 에러 메시지 초기화 및 로딩 상태 시작
     setErrorMessage("");
     setFetchStatus("loading");
 
     try {
+
+      //actionFn 실행시 signal과 isLatest전달
       await actionFn({
         signal: controller.signal,
+
+        //이 요청이 아직도 최신 요청인지 확인하는 함수
+        //만약 false면 늦게 도착한 응답이므로 state업데이트를 건너뜀
         isLatest: () => requestId === latestRequestIdRef.current,
       });
 
-      if (requestId !== latestRequestIdRef.current) return;
-      clearTimeout(timeoutId);
-      setFetchStatus("success");
+      if (requestId !== latestRequestIdRef.current) return; //응답이 도착했지만 이미 더 최신 요청이 있으면 아무것도 하지않음
+      clearTimeout(timeoutId); //타임아웃 타이머 정리
+      setFetchStatus("success"); //성공 상태로 변경함
 
-      if (statusResetTimerRef.current) clearTimeout(statusResetTimerRef.current);
+      if (statusResetTimerRef.current) clearTimeout(statusResetTimerRef.current); //기존 리셋 타이머가 있으면 정리함
       statusResetTimerRef.current = setTimeout(() => {
+        //2초 사이에 새 요청이 없을때만 idle로 반환
         if (requestId === latestRequestIdRef.current) setFetchStatus("idle");
       }, 2000);
     } catch (err) {
-      if (requestId !== latestRequestIdRef.current) return;
-      clearTimeout(timeoutId);
+      if (requestId !== latestRequestIdRef.current) return; //에러 발생시 이 요청이 최신이 아니라면 무시함
+      clearTimeout(timeoutId); //타이머 정리
+
+      //AbortError이랑 timedOut이면 타임아웃 효과로 인한 취소
       if (err?.name === "AbortError" && timedOut) {
         setFetchStatus("error");
         setErrorMessage("불러오기 실패: 시간 초과");
         return;
       }
-      if (err?.name === "AbortError") return;
+      if (err?.name === "AbortError") return; //AbortError 이지만 timedOut이 아니면 새 요청 시작으로 인한 의도적 취소니 무시함
+      
+      //그외 일반에러
       setFetchStatus("error");
       setErrorMessage(`불러오기 실패: ${err?.message || "알 수 없는 오류"}`);
     }
   }
 
+
+  //랜덤 N명 추가 버튼 핸들러
+  //count는 추가할 인원 수
   const handleFetchAdd = (count) =>
+    
+    //runFetchAction에 실제 동작을 함수로 전달함
     runFetchAction(async (ctx) => {
+
+      //count명 API호출 ctx.signal로 취소 연동함
       const users = await fetchRandomUsers(count, ctx.signal);
-      if (!ctx.isLatest()) return;
-      const newOnes = users.map((u) => mapApiUser(u, nextIdRef.current++));
-      setMembers((prev) => [...prev, ...newOnes]);
+      if (!ctx.isLatest()) return; //응답이 도착했지만 더 최신 요청이 있으면 state업데이트를 건너뜀
+      const newOnes = users.map((u) => mapApiUser(u, nextIdRef.current++)); //API응답 배열을 앱 내부 멤버 형식으로 변환함
+      setMembers((prev) => [...prev, ...newOnes]); //기존 멤버 배열 끝에 새 멤버들을 추가함
     });
 
+
+    //전체 새로고침 버튼 핸들러
+    //isMime이 true인 카드는 보전하고
+    //나머지를 API데이터로 교챃ㅁ
   const handleFetchRefresh = () =>
     runFetchAction(async (ctx) => {
-      const mineMembers = members.filter((m) => m.isMine);
-      const fetchCount = members.length - mineMembers.length;
-      if (fetchCount === 0) return;
-      const users = await fetchRandomUsers(fetchCount, ctx.signal);
-      if (!ctx.isLatest()) return;
-      const newOnes = users.map((u) => mapApiUser(u, nextIdRef.current++));
-      setMembers([...mineMembers, ...newOnes]);
+      const mineMembers = members.filter((m) => m.isMine); //isMine이 true인 내 카드 멤버만 필터링해서 보존함
+      const fetchCount = members.length - mineMembers.length; //API료 교체할 멤버수
+      if (fetchCount === 0) return; //교체할 카드가 없으면 호출한해도됨
+      const users = await fetchRandomUsers(fetchCount, ctx.signal); //fetchCount명만큼 API호출함
+      if (!ctx.isLatest()) return; //최신 요청이 아니면 state 업데이트 건너뜀
+      const newOnes = users.map((u) => mapApiUser(u, nextIdRef.current++)); //새 멤버 생성함
+      setMembers([...mineMembers, ...newOnes]); //내 카드 뒤에 새 멤버들을 붙여 배열 교체함
     });
 
+    //재시도 버튼 핸들러
+    //마지막으로 실행한 fetch액션을 동일하게 재실행함
   const handleRetry = () => {
+    //lastFetchActionRef에 저장된 함수가 유요하면 runEftchAction으로 재실행
     if (typeof lastFetchActionRef.current === "function") {
       runFetchAction(lastFetchActionRef.current);
     }
   };
 
+
+  //화면에 실제로 표시할 멤버 목록을 계산하는 즉시 실행함수
+  //필터 검색 정렬 순서로 처리함
   const visibleMembers = (() => {
-    let list = members.slice();
-    if (filterPart !== "전체") list = list.filter((m) => m.part === filterPart);
-    const query = searchName.trim();
-    if (query) list = list.filter((m) => m.name?.includes(query));
+    let list = members.slice(); //원본 배열 훼손 방지를 위해 얕은복사함
+    if (filterPart !== "전체") list = list.filter((m) => m.part === filterPart); //파트 필터 전체가 아니면 선택한 파트의 멤버만 남김
+    const query = searchName.trim(); //검색어 앞뒤 공백 제거
+    if (query) list = list.filter((m) => m.name?.includes(query)); //검색어가 있으면 이름에 검색어를 포함하는 멤버만 남김
+    
+    //정렬 적용함
     if (sortOrder === "이름순") {
-      list.sort((a, b) => a.name.localeCompare(b.name, "ko"));
+      list.sort((a, b) => a.name.localeCompare(b.name, "ko")); //ko로케일 기준 가나다순 정렬
     } else {
+      //기본값 최신 추가순
       list.sort((a, b) => b.id - a.id);
     }
     return list;
   })();
 
+  //여기서부턴 JSX렌더
   return (
+    //전체 레이아웃을 감싸는 main태그
     <main className={styles["container"]}>
+      {/* 수동 추가 삭제 버튼 및 총 인원 표시 */}
       <div className={styles["controls"]}>
+        {/* 폼 열기 닫기 토글 버튼 ref를 달아 폼 닫힐때 포커스 복귀 */}
         <button ref={addBtnRef} type="button" className={styles["btn"]} onClick={handleToggleForm}>
           아기 사자 추가
         </button>
+        {/* 마지막 멤버 삭제 버튼 */}
         <button type="button" className={styles["btn"]} onClick={handleDeleteLast}>
           마지막 아기 사자 삭제
         </button>
+
+        {/* 현재 전체 멤버수 표시 */}
         <span className={styles["total-count"]}>총 {members.length}명</span>
       </div>
 
+      {/* API fetch 관련 버튼 및 상태 표시 */}
       <div className={styles["controls"]}>
+        {/* 랜덤 1명 추가 버튼 로딩중에는 disabled */}
         <button
           type="button"
           className={`${styles["btn"]} ${styles["btn-fetch"]}`}
@@ -377,6 +429,7 @@ export default function Week4Page() {
         >
           랜덤 1명 추가
         </button>
+        {/* 랜덤 5명 추가 버튼 로딩중에는 disabled */}
         <button
           type="button"
           className={`${styles["btn"]} ${styles["btn-fetch"]}`}
@@ -385,6 +438,7 @@ export default function Week4Page() {
         >
           랜덤 5명 추가
         </button>
+        {/* 전체 새로고침 버튼 isMine카드 유지하고 나머지 교체함 로딩중에는 disabled */}
         <button
           type="button"
           className={`${styles["btn"]} ${styles["btn-fetch"]}`}
@@ -393,15 +447,20 @@ export default function Week4Page() {
         >
           전체 새로고침
         </button>
+        {/* fetch상태 메시지 표시 영역임
+        data-state속성은 CSS에서 상태별 스타일 적용에 사용됨 */}
         <span
           className={styles["fetch-status"]}
           data-state={fetchStatus === "idle" ? "" : fetchStatus}
         >
+          {/* 각 fetchstatus값에 따라 적절한 텍스트를 조건부 렌더링함 */}
           {fetchStatus === "loading" && "불러오는 중..."}
           {fetchStatus === "success" && "완료!"}
           {fetchStatus === "error" && errorMessage}
           {fetchStatus === "idle" && "준비 완료"}
         </span>
+
+        {/* 에러 상태일 때만 재시도 버튼 렌더링 */}
         {fetchStatus === "error" && (
           <button
             type="button"
@@ -413,16 +472,21 @@ export default function Week4Page() {
         )}
       </div>
 
+      {/* 파트 필터 정렬 이름검색 */}
       <div className={styles["view-options"]}>
+
+        {/* 파트 필터 select */}
         <label className={styles["view-option"]}>
           <span>파트</span>
           <select value={filterPart} onChange={(e) => setFilterPart(e.target.value)}>
             <option value="전체">전체</option>
+            {/* PARTS배열을 순회하여 각 파트를 option으로 생성함 */}
             {PARTS.map((p) => (
               <option key={p} value={p}>{p}</option>
             ))}
           </select>
         </label>
+        {/* 정렬 기준 select */}
         <label className={styles["view-option"]}>
           <span>정렬</span>
           <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
@@ -430,6 +494,7 @@ export default function Week4Page() {
             <option value="이름순">이름순</option>
           </select>
         </label>
+        {/* 이름 검색 input */}
         <label className={styles["view-option"]}>
           <span>검색</span>
           <input
@@ -441,27 +506,34 @@ export default function Week4Page() {
         </label>
       </div>
 
+      {/* showForm이 true일때만 렌더링함 */}
       {showForm && (
         <div className={styles["form-wrapper"]}>
+          {/* onsubmit handlesubmit연결함,e.preventDefault포함 */}
           <form className={styles["add-form"]} onSubmit={handleSubmit}>
             <div className={styles["form-grid"]}>
+
+              {/* 이름 입력 */}
               <div className={styles["form-group"]}>
                 <label htmlFor="f-name">이름</label>
                 <input
-                  ref={nameInputRef}
+                  ref={nameInputRef} //폼 열릴때 자동으로 포커스
                   id="f-name" type="text" placeholder="예: 홍아기사자"
                   value={formData.name} onChange={handleInput("name")} required
                 />
               </div>
 
+              {/* 파트 선택 */}
               <div className={styles["form-group"]}>
                 <label htmlFor="f-part">파트</label>
                 <select id="f-part" value={formData.part} onChange={handleInput("part")} required>
                   <option value="">선택하세요</option>
+                  {/* PARTS배열 순회하며 option생성 */}
                   {PARTS.map((p) => <option key={p} value={p}>{p}</option>)}
                 </select>
               </div>
 
+              {/* 관심 기술 쉼표 구분 문자열로 입력후 제출시 배열로 변환함 */}
               <div className={`${styles["form-group"]} ${styles["form-full"]}`}>
                 <label htmlFor="f-skills">관심 기술 (쉼표로 구분)</label>
                 <input
@@ -470,6 +542,7 @@ export default function Week4Page() {
                 />
               </div>
 
+              {/* 한줄소개 요약 카드에 표시될 짧은 소개 */}
               <div className={`${styles["form-group"]} ${styles["form-full"]}`}>
                 <label htmlFor="f-intro">한 줄 소개 (요약 카드)</label>
                 <input
@@ -478,6 +551,7 @@ export default function Week4Page() {
                 />
               </div>
 
+              {/* 자기소개 상세카드에 표시될 긴 소개 */}
               <div className={`${styles["form-group"]} ${styles["form-full"]}`}>
                 <label htmlFor="f-about">자기소개 (상세 카드)</label>
                 <textarea
@@ -487,6 +561,7 @@ export default function Week4Page() {
                 />
               </div>
 
+              {/* type="email"로 브라우저 기본 유효성 검사 활용함 */}
               <div className={styles["form-group"]}>
                 <label htmlFor="f-email">Email</label>
                 <input
@@ -495,6 +570,7 @@ export default function Week4Page() {
                 />
               </div>
 
+              {/* type="tel"로 모바일에서 숫자 키패드 표시 */}
               <div className={styles["form-group"]}>
                 <label htmlFor="f-phone">Phone</label>
                 <input
@@ -503,6 +579,7 @@ export default function Week4Page() {
                 />
               </div>
 
+              {/* 웹사이트 URL입력함 type="url"로 URL형식 검사함, require없음 */}
               <div className={`${styles["form-group"]} ${styles["form-full"]}`}>
                 <label htmlFor="f-website">Website</label>
                 <input
@@ -511,6 +588,7 @@ export default function Week4Page() {
                 />
               </div>
 
+              {/* 한마디 상세카드 하단 blockquote에 표시될 짧은 문구 */}
               <div className={`${styles["form-group"]} ${styles["form-full"]}`}>
                 <label htmlFor="f-quote">한 마디</label>
                 <input
@@ -520,7 +598,9 @@ export default function Week4Page() {
               </div>
             </div>
 
+            {/* 폼 하단 버튼 영역 */}
             <div className={styles["form-actions"]}>
+              {/* 랜덤 값 채우기 API호출중이면 disabled및 텍스트 변경 */}
               <button
                 type="button"
                 className={styles["btn"]}
@@ -529,9 +609,11 @@ export default function Week4Page() {
               >
                 {isFilling ? "불러오는 중..." : "랜덤 값 채우기"}
               </button>
+              {/* 추가하기 form submit트리거 */}
               <button type="submit" className={`${styles["btn"]} ${styles["btn-primary"]}`}>
                 추가하기
               </button>
+              {/* 취소 폼 닫기 및 데이터 초기화 */}
               <button type="button" className={styles["btn"]} onClick={handleCloseForm}>
                 취소
               </button>
@@ -540,34 +622,49 @@ export default function Week4Page() {
         </div>
       )}
 
+      {/* 요약 카드 부분 */}
       <section className={styles["summary-section"]}>
+        {/* CSS grid로 카드를 격자로 배치 */}
         <ul className={styles["card-grid"]}>
+
+          {/* 표시할 멤버가 없을때 빈 상태 메시지 */}
           {visibleMembers.length === 0 && (
             <li className={styles["empty-state"]}>
               표시할 아기 사자가 없습니다.<br />(필터/검색 조건을 확인해 주세요)
             </li>
           )}
+
+          {/* visibleMembers배열 순회하여 각 멤버를 요약 카드 li로 렌더링함 */}
           {visibleMembers.map((m) => {
+            //파트명을 소문자로 변환해서 CSS클래스 이름에 사용함
             const partClass = m.part?.toLowerCase() || "";
             return (
               <li
-                key={m.id}
-                className={`${styles["summary-card"]} ${m.isMine ? styles["summary-card--mine"] : ""}`}
+                key={m.id} //리스트 재조정시 각 항목을 구분하는 고유값
+                className={`${styles["summary-card"]} ${m.isMine ? styles["summary-card--mine"] : ""}`} //isMine이 true면 내 카드 강조 스타일 클래스 추가함
               >
+
+                {/* 카드 이미지 뱃지 영역 */}
                 <div className={styles["card-image-wrap"]}>
                   <img
                     src={m.image}
                     alt={`${m.name} 프로필 이미지`}
                     className={styles["card-image"]}
+
+                    //이미지 로드 실패시 picsum이미지로 교체하고 무한루프 방지함
                     onError={(e) => {
                       e.currentTarget.onerror = null;
                       e.currentTarget.src = `https://picsum.photos/seed/${m.id}/400/280`;
                     }}
                   />
+
+                  {/* 첫번째 기술 스택을 뱃지로 표시함 */}
                   <span className={styles["badge"]}>{m.badge}</span>
                 </div>
+                {/* 카드 텍스트 영역 */}
                 <div className={styles["card-body"]}>
                   <h2 className={styles["card-name"]}>{m.name}</h2>
+                  {/* 파트별 색상 스타일을 위해 파트명 기반 클래스 추가함 */}
                   <p className={`${styles["card-part"]} ${styles[`card-part--${partClass}`] || ""}`}>
                     {m.part}
                   </p>
@@ -579,16 +676,24 @@ export default function Week4Page() {
         </ul>
       </section>
 
+      {/* 상세 자기소개 부분 */}
       <section className={styles["detail-section"]}>
         <h2 className={styles["section-title"]}>상세 자기소개</h2>
+
+        {/* 순서가있는 목록으로 렌더링함 */}
         <ol className={styles["detail-list"]}>
+          {/* 빈 상태 메시지 */}
           {visibleMembers.length === 0 && (
             <li className={styles["empty-state"]}>표시할 아기 사자가 없습니다.</li>
           )}
+
+          {/* visibleMembers순회하여 상세 카드 렌더링함 */}
           {visibleMembers.map((m) => {
             const partClass = m.part?.toLowerCase() || "";
             return (
               <li key={m.id} className={styles["detail-card"]}>
+
+                {/* 카드헤더 이름 파트 클럽명 */}
                 <header className={styles["detail-header"]}>
                   <h3 className={styles["detail-name"]}>{m.name}</h3>
                   <p className={`${styles["detail-part"]} ${styles[`detail-part--${partClass}`] || ""}`}>
@@ -597,29 +702,38 @@ export default function Week4Page() {
                   <p className={styles["detail-club"]}>{m.club}</p>
                 </header>
 
+                {/* 자기소개 */}
                 <section className={styles["detail-section-inner"]}>
                   <h4>자기소개</h4>
                   <p>{m.about}</p>
                 </section>
 
+                {/* 관심기술 skills배열을 li로 렌더링함 */}
                 <section className={styles["detail-section-inner"]}>
                   <h4>관심 기술</h4>
                   <ul className={styles["skill-list"]}>
+                    {/* key에 인덱스 사용함 기술 목록은 재정렬되지않으므로 안전함 */}
                     {(m.skills || []).map((s, i) => (
                       <li key={`${m.id}-skill-${i}`}>{s}</li>
                     ))}
                   </ul>
                 </section>
 
+
+                {/* 연락처 부분 address태그는 연락처 정보의 시맨틱 마크업 */}
                 <section className={styles["detail-section-inner"]}>
                   <h4>연락처</h4>
                   <address>
                     <ul className={styles["contact-list"]}>
+                      {/* 이메일이 있을때만 렌더링함 mailto:링크 */}
                       {m.email && <li>이메일: <a href={`mailto:${m.email}`}>{m.email}</a></li>}
+                      {/* 전화번호가 있을떄만 렌더링함 */}
                       {m.phone && <li>전화번호: {m.phone}</li>}
+                      {/* 웹사이트가 있을떄만 렌더링,새탭으로 열기 */}
                       {m.website && (
                         <li>
                           웹사이트:{" "}
+                          {/* 새탭열기 사용함,rel="noopener noreferrer"로 탭나이핑 방지함 */}
                           <a href={m.website} target="_blank" rel="noopener noreferrer">
                             {m.website}
                           </a>
@@ -629,6 +743,7 @@ export default function Week4Page() {
                   </address>
                 </section>
 
+                {/* 한마디임 blockquote태그로 인용구 시맨틱 마크업 */}
                 <section className={styles["detail-section-inner"]}>
                   <h4>한 마디</h4>
                   <blockquote>{m.quote}</blockquote>
