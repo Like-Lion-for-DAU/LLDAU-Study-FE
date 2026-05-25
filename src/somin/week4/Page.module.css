@@ -10,6 +10,26 @@
   padding: 0 24px;
 }
 
+.status_idle {
+  background: #f3f4f6;
+  color: navy
+}
+
+.status_loading {
+  background: #dbeafe;
+  color: blue;
+}
+
+.status_success {
+  background: #dcfce7;
+  color: green;
+}
+
+.status_fail {
+  background: #fee2e2;
+  color: red;
+}
+
 .controlBarInner {
   max-width: 1200px;
   margin: 0 auto;
@@ -103,13 +123,6 @@
   max-width: 280px;
 }
 
-.searchIcon {
-  position: absolute;
-  left: 10px;
-  font-size: 0.8rem;
-  pointer-events: none;
-}
-
 .viewSearch {
   width: 100%;
   font-size: 0.83rem;
@@ -122,20 +135,20 @@
   box-sizing: border-box;
 }
 
-/* 버튼 공통*/
+/* 버튼 공통 */
 .btn {
   font-size: 14px;
-  padding: 8px 14px;
-  border: 1px solid black;
-  background: lightgray;
-  color: black;
-  cursor: pointer;
-  border-radius: 10%;
+  font-weight: 600;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 12px;
+  background: skyblue;
+  color: white;
 }
 
 /* 추가 폼 */
 .formSection {
-  background: white;
+  background: #f7faff;
   padding: 32px 0;
   margin: 0 -24px;
 }
@@ -190,22 +203,12 @@
 
 .formGroup input,
 .formGroup select,
-.formGroup textarea {
-  padding: 8px 12px;
-  border: 1.5px solid white;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  color: black;
-  background: white;
-  outline: none;
-  transition: border-color 0.15s;
-  resize: vertical;
-}
-
-.formGroup input:focus,
-.formGroup select:focus,
-.formGroup textarea:focus {
-  border-color: navy;
+.formGroup textarea,
+.viewSearch,
+.viewSelect {
+  background: rgba(255,255,255,0.85);
+  border: 1.5px solid #dbe4ff;
+  border-radius: 14px;
 }
 
 .required {
@@ -302,7 +305,7 @@
   color: blue;
 }
 
-/*  상세 카드*/
+/* 상세 카드 */
 .cardDetail {
   display: flex;
   flex-direction: column;
@@ -374,6 +377,21 @@
 .gako {
   font-size: 14px;
   line-height: 1.8;
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #d1d5db;
+  border-top-color: #003364;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @media (max-width: 1000px) {
