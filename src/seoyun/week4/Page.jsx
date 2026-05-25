@@ -144,49 +144,64 @@ export default function Week4Page() {
     };
   }, []);
 
+  //showForm이 바뀔때마다 실행되는 useEffect
+  //폼이 열리면 이름 일벽 필드로 자동 포커스 이동
   useEffect(() => {
     if (showForm) nameInputRef.current?.focus();
-  }, [showForm]);
+  }, [showForm]); //showForm이 변경될때만 재실행
 
+  //show FOrm 상태에 따라 esc키 이벤트 리스너를 등록 해제함
   useEffect(() => {
+    //폼이 닫혀있으면 이벤트 리스너 등록 불필요하므로 즉시 종료함
     if (!showForm) return;
+
+    //esc키 누름 감지 핸들러
     const onEsc = (e) => {
       if (e.key === "Escape") {
-        setShowForm(false);
-        setFormData(EMPTY_FORM);
-        addBtnRef.current?.focus();
+        setShowForm(false);//폼 닫기
+        setFormData(EMPTY_FORM);//폼 데이터 초기화
+        addBtnRef.current?.focus(); //포커스를 아기사자 추가 버튼으로 복귀
       }
     };
-    window.addEventListener("keydown", onEsc);
-    return () => window.removeEventListener("keydown", onEsc);
-  }, [showForm]);
+    window.addEventListener("keydown", onEsc); //전역에 keydown이벤트 등록
+    return () => window.removeEventListener("keydown", onEsc); //cleanup showForm이 flase가 되거나 컴포넌트 언마운트시 이벤트 해제함
+  }, [showForm]); //show Form 바뀔때마다 리스너 재등록
 
+  //아기사자 추가 버튼 클릭 핸들러 폼 표시 여부를 토글함
   const handleToggleForm = () => setShowForm((prev) => !prev);
 
+  //폼 닫기,데이터 초기화,버튼으로 포커스 복귀를 처리함
   const handleCloseForm = () => {
-    setShowForm(false);
-    setFormData(EMPTY_FORM);
-    addBtnRef.current?.focus();
+    setShowForm(false); //폼숨기기
+    setFormData(EMPTY_FORM); //모든 입력값 초기화
+    addBtnRef.current?.focus(); //아기사자 추가 버튼으로 포커스 이동
   };
 
+
+  //랜덤 값 채우기 버튼 핸들러
   const handleFillRandom = async () => {
-    if (isFilling) return;
-    setIsFilling(true);
-    const controller = new AbortController();
-    let timedOut = false;
+    if (isFilling) return; //이미 로딩중이면 중복 호출 방지함
+    setIsFilling(true); //로딩상태 시작
+    const controller = new AbortController(); //이 요청 전용 AbortController 생성
+    let timedOut = false; //타임아웃 여부 추적용 지역변수
+    
+    //TIMEOUT_MS 후 자동 abort및 timedOut플래그 설정
     const timeoutId = setTimeout(() => {
       timedOut = true;
       controller.abort();
     }, TIMEOUT_MS);
     try {
+      //랜덤 유저 API호출
       const users = await fetchRandomUsers(1, controller.signal);
-      clearTimeout(timeoutId);
+      clearTimeout(timeoutId); //성공시 타이머 정리
       const user = users[0];
-      if (!user) throw new Error("유저를 불러오지 못했습니다.");
-      const part = pickRandom(PARTS);
+      if (!user) throw new Error("유저를 불러오지 못했습니다."); //유저 데이터 없으면 에러 throw
+      const part = pickRandom(PARTS); //파트 및 기술 무작위 선택
       const skills = [...SKILLS_BY_PART[part]].sort(() => Math.random() - 0.5).slice(0, 3);
       const country = user.location?.country || "";
       const city = user.location?.city || "";
+      
+      //API데이터 및 랜덤 프리셋으로 전체 필드를 채움
       setFormData({
         name: `${user.name.first} ${user.name.last}`,
         part,
@@ -199,24 +214,37 @@ export default function Week4Page() {
         quote: pickRandom(QUOTE_PRESETS),
       });
     } catch (err) {
-      clearTimeout(timeoutId);
+      clearTimeout(timeoutId); //에러 발생시에도 타이머 정리
+
+      //AbortError 이면서 timedOut이면 취소함
       if (err?.name === "AbortError" && timedOut) {
         alert("랜덤 값 채우기 실패: 시간 초과");
       } else if (err?.name !== "AbortError") {
+        //AbortError가 아닌 에러
         alert(`랜덤 값 채우기 실패: ${err?.message}`);
       }
+      //AbortError이지만 Timeout이아니면 사용자가 의도적으로 취소한것이므로 무시함
     } finally {
+      //성공 실패 모두 로딩 상태 해제함
       setIsFilling(false);
     }
   };
 
+  //마지막으로 추가된 멤버를 삭제하는 핸들러
+  //마지막 요소를 제외한 새 배열을 반환함
   const handleDeleteLast = () => setMembers((prev) => prev.slice(0, -1));
 
+  //폼 입력 필드의 onChange핸들러를 생성하는 고차함수
+  //field는 변경할 formData의 키 이름
+  //반환값은 onChange이벤트 핸들러 함수
+  //이전 상태를 spread한뒤 해당 field만 새 값으로 업데이트해서 불변성을 유지함
   const handleInput = (field) => (e) =>
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
 
+  //폼 제출 핸들러
+  //입력값을 검증후 members에 새 멤버 추가
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault(); //기본 form subit방지
     const skillArr = formData.skills
       .split(",")
       .map((s) => s.trim())
