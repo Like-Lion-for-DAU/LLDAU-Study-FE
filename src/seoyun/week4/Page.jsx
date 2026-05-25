@@ -1,5 +1,9 @@
+//react 훅 임포트
+//useEffect 사이드 이펙트 처리
+//useRef 리렌더링엉ㅂ시 값/DOM 보관하는 ref객체 생성
+//useState 컴포넌트 상태 선언 관리
 import { useEffect, useRef, useState } from "react";
-import styles from "./Page.module.css";
+import styles from "./Page.module.css"; //css 모듈 임포트
 import {
   initialMembers,
   PARTS,
@@ -7,22 +11,31 @@ import {
   ABOUT_PRESETS,
   QUOTE_PRESETS,
   DEFAULT_IMAGES,
-} from "./lions";
+} from "./lions"; //필요한 상수랑 데이터
 
-const TIMEOUT_MS = 5000;
+const TIMEOUT_MS = 5000; //fetch 요청에 적용할 타임아웃 시간,이 시간안에 응답없으면 abortController로 요청 취소
 
+//배열에서 무작위 요소 하나를 반환하는 함수
+//0이상 1미만 난수 생성후 배열 길이 범위로 스케일업해서 소수점 버리고 유요한 정수 확보함
 function pickRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
-
+//randomuser.me API응답을 내부 멤버 형식으로 반환함
 function mapApiUser(user, id) {
+  //PARTS배열에서 파트를 무작위로 선택
   const part = pickRandom(PARTS);
+
+  //해당 파트의 기술 스택 배열을 복사한뒤 무작위로 섞고 앞 3개만 추출
   const skills = [...SKILLS_BY_PART[part]].sort(() => Math.random() - 0.5).slice(0, 3);
+  //API응답에서 이름 추출후 성이랑 이릅 결합
   const name = `${user.name.first} ${user.name.last}`;
+  //API응답에서 국가추출 만약 없으면 빈 문자열로 대체
   const country = user.location?.country || "";
+  //API응답에서 도시추출 만약 없으면 빈 문자열로 대체
   const city = user.location?.city || "";
+  //위에서 조합한 데이터로 내부 멤버 객체를 구성해 반환함
   return {
-    id,
+    id,//앱 내부 고유 ID
     name,
     part,
     intro: `${part} · ${country} ${city}에서 합류했어요!`,
@@ -34,55 +47,100 @@ function mapApiUser(user, id) {
     website: `https://github.com/${user.login?.username || "lion"}`,
     image: user.picture?.large || `https://picsum.photos/seed/${id}/200/200`,
     club: "LION TRACK",
-    isMine: false,
+    isMine: false,//API로 추가된 멤버는 내 카드가 아님
   };
 }
-
+//randomuser.me API에서 count명의 랜덤 유저를 가져오는 비동기 함수
 async function fetchRandomUsers(count, signal) {
+  //fetch 요청 results=count 명 nat으로 국정 한정
   const res = await fetch(
     `https://randomuser.me/api/?results=${count}&nat=us,gb,ca,au,nz`,
-    { signal }
+    { signal } //AbortSignal을 fetch에 전달 만약 abort시 요청 즉시 취소
   );
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const data = await res.json();
-  return data.results || [];
-}
 
+  //HTTP응답이 실패면 에러 throw
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data = await res.json(); //JSON으로 파싱
+  return data.results || []; //results배열 반환 만약 없으면 빈 배열 반환
+}
+//폼 초기 상태 함수
+//폼을 열거나 닫을때 이 값으로 초기화함
 const EMPTY_FORM = {
-  name: "",
-  part: "",
-  skills: "",
-  intro: "",
-  about: "",
-  email: "",
-  phone: "",
-  website: "",
-  quote: "",
+  name: "", //이름
+  part: "", //파트
+  skills: "", //관심기술 쉼표로 구분된 문자열
+  intro: "", //한줄소개
+  about: "", //자기소개
+  email: "", //이메일
+  phone: "", //전화번호
+  website: "", //웹사이트
+  quote: "", //한마디
 };
 
+//페이지 메인 컴포넌트 선언 및 default export
 export default function Week4Page() {
-  const [members, setMembers] = useState(initialMembers);
-  const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState(EMPTY_FORM);
-  const [filterPart, setFilterPart] = useState("전체");
-  const [sortOrder, setSortOrder] = useState("최신추가순");
-  const [searchName, setSearchName] = useState("");
-  const [fetchStatus, setFetchStatus] = useState("idle");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [isFilling, setIsFilling] = useState(false);
 
+  //현재 표시중인 전체 멤버 배열 상태
+  //초기값은 lion.js에서 불러온 initialMemvers
+  const [members, setMembers] = useState(initialMembers);
+  
+  const [showForm, setShowForm] = useState(false); //멤버 추가 폼의 표시 여부 상태 True는 열림 False는 닫힘
+  const [formData, setFormData] = useState(EMPTY_FORM); //폼 입력값 상태 객체 각 필드가 controlled input과 연동됨
+  const [filterPart, setFilterPart] = useState("전체"); //파트 필터 상태 전체이면 모든 멤버표시 특정파트이면 해당 파트만 표시
+  const [sortOrder, setSortOrder] = useState("최신추가순");//정렬 기준 상태
+  const [searchName, setSearchName] = useState(""); //이름 검색어 상태 입력값을 포함하는 멤버만 필터링
+  
+  
+  //API fetch 상태
+  //idle loading success error
+  //UI에서 버튼 비활성화 상태 메시지 표시에 활용
+  const [fetchStatus, setFetchStatus] = useState("idle");
+  const [errorMessage, setErrorMessage] = useState(""); //fetch 실패시 에러 메시지 상태
+  
+  
+  //랜덤값 채우기 버튼이 현재 요청중인지 여부 상태
+  //true면 버튼 비활성화 및 로딩 텍스트 표시
+  const [isFilling, setIsFilling] = useState(false);
+  
+  
+  //다음 멤버에 부여할 id를 저장하는 ref
+  //ref를 사용하는 이유는 id변경시 리렌더링이 필요없기떄문
+  //초기값은 현재 initialMembers중 가장 큰 id + 1
   const nextIdRef = useRef(Math.max(...initialMembers.map((m) => m.id)) + 1);
+  
+  
+  //가장 최근에 시작된 fetch 요청의 고유 번호를 추적하는 ref
+  //경쟁 조건 방지하기위해서 사용됨
+  //이전 요청의 응답이 늦게 도착해도 무시 가능함
   const latestRequestIdRef = useRef(0);
+  
+  //현재 진행중인 ㄴfetch 요청의 AbortController를 저장하는 ref
+  //새 요청 시작전에 이전 요청을 abort()로 취소할떄 사용
   const latestControllerRef = useRef(null);
+  
+  //마지막으로 실행된 fetch액션 함수를 저장하는 ref
+  //재시도 버튼 클릭시 동일한 액션을 다시 실행하기위해 보관
   const lastFetchActionRef = useRef(null);
+  
+  //완료 상태를 2초후 idle로 되돌리는 타이머를 저장하는 ref
+  //컴포넌트 언마운트시 clearTimeout으로 타임어를 정리
   const statusResetTimerRef = useRef(null);
+  
+  //폼의 이름 input요소에ㅓ 대한 ref
+  //폼이 열릴때 자동으로 포커스를 위해 사용
   const nameInputRef = useRef(null);
+  
+  //아기사자추가 버튼 요서에 대한 ref
+  //폼 닫힐때 포커스를 이 버튼으로 되돌리기위해 사용
   const addBtnRef = useRef(null);
 
+  //컴포넌트 마운트시 1회 실행되는 cleanup등록 useEffect
+  //의존성 배열이 []이므로 마운트시한번 언마운트시 cleanup실행
   useEffect(() => {
+    //cleanup함수는 컴포넌트가 DOM에서 제거될때 실행됨
     return () => {
-      if (statusResetTimerRef.current) clearTimeout(statusResetTimerRef.current);
-      if (latestControllerRef.current) latestControllerRef.current.abort();
+      if (statusResetTimerRef.current) clearTimeout(statusResetTimerRef.current); //메모리 누수 방지하기위해 남아있는 상태 리셋 타이머가 있으면 정리함
+      if (latestControllerRef.current) latestControllerRef.current.abort();//언마운트후 setState호출을 방지하기위해 진행중인 fetch요청이있으면 취소함
     };
   }, []);
 
