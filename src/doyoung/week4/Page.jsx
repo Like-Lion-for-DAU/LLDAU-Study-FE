@@ -89,54 +89,93 @@ function DetailCard({
 
 export default function Week4Page() {
 
+  const [retryAction, setRetryAction] =
+  useState(null);
+
+  const handleRetry = () =>{
+    if (retryAction) {
+      retryAction();
+    }
+  };
+
+  const [fetchStatus, setFetchStatus] =
+  useState("idle");
+
+  const [statusMessage, setStatusMessage] =
+  useState("");
+
+  const [lastRequest, setLastRequest] =
+  useState(null);
+
+  const latestControllRef = useRef(null);
+
+  const latestRequestIdRef = useRef(0);
+
+  const [sortType, setSortType] =
+  useState("recent");
+
+  const controller = new AbortController();
+
+  const TIMEOUT_MS = 5000;
+  let timedOut = false;
+  const timeoutId = setTimeout(() => {
+    timedOut = true;
+    controller.abort();
+  }, TIMEOUT_MS);
+
   const fetchRandomUsers = async (count, type = "add") => {
+    const requestId = ++latestRequestIdRef.current;
+
+    if(latestControllRef.current) latestControllRef.current.abort();
+    const controller = new AbortController();
+    latestControllRef.current = controller;
+
+    let timedOut = false;
+
+    const timeOutId = setTimeout(() => {
+      timedOut = true;
+      controller = true;
+      controller.abort();
+    }, 5000);
+
     try {
-      setLastRequest({
-        count,
-        type,
-      });
       setFetchStatus("loading");
-      const response = await fetch(
-        `https://randomuser.me/api/?results=${count}&nat=us,gb,ca,au,nz`
-      );
+      setStatusMessage("");
+
+      await new Promise((resolve) =>
+      setTimeout(resolve, 5000));
+
+      const response = await fetch(`https://randomuser.me/api/?results=${count}&nat=us,gb,ca,au,nz`, {signal: controller.signal});
+      clearTimeout(timeoutId);
+      if(requestId !== latestRequestIdRef.current) return;
       if (!response.ok) {
           throw new Error("API 요청 실패");
       }
       const data = await response.json();
-
       const parts = ["Frontend", "Backend", "Design",];
-
       const newMember = data.results.map(
-        (user, index) => ({
+        (user) => ({
           name: `${user.name.first} ${user.name.last}`,
           role:
           parts[
             Math.floor(Math.random() * parts.length)
           ],
-
+          //Math.floor -> 소수점 버림
           intro: "랜덤 유저입니다.",
-
           bio: [
             `${user.location.country}에서 온 사용자`,
           ],
-
           skills: [
             "React",
             "JavaScript",
             "CSS",
           ],
-
           tell: "잘 부탁드립니다!",
-
           image: user.picture.large,
-
-          email: user.email,
-
-          phone: user.phone,
-
-          link: {
-            label: "Profile",
-            url: user.picture.large,
+          contact: {
+            email: user.email,
+            phone: user.phone,
+            link: { label: "Profile", url: user.picture.large },
           },
         })
       );
@@ -145,7 +184,6 @@ export default function Week4Page() {
         const myCards = members.filter(
           (member) => member.isMe
         );
-
         setMembers([
           ...myCards,
           ...newMember,
@@ -159,36 +197,73 @@ export default function Week4Page() {
 
       setFetchStatus("success");
 
+
       setTimeout(() => {
         setFetchStatus("idle");
       }, 2000);
     }catch (error) {
-      setFetchStatus("error");
-
-      setStatusMessage(error.message);
+      clearTimeout(timeoutId);
+      setFetchStatus("error")
+      if(error.name === "AbortError" && timedOut){
+        setStatusMessage("시간 초과");
+      } else {
+        setStatusMessage("불러오기 실패")
+      }
     }
   };
 
-  const handleRetry = () => {
-    if (!lastRequest) return;
+  const fillRandomData = async () => {
+    const controller = new AbortController();
 
-    fetchRandomUsers(
-      lastRequest.count,
-      lastRequest.type
-    );
-  };
+    let timedOut = false;
 
-  const [fetchStatus, setFetchStatus] =
-  useState("idle");
+    const timeoutId = setTimeout(() => {
+      timedOut = true;
+      controller.abort();
+    }, 5000);
+    try{
+      setFetchStatus("loading");
+      setRetryAction(() => fillRandomData);
 
-  const [statusMessage, setStatusMessage] =
-  useState("");
+      await new Promise((resolve) =>
+      setTimeout(resolve, 5000));
 
-  const [lastRequest, setLastRequest] =
-  useState(null);
+      const response = await fetch(`https://randomuser.me/api/?nat=us,gb,ca,au,nz`);
 
-  const [sortType, setSortType] =
-  useState("recent");
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        throw new Error("랜덤 유저 불러오기 실패");
+      }
+      const data = await response.json();
+      const user = data.results[0];
+
+      const parts = [
+        "Frontend",
+        "Backend",
+        "Design",
+      ];
+
+      const randomIndex = Math.floor(
+        Math.random() * parts.length
+      );
+
+      setmemberInput({
+        name: `${user.name.first} ${user.name.last}`,
+        role: parts[randomIndex],
+        skills : "React, JavaScript, CSS",
+        intro: "랜덤으로 생성된 아기사자입니다!",
+        bio: `${user.location.country}에서 온 사용자입니다.`,
+        email: user.email,
+        phone: user.phone,
+        web: user.picture.large,
+        motto: "잘 부탁드립니다!",
+      });
+    } catch (error) {
+      console.error(error);
+      alert("랜덤 데이터를 불러오지 못했습니다.");
+    }
+  }
 
   const [search, setSearch] =
   useState("")
@@ -210,14 +285,14 @@ export default function Week4Page() {
   const [memberInput, setmemberInput] =
   useState ({
     name :"",
-    part :"",
+    role :"",
     skills :"",
     intro :"",
-    detail :"",
+    bio :"",
     email : "",
     phone :"",
     web :"",
-    tell :"",
+    motto :"",
   }); 
 
   const visibleMembers = [...members]
@@ -277,7 +352,7 @@ export default function Week4Page() {
       behavior: "smooth",
       block: "start",
     });
-
+    setFocusedId(name);
     setTimeout(() =>{
       setFocusedId(null);
     }, 1000);
@@ -287,15 +362,15 @@ export default function Week4Page() {
     event.preventDefault();
     const newMember = {
       name : memberInput.name,
-      part : memberInput.part,
+      role : memberInput.role,
       intro : memberInput.intro,
       club : "DSIS",
       image: "/lion.png",
-      bio : [memberInput.detail],
+      bio : [memberInput.bio],
       skills : memberInput.skills
       .split(",")
       .map((skill) => skill.trim()),
-      motto: memberInput.tell,
+      motto: memberInput.motto,
       contact: {
         email: memberInput.email,
         phone: memberInput.phone,
@@ -313,14 +388,14 @@ export default function Week4Page() {
 
     setmemberInput({
       name: "",
-      part: "",
+      role: "",
       skills: "",
       intro: "",
-      detail: "",
+      bio: "",
       email: "",
       phone: "",
       web: "",
-      tell: "",
+      motto: "",
     });
     setShowForm(false);
   }
@@ -418,7 +493,7 @@ export default function Week4Page() {
           <div>
             <span className={styles["text"]}>정렬</span>
             <select
-            value={partFilter}
+            value={sortType}
             className={styles["btnIcon"]}
             onChange={(e) =>
               setSortType(e.target.value)
@@ -457,6 +532,7 @@ export default function Week4Page() {
                 id="name"
                 type="text"
                 className={styles["form"]}
+                value={memberInput.name}
                 onChange={(event) =>
                   handleInputChange("name", event)
                 }
@@ -466,16 +542,16 @@ export default function Week4Page() {
               <div
               className={styles["controlInner"]}>
                 <label
-                htmlFor="part"
+                htmlFor="role"
                 className={styles["text"]}>
                   파트
                 </label>
                 <select
-                id="part"
+                id="role"
                 className={styles["part"]}
-                value={memberInput.part}
+                value={memberInput.role}
                 onChange={(e) =>
-                  handleInputChange("part", event)
+                  handleInputChange("role", e)
                 }
                 required>
                   <option value="">파트를 선택하세요</option>
@@ -522,19 +598,19 @@ export default function Week4Page() {
               </div>
               <div
               className={styles["Width"]}>
-                <lable
-                htmlFor="detail"
+                <label
+                htmlFor="bio"
                 className={styles["text"]}>
                   자기소개 (상세 카드)
-                </lable>
+                </label>
                 <textarea
-                id="detail"
+                id="bio"
                 rows="5"
                 cols="30"
-                value={memberInput.detail}
+                value={memberInput.bio}
                 className={styles["form"]}
                 onChange={(event) =>
-                  handleInputChange("detail", event)
+                  handleInputChange("bio", event)
                 }
                 placeholder="예: HTML/CSS로 구조를 만들고, JS로 데이터를 바꾸면 화면이 바뀌는 경험을 하고 있습니다."
                 required/>
@@ -554,7 +630,7 @@ export default function Week4Page() {
                 onChange={(event) =>
                   handleInputChange("email", event)
                 }
-                replaceholder="예: lion@example.com"
+                placeholder="예: lion@example.com"
                 required/>
               </div>
               <div
@@ -584,7 +660,7 @@ export default function Week4Page() {
                 </label>
                 <input
                 id="web"
-                type="web"
+                type="text"
                 className={styles["form"]}
                 value={memberInput.web}
                 onChange={(event) =>
@@ -596,17 +672,17 @@ export default function Week4Page() {
               <div
               className={styles["Width"]}>
                 <label
-                htmlFor="tell"
+                htmlFor="motto"
                 className={styles["text"]}>
                   한마디
                 </label>
                 <input
-                id="tell"
+                id="motto"
                 type="text"
                 className={styles["form"]}
-                value={memberInput.tell}
+                value={memberInput.motto}
                 onChange={(event) =>
-                  handleInputChange("tell", event)
+                  handleInputChange("motto", event)
                 }
                 placeholder="예: 데이터 바꾸면 화면도 바뀐다!"
                 required/>
@@ -615,6 +691,12 @@ export default function Week4Page() {
               className={styles["controlOut"]}>
                 <button
                 type="button"
+                className={styles["btnIcon"]}
+                onClick={fillRandomData}>
+                  랜덤 값 채우기
+                </button>
+                <button
+                type="submit"
                 className={styles["btnIcon"]}
                 >
                   추가하기
@@ -646,7 +728,7 @@ export default function Week4Page() {
       )}
       
       <section className={styles["detailcardpack"]}>
-        {members.map((member) => (
+        {visibleMembers.map((member) => (
           <DetailCard
           key={member.name}
           member={member}
