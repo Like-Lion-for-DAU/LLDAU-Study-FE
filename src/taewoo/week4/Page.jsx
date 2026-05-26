@@ -1,6 +1,6 @@
 import styles from "./Page.module.css";
 import { members as initialMembers, pushRandomMembers, usePageScrollDown, useFormData, randomResult, randomNewMember} from "./script.js";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function Week4Page() {
   const [memberList, setMemberList] = useState(initialMembers);
@@ -11,6 +11,8 @@ export default function Week4Page() {
   const [sortPart, setSortPart] = useState("all");
   const [sortType, setSortType] = useState("newest");
   const [sortSearch, setSortSearch] = useState("");
+
+  const TIMEOUT_MS = 2000;
 
 
   usePageScrollDown(selected, () => setSelected(null));
@@ -23,6 +25,8 @@ export default function Week4Page() {
     error: "실패하였습니다. 잠시 후 다시 시도해주세요.",
   }
 
+  const lastAction = useRef(null);
+
   const handleAddSubmit = (e) => {
     e.preventDefault();
     const skillList = formData.skills.split(",").map((s) => s.trim()).filter(Boolean);
@@ -31,9 +35,9 @@ export default function Week4Page() {
       name: formData.name,
       part: formData.part,
       intro: formData.introduce,
-      club: "DAU_DSIS",
+      club: formData.club,
       badge: skillList[0] || "신규",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2QuItPJLx65Rb2kqBsMRU7t3BmKc8jn98lw&s",
+      image: `https://picsum.photos/seed/${Date.now()}/200/200`,
       introduce: [formData.introduceDetail],
       contact: {
         email: formData.email,
@@ -50,34 +54,37 @@ export default function Week4Page() {
 
   const handleFetchRandom = async () => {
     setFetching("loading");
+    lastAction.current = handleFetchRandom;
     try {
       const user = await randomResult(1);
       const newMember = randomNewMember(user[0]);
       setMemberList((prev) => [...prev, newMember]);
       setFetching("success");
+      setTimeout(() => setFetching("ready"), 2000);
     } catch{
       setFetching("error");
-    } finally {
-      setTimeout(() => setFetching("ready"), 2000);
     }
+    return user[0];
   };
 
   const handleFetchFiveRandom = async () => {
     setFetching("loading");
+    lastAction.current = handleFetchFiveRandom;
     try {
       const users = await randomResult(5);
       const newMembers = users.map(randomNewMember);
       setMemberList((prev) => [...prev, ...newMembers]);
       setFetching("success");
+      setTimeout(() => setFetching("ready"), 2000);
     } catch {
       setFetching("error");
-    } finally {
-      setTimeout(() => setFetching("ready"), 2000);
     }
+    return users[0];
   }
 
   const handleRefresh = async () => {
     setFetching("loading");
+    lastAction.current = handleRefresh;
     try {
       const myProfile = memberList.find((member) => member.name === "백태우");
       const lionCount = memberList.length-1;
@@ -85,12 +92,21 @@ export default function Week4Page() {
       const newMembers = users.map(randomNewMember);
       setMemberList([myProfile, ...newMembers]);
       setFetching("success");
+      setTimeout(() => setFetching("ready"), 2000);
     } catch {
       setFetching("error");
-    } finally {
-      setTimeout(() => setFetching("ready"), 2000);
     }
+    return users[0];
   }
+
+  const handleRetry = () => {
+    if (fetching === "error") {
+      setFetching("ready");
+      if (lastAction.current) {
+        lastAction.current();
+      }
+    }
+  };
 
   const displayList = memberList
     .filter((member) => sortSearch === ""
@@ -98,11 +114,11 @@ export default function Week4Page() {
       || member.part?.includes(sortSearch)
       || member.intro?.includes(sortSearch)
       || member.club?.includes(sortSearch)
-      || member.introduce?.some((text) => text.includes(sortSearch))
-      || member.contact?.email.includes(sortSearch)
-      || member.contact?.phone.includes(sortSearch)
-      || member.contact?.website?.label.includes(sortSearch)
-      || member.skills?.some((skill) => skill.includes(sortSearch))
+      || member.introduce?.some((text) => text?.includes(sortSearch))
+      || member.contact?.email?.includes(sortSearch)
+      || member.contact?.phone?.includes(sortSearch)
+      || member.contact?.website?.label?.includes(sortSearch)
+      || member.skills?.some((skill) => skill?.includes(sortSearch))
       || member.last?.includes(sortSearch))
       )
     .filter((member) => sortPart === "all" || member.part === sortPart)
@@ -116,7 +132,30 @@ export default function Week4Page() {
   const handlePushRandom = async () => {
     const randomData = await pushRandomMembers();
     setFormData(randomData);
+    return randomData;
   };
+
+  async function fetchTimeout() {
+    const controller = new AbortController();
+    let checkOut = false;
+    const timeoutId = setTimeout(() => {
+      checkOut = true;
+      controller.abort();
+    }, TIMEOUT_MS);
+
+    try {
+      const res = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
+    } catch (error) {
+      if (error.name === "AbortError" && checkOut) {
+        throw new Error("시간 초과");
+      } 
+      throw error;
+    }
+  }
 
   return (
     <div className={styles["week-page"]}>
@@ -137,22 +176,25 @@ export default function Week4Page() {
 
       <div className={styles["randomButtonsRow"]}>
         <button className={styles["randomOneButton"]}
-        disabled={fetching === "loading" || fetching === "error"}
+        disabled={fetching === "loading"}
         onClick={handleFetchRandom}>
         랜덤 1명 추가</button>
         <button className={styles["randomFiveButton"]}
-        disabled={fetching === "loading" || fetching === "error"}
+        disabled={fetching === "loading"}
         onClick={handleFetchFiveRandom}>랜덤 5명 추가</button>
         <button className={styles["refrashButton"]}
-        disabled={fetching === "loading" || fetching === "error"}
+        disabled={fetching === "loading"}
         onClick={handleRefresh}>전체 새로고침</button>
-        <span className={styles["refrashState"]}>
+        <span className={styles["refrashState"]} role="alert">
           {fetchMessage[fetching]}
         </span>
+        {fetching === "error" && <button onClick={handleRetry} className={styles["retryButton"]}>
+          재시도
+        </button>}
       </div>
 
       <div className={styles["sortLabelRow"]}>
-        <label className={styles["firstSortLabel"]}>파트</label>
+        <label className={styles["firstSortLabel"]} htmlForfor="sortPart">파트</label>
         <select name="sortPart" id="sortPart" className={styles["sortSelect"]}
         value={sortPart} onChange={(e) => setSortPart(e.target.value)}>
           <option value="all">전체</option>
@@ -161,35 +203,37 @@ export default function Week4Page() {
           <option value="PM">PM</option>
           <option value="Design">Design</option>
         </select>
-        <label className={styles["sortLabel"]}>정렬</label>
+        <label className={styles["sortLabel"]} htmlForfor="sortType">정렬</label>
         <select name="sortType" id="sortType" className={styles["sortSelect"]}
         value={sortType} onChange={(e) => setSortType(e.target.value)}>
           <option value="newest">최신 업데이트순</option>
           <option value="nameAsc">이름 오름차순</option>
           <option value="nameDesc">이름 내림차순</option>
         </select>
-        <label className={styles["sortLabel"]}>검색</label>
+        <label className={styles["sortLabel"]} htmlForfor="searchInput">검색</label>
         <input type="text" id="searchInput" 
         placeholder="이름으로 검색" className={styles["sortSelect"]}
         value={sortSearch} onChange={(e) => setSortSearch(e.target.value)}/>
       </div>
 
       <div className={styles["gridContainer"]}>
-        {displayList.length === 0 ? (
+        {memberList.length === 0 ? (
+          <p className={styles["noResult"]}>남은 아기사자가 없습니다 ㅜㅜ</p>
+        ) : displayList.length === 0 ? (
           <p className={styles["noResult"]}>조건에 맞는 아기 사자가 없습니다.</p>
         ) : (
           displayList.map((member) => (
-            <div onClick={() => setSelected(member)} className={styles["mainProfile"]}>
+            <div key={member.id} onClick={() => setSelected(member)} className={styles["mainProfile"]}>
               <p className={styles["badge"]}>
                 <span className={styles["badgeSpace"]}>{member.badge}</span>
               </p>
-              <img className={styles["profileImage"]} src={member.image} />
+              <img className={styles["profileImage"]} src={member.image} alt={`${member.name} 프로필 사진`}/>
               <h2 className={styles["name"]}>{member.name}</h2>
               <b className={styles["blueRule"]}>{member.part}</b>
               <p className={styles["lineIntroduce"]}>{member.intro}</p>
             </div>
-            ))
-          )}
+          ))
+        )}
       </div>
 
       {/* 아기 사자 추가 모달 */}
@@ -229,7 +273,7 @@ export default function Week4Page() {
               </div>
 
               <div className={`${styles["pushLionRow"]} ${styles["fullWidth"]}`}>
-                <label htmlFor="introduce" className={styles["pushLabel"]}>한 줄 소개(요약 카드)</label>
+                <label htmlFor="introduce" className={styles["pushLabel"]} >한 줄 소개(요약 카드)</label>
                 <input id="introduce" type="text" className={styles["inputLongtype"]}
                 placeholder="예: 3주차 DOM 조작 연습 중"
                 value={formData.introduce} onChange={handleInput("introduce")}/>
@@ -337,8 +381,8 @@ export default function Week4Page() {
               <>
                 <h3 className={styles["introduceTitle"]}>관심 기술</h3>
                 <ul>
-                  {selected.skills.map((skill, i) => (
-                    <li key={i} className={styles["listStyle"]}>{skill}</li>
+                  {selected.skills.map((skill) => (
+                    <li key={skill.id} className={styles["listStyle"]}>{skill}</li>
                   ))}
                 </ul>
               </>
