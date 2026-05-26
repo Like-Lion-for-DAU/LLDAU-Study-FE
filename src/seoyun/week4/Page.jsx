@@ -101,6 +101,9 @@ export default function Week4Page() {
   //랜덤값 채우기 버튼이 현재 요청중인지 여부 상태
   //true면 버튼 비활성화 및 로딩 텍스트 표시
   const [isFilling, setIsFilling] = useState(false);
+
+
+  const [fillError, setFillError] = useState(""); //개선 1
   
   
   //다음 멤버에 부여할 id를 저장하는 ref
@@ -218,11 +221,10 @@ export default function Week4Page() {
 
       //AbortError 이면서 timedOut이면 취소함
       if (err?.name === "AbortError" && timedOut) {
-        alert("랜덤 값 채우기 실패: 시간 초과");
-      } else if (err?.name !== "AbortError") {
-        //AbortError가 아닌 에러
-        alert(`랜덤 값 채우기 실패: ${err?.message}`);
-      }
+      setFillError("랜덤 값 채우기 실패: 시간 초과");
+    } else if (err?.name !== "AbortError") {
+      setFillError(`랜덤 값 채우기 실패: ${err?.message || "알 수 없는 오류"}`);
+    }
       //AbortError이지만 Timeout이아니면 사용자가 의도적으로 취소한것이므로 무시함
     } finally {
       //성공 실패 모두 로딩 상태 해제함
@@ -609,6 +611,7 @@ export default function Week4Page() {
               >
                 {isFilling ? "불러오는 중..." : "랜덤 값 채우기"}
               </button>
+              {fillError && <span className={styles["fill-error"]}>{fillError}</span>}
               {/* 추가하기 form submit트리거 */}
               <button type="submit" className={`${styles["btn"]} ${styles["btn-primary"]}`}>
                 추가하기
