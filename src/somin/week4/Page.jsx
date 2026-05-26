@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef} from "react";
+import { useState, useEffect, useRef } from "react";
 import styles from "./Page.module.css";
 import { members as initialMembers } from "./members.js";
-
 
 // API
 const PARTS = ["Frontend", "Backend", "Design"];
@@ -19,8 +18,7 @@ function pick(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function transformUser(user, idx) {
-  const id = Date.now() + idx;
+function transformUser(user, id) {
   const part = pick(PARTS);
   const badge = pick(BADGES);
   return {
@@ -41,13 +39,14 @@ function transformUser(user, idx) {
   };
 }
 
-async function fetchRandomUsers(count) {
+async function fetchRandomUsers(count, signal) {
   const res = await fetch(
-    `https://randomuser.me/api/?results=${count}&nat=us,gb,ca,au,nz`
+    `https://randomuser.me/api/?results=${count}&nat=us,gb,ca,au,nz`,
+    { signal }
   );
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const data = await res.json();
-  return data.results.map((u, i) => transformUser(u, i));
+  return data.results;
 }
 
 // 요약 카드
@@ -59,7 +58,16 @@ function SummaryCard({ member, onClick }) {
       onClick={onClick}
     >
       <div className={styles.profileimg}>
-        {member.image && <img src={member.image} alt={member.name} />}
+        {member.image && (
+          <img
+            src={member.image}
+            alt={member.name}
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = `https://picsum.photos/seed/${member.id}/400/400`;
+            }}
+          />
+        )}
         <span className={styles.badge}>{member.badge || "New"}</span>
       </div>
       <p className={styles.name}>{member.name}</p>
@@ -117,6 +125,13 @@ function DetailCard({ member, detailRef, focused }) {
   );
 }
 
+const EMPTY_FORM = {
+  name: "", part: "", skills: "", intro: "",
+  bio: "", club: "", email: "", phone: "", website: "", motto: "",
+};
+
+const TIMEOUT_MS = 5000;
+
 // 메인 페이지
 export default function Week4Page() {
   const [membersList, setMembersList] = useState(initialMembers || []);
@@ -124,36 +139,49 @@ export default function Week4Page() {
   const [partFilter, setPartFilter] = useState("ALL");
   const [sortOrder, setSortOrder] = useState("latest");
   const [searchQuery, setSearchQuery] = useState("");
-  const [focusedName, setFocusedName] = useState(null);
+
+  const [focusedId, setFocusedId] = useState(null);
+  const [formData, setFormData] = useState(EMPTY_FORM);
 
   // 비동기 상태
   const [asyncStatus, setAsyncStatus] = useState("idle");
   const [asyncMsg, setAsyncMsg] = useState("준비 완료");
   const lastActionRef = useRef(null);
 
+  const latestControllerRef = useRef(null);
+  const latestRequestIdRef = useRef(0);
+  const statusResetTimerRef = useRef(null);
+  const focusResetTimerRef = useRef(null);
+
+  const nextIdRef = useRef(
+    initialMembers.length === 0
+      ? 1
+      : Math.max(...initialMembers.map((m) => m.id)) + 1
+  );
+
+  function makeNextId() {
+    return nextIdRef.current++;
+  }
+
   const detailRefs = useRef({});
-  const formRef = useRef(null);
 
   // 보기 옵션
   let visibleMembers = [...membersList];
   if (partFilter !== "ALL") {
-    visibleMembers = visibleMembers.filter(
-      (m) => m.role === partFilter
-    );
+    visibleMembers = visibleMembers.filter((m) => m.role === partFilter);
   }
-
   if (searchQuery.trim()) {
     const q = searchQuery.trim().toLowerCase();
     visibleMembers = visibleMembers.filter((m) =>
       m.name.toLowerCase().includes(q)
     );
   }
-
-  if (sortOrder === "name") {
-    visibleMembers.sort((a, b) =>
-      a.name.localeCompare(b.name, "ko")
-    );
+  if (sortOrder === "latest") {
+    visibleMembers.sort((a, b) => a.id - b.id);
   }
+  if (sortOrder === "name") {
+    visibleMembers.sort((a, b) => a.name.localeCompare(b.name, "ko"));
+  } 
 
   // ESC 닫기
   useEffect(() => {
@@ -163,132 +191,155 @@ export default function Week4Page() {
     return () => window.removeEventListener("keydown", onEsc);
   }, [isFormOpen]);
 
-  // 상세로 스크롤
-  const handleCardClick = (name) => {
-    detailRefs.current[name]?.scrollIntoView({ behavior: "smooth", block: "start" });
-    setFocusedName(name);
-    setTimeout(() => setFocusedName(null), 900);
+  useEffect(() => {
+    return () => {
+      if (statusResetTimerRef.current) clearTimeout(statusResetTimerRef.current);
+      if (focusResetTimerRef.current) clearTimeout(focusResetTimerRef.current);
+      if (latestControllerRef.current) latestControllerRef.current.abort();
+    };
+  }, []);
+
+  const scheduleStatusReset = () => {
+    if (statusResetTimerRef.current) clearTimeout(statusResetTimerRef.current);
+    statusResetTimerRef.current = setTimeout(() => {
+      setAsyncStatus("idle");
+      setAsyncMsg("준비 완료");
+    }, 1500);
   };
 
-  //  마지막 삭제
+  const runFetchAction = async (actionFn) => {
+    const requestId = ++latestRequestIdRef.current;
+
+    if (latestControllerRef.current) latestControllerRef.current.abort();
+    const controller = new AbortController();
+    latestControllerRef.current = controller;
+
+    let timedOut = false;
+    const timeoutId = setTimeout(() => {
+      timedOut = true;
+      controller.abort();
+    }, TIMEOUT_MS);
+
+    setAsyncStatus("loading");
+    setAsyncMsg("불러오는 중...");
+
+    try {
+      await actionFn(controller.signal, () => requestId === latestRequestIdRef.current);
+      clearTimeout(timeoutId);
+
+      if (requestId !== latestRequestIdRef.current) return;
+
+      setAsyncStatus("success");
+      setAsyncMsg("완료!");
+      scheduleStatusReset();
+    } catch (err) {
+      clearTimeout(timeoutId);
+      if (requestId !== latestRequestIdRef.current) return;
+
+      if (err.name === "AbortError") {
+        if (timedOut) {
+          setAsyncStatus("fail");
+          setAsyncMsg("불러오기 실패: 시간 초과");
+        }
+        return;
+      }
+      setAsyncStatus("fail");
+      setAsyncMsg(`불러오기 실패: ${err.message}`);
+    }
+  };
+
+  const handleCardClick = (id) => {
+    detailRefs.current[id]?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setFocusedId(id);
+
+    if (focusResetTimerRef.current) clearTimeout(focusResetTimerRef.current);
+    focusResetTimerRef.current = setTimeout(() => setFocusedId(null), 900);
+  };
+
   const deleteLast = () => {
     setMembersList((prev) => (prev.length === 0 ? prev : prev.slice(0, -1)));
   };
 
-  // 비동기 실행
-  const handleAddRandom = async (count) => {
+  const handleAddRandom = (count) => {
     lastActionRef.current = () => handleAddRandom(count);
-
-    setAsyncStatus("loading");
-    setAsyncMsg("불러오는 중...");
-
-    try {
-      const newMembers = await fetchRandomUsers(count);
-
+    runFetchAction(async (signal, isLatest) => {
+      const users = await fetchRandomUsers(count, signal);
+      if (!isLatest()) return;
+      const newMembers = users.map((u) => transformUser(u, makeNextId()));
       setMembersList((prev) => [...prev, ...newMembers]);
-
-      setAsyncStatus("success");
-      setAsyncMsg("완료!");
-
-      setTimeout(() => {
-        setAsyncStatus("idle");
-        setAsyncMsg("준비 완료");
-      }, 1500);
-
-    } 
-    catch (err) {
-      setAsyncStatus("fail");
-      setAsyncMsg(`불러오기 실패: ${err.message}`);
-    }
+    });
   };
 
-  const handleRefreshAll = async () => {
+  const handleRefreshAll = () => {
     lastActionRef.current = handleRefreshAll;
-    setAsyncStatus("loading");
-    setAsyncMsg("불러오는 중...");
-
-    try {
-      const currentCount = membersList.length;
+    runFetchAction(async (signal, isLatest) => {
       const myCards = membersList.filter((m) => m.isMe);
-      const fetchCount = Math.max(
-        currentCount - myCards.length,
-        1
-      );
-
-      const newMembers = await fetchRandomUsers(fetchCount);
-
+      const fetchCount = membersList.length - myCards.length;
+      if (fetchCount <= 0) return; 
+      const users = await fetchRandomUsers(fetchCount, signal);
+      if (!isLatest()) return;
+      const newMembers = users.map((u) => transformUser(u, makeNextId()));
       setMembersList([...myCards, ...newMembers]);
-
-      setAsyncStatus("success");
-      setAsyncMsg("완료!");
-
-      setTimeout(() => {
-        setAsyncStatus("idle");
-        setAsyncMsg("준비 완료");
-      }, 1500);
-
-    } catch (err) {
-      setAsyncStatus("fail");
-      setAsyncMsg(`불러오기 실패: ${err.message}`);
-    }
+    });
   };
 
-  // 재시도
   const handleRetry = () => {
-    if (lastActionRef.current) {
-      lastActionRef.current();
-    }
+    if (lastActionRef.current) lastActionRef.current();
   };
 
-  // 폼 랜덤 채우기
-  const handleRandomFill = async () => {
-    try {
-      const [u] = await fetchRandomUsers(1);
-      const f = formRef.current;
-      if (!f) return;
-      f.querySelector('[name="name"]').value = u.name;
-      f.querySelector('[name="part"]').value = u.role;
-      f.querySelector('[name="skills"]').value = u.skills.join(", ");
-      f.querySelector('[name="intro"]').value = u.intro;
-      f.querySelector('[name="bio"]').value = u.bio;
-      f.querySelector('[name="club"]').value = u.club;
-      f.querySelector('[name="email"]').value = u.email;
-      f.querySelector('[name="phone"]').value = u.phone;
-      f.querySelector('[name="motto"]').value = u.motto;
-    } catch (e) {
-      alert("랜덤 값 불러오기 실패: " + e.message);
-    }
+const handleRandomFill = () => {
+  runFetchAction(async (signal, isLatest) => {
+    const [raw] = await fetchRandomUsers(1, signal);
+
+    if (!isLatest()) return;
+
+    setFormData({
+      name: `${raw.name.first} ${raw.name.last}`,
+      part: pick(PARTS),
+      skills: pick(BADGES),
+      intro: `${raw.location.country} 출신의 아기사자입니다.`,
+      bio: `안녕하세요, ${raw.name.first} ${raw.name.last}입니다. ${raw.location.city}, ${raw.location.country} 출신입니다.`,
+      club: pick(CLUBS),
+      email: raw.email,
+      phone: raw.phone,
+      website: "",
+      motto: pick(MOTTOS),
+    });
+  });
+};
+
+  const handleInput = (field) => (e) => {
+    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
-  // 폼 제출
   const handleSubmit = (e) => {
     e.preventDefault();
-    const fd = new FormData(e.target);
-    const skills = fd.get("skills").split(",").map((s) => s.trim()).filter(Boolean);
-    const nextId = Date.now();
+    const skills = formData.skills.split(",").map((s) => s.trim()).filter(Boolean);
+    const id = makeNextId();
     const newMember = {
-      id: nextId,
-      name: fd.get("name").trim(),
-      role: fd.get("part"),
-      intro: fd.get("intro").trim(),
+      id,
+      name: formData.name.trim(),
+      role: formData.part,
+      intro: formData.intro.trim(),
       badge: skills[0] || "New",
-      club: fd.get("club").trim(),
-      bio: fd.get("bio").trim(),
-      email: fd.get("email").trim(),
-      phone: fd.get("phone").trim(),
-      website: fd.get("website").trim(),
+      club: formData.club.trim(),
+      bio: formData.bio.trim(),
+      email: formData.email.trim(),
+      phone: formData.phone.trim(),
+      website: formData.website.trim(),
       skills,
-      motto: fd.get("motto").trim(),
-      image: `https://picsum.photos/seed/${nextId}/200/200`,
+      motto: formData.motto.trim(),
+      image: `https://picsum.photos/seed/${id}/200/200`,
       isMe: false,
     };
     if (!newMember.name || !newMember.role) {
-      alert("이름과 파트는 필수 항목입니다.");
+      setAsyncStatus("fail");
+      setAsyncMsg("이름과 파트는 필수 항목입니다.");
       return;
     }
     setMembersList((prev) => [...prev, newMember]);
+    setFormData(EMPTY_FORM); 
     setIsFormOpen(false);
-    e.target.reset();
   };
 
   const isLoading = asyncStatus === "loading";
@@ -301,10 +352,16 @@ export default function Week4Page() {
             총 <span>{membersList.length}</span>명
           </span>
           <div className={styles.controlBtns}>
-            <button onClick={() => setIsFormOpen((v) => !v)} className={`${styles.btn} `}>
+            <button
+              onClick={() => {
+                setFormData(EMPTY_FORM);
+                setIsFormOpen((v) => !v);
+              }}
+              className={styles.btn}
+            >
               아기사자 추가
             </button>
-            <button onClick={deleteLast} className={`${styles.btn}`}>
+            <button onClick={deleteLast} className={styles.btn}>
               마지막 삭제
             </button>
           </div>
@@ -312,13 +369,13 @@ export default function Week4Page() {
 
         <div className={styles.fetchBar}>
           <div className={styles.fetchBtns}>
-            <button onClick={() => handleAddRandom(1)} disabled={isLoading} className={`${styles.btn} `}>
+            <button onClick={() => handleAddRandom(1)} disabled={isLoading} className={styles.btn}>
               랜덤 1명 추가
             </button>
-            <button onClick={() => handleAddRandom(5)} disabled={isLoading} className={`${styles.btn}`}>
+            <button onClick={() => handleAddRandom(5)} disabled={isLoading} className={styles.btn}>
               랜덤 5명 추가
             </button>
-            <button onClick={handleRefreshAll} disabled={isLoading} className={`${styles.btn} `}>
+            <button onClick={handleRefreshAll} disabled={isLoading} className={styles.btn}>
               전체 새로고침
             </button>
           </div>
@@ -326,7 +383,7 @@ export default function Week4Page() {
             {asyncStatus === "loading" && <span className={styles.spinner} />}
             <span>{asyncMsg}</span>
             {asyncStatus === "fail" && (
-              <button onClick={handleRetry} className={`${styles.btn}`}>
+              <button onClick={handleRetry} className={styles.btn}>
                 재시도
               </button>
             )}
@@ -357,84 +414,111 @@ export default function Week4Page() {
       </div>
 
       {isFormOpen && (
-        <form className={styles.formSection} onSubmit={handleSubmit} ref={formRef}>
+        <div className={styles.formSection}>
           <div className={styles.formInner}>
             <div className={styles.formHeader}>
               <h2 className={styles.formTitle}>새 아기사자 추가</h2>
-              <button
-                type="button"
-                onClick={handleRandomFill}
-                className={`${styles.btn} ${styles.btnRandom}`}
-              >
+              <button type="button" onClick={handleRandomFill} className={styles.btn}>
                 랜덤 값 채우기
               </button>
             </div>
-            <div className={styles.formGrid}>
-              <div className={styles.formGroup}>
-                <label>이름 <span className={styles.required}>*</span></label>
-                <input name="name" type="text" placeholder="홍길동" required />
+            <form onSubmit={handleSubmit}>
+              <div className={styles.formGrid}>
+                <div className={styles.formGroup}>
+                  <label>이름 <span className={styles.required}>*</span></label>
+                  <input
+                    name="name" type="text" placeholder="홍길동" required
+                    value={formData.name} onChange={handleInput("name")}
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label>파트 <span className={styles.required}>*</span></label>
+                  <select
+                    name="part" required
+                    value={formData.part} onChange={handleInput("part")}
+                  >
+                    <option value="" disabled>선택하세요</option>
+                    <option value="Frontend">Frontend</option>
+                    <option value="Backend">Backend</option>
+                    <option value="Design">Design</option>
+                  </select>
+                </div>
+                <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
+                  <label>관심 기술 <span className={styles.required}>*</span> <small>(쉼표로 구분)</small></label>
+                  <input
+                    name="skills" type="text" placeholder="ex: React, JavaScript" required
+                    value={formData.skills} onChange={handleInput("skills")}
+                  />
+                </div>
+                <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
+                  <label>한 줄 소개 <span className={styles.required}>*</span></label>
+                  <input
+                    name="intro" type="text" placeholder="요약 카드용 짧은 소개" required
+                    value={formData.intro} onChange={handleInput("intro")}
+                  />
+                </div>
+                <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
+                  <label>자기소개 <span className={styles.required}>*</span></label>
+                  <textarea
+                    name="bio" rows={3} placeholder="상세 카드용 자기소개" required
+                    value={formData.bio} onChange={handleInput("bio")}
+                  />
+                </div>
+                <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
+                  <label>동아리명 <span className={styles.required}>*</span></label>
+                  <input
+                    name="club" type="text" placeholder="ex: 디스이즈" required
+                    value={formData.club} onChange={handleInput("club")}
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label>이메일 <span className={styles.required}>*</span></label>
+                  <input
+                    name="email" type="email" placeholder="example@email.com" required
+                    value={formData.email} onChange={handleInput("email")}
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label>전화번호 <span className={styles.required}>*</span></label>
+                  <input
+                    name="phone" type="tel" placeholder="010-0000-0000" required
+                    value={formData.phone} onChange={handleInput("phone")}
+                  />
+                </div>
+                <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
+                  <label>웹사이트 <small>(선택)</small></label>
+                  <input
+                    name="website" type="url" placeholder="https://github.com/..."
+                    value={formData.website} onChange={handleInput("website")}
+                  />
+                </div>
+                <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
+                  <label>각오 한 마디 <span className={styles.required}>*</span></label>
+                  <input
+                    name="motto" type="text" placeholder="각오 한 마디" required
+                    value={formData.motto} onChange={handleInput("motto")}
+                  />
+                </div>
+                <div className={`${styles.formActions} ${styles.formGroupFull}`}>
+                  <button type="submit" className={styles.btn}>추가하기</button>
+                  <button type="button" onClick={() => setIsFormOpen(false)} className={styles.btn}>취소</button>
+                </div>
               </div>
-              <div className={styles.formGroup}>
-                <label>파트 <span className={styles.required}>*</span></label>
-                <select name="part" required defaultValue="">
-                  <option value="" disabled>선택하세요</option>
-                  <option value="Frontend">Frontend</option>
-                  <option value="Backend">Backend</option>
-                  <option value="Design">Design</option>
-                </select>
-              </div>
-              <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
-                <label>관심 기술 <span className={styles.required}>*</span> <small>(쉼표로 구분)</small></label>
-                <input name="skills" type="text" placeholder="ex: React, JavaScript" required />
-              </div>
-              <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
-                <label>한 줄 소개 <span className={styles.required}>*</span></label>
-                <input name="intro" type="text" placeholder="요약 카드용 짧은 소개" required />
-              </div>
-              <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
-                <label>자기소개 <span className={styles.required}>*</span></label>
-                <textarea name="bio" rows={3} placeholder="상세 카드용 자기소개" required />
-              </div>
-              <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
-                <label>동아리명 <span className={styles.required}>*</span></label>
-                <input name="club" type="text" placeholder="ex: 디스이즈" required />
-              </div>
-              <div className={styles.formGroup}>
-                <label>이메일 <span className={styles.required}>*</span></label>
-                <input name="email" type="email" placeholder="example@email.com" required />
-              </div>
-              <div className={styles.formGroup}>
-                <label>전화번호 <span className={styles.required}>*</span></label>
-                <input name="phone" type="text" placeholder="010-0000-0000" required />
-              </div>
-              <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
-                <label>웹사이트 <small>(선택)</small></label>
-                <input name="website" type="text" placeholder="https://github.com/..." />
-              </div>
-              <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
-                <label>각오 한 마디 <span className={styles.required}>*</span></label>
-                <input name="motto" type="text" placeholder="각오 한 마디" required />
-              </div>
-              <div className={`${styles.formActions} ${styles.formGroupFull}`}>
-                <button type="submit" className={`${styles.btn} ${styles.btnPrimary}`}>추가하기</button>
-                <button type="button" onClick={() => setIsFormOpen(false)} className={`${styles.btn} ${styles.btnGhost}`}>취소</button>
-              </div>
-            </div>
+            </form>
           </div>
-        </form>
+        </div>
       )}
 
-    
       <section className={styles.cardSection}>
         {visibleMembers.length === 0 ? (
-          <p className={styles.emptyMsg}> 표시할 아기 사자가 없습니다.</p>
+          <p className={styles.emptyMsg}>표시할 아기 사자가 없습니다.</p>
         ) : (
           <div className={styles.cardIntro}>
             {visibleMembers.map((member) => (
               <SummaryCard
-                key={member.id ?? member.name}
+                key={member.id} 
                 member={member}
-                onClick={() => handleCardClick(member.name)}
+                onClick={() => handleCardClick(member.id)}
               />
             ))}
           </div>
@@ -445,10 +529,16 @@ export default function Week4Page() {
         <div className={styles.cardDetail}>
           {visibleMembers.map((member) => (
             <DetailCard
-              key={member.id ?? member.name}
+              key={member.id} 
               member={member}
-              detailRef={(el) => { if (el) detailRefs.current[member.name] = el; }}
-              focused={focusedName === member.name}
+              detailRef={(el) => {
+                if (el) {
+                  detailRefs.current[member.id] = el;
+                } else {
+                  delete detailRefs.current[member.id];
+                }
+              }}
+              focused={focusedId === member.id}
             />
           ))}
         </div>

@@ -8,6 +8,7 @@ import jsy from "./profile/jsy.png";
 
 export const members = [
   {
+    id: 1,
     name: "정소민",
     role: "Frontend",
     intro: "컴퓨터공학과 25학번 정소민입니다.",
@@ -23,6 +24,7 @@ export const members = [
     isMe: true,
   },
   {
+    id: 2,
     name: "김주완",
     role: "Frontend",
     intro: "성실히 배우고 싶은 학생입니다.",
@@ -37,6 +39,7 @@ export const members = [
     motto: "성실히 배워서 웹개발 마스터가 되고 싶습니다.",
   },
   {
+    id: 3,
     name: "임도영",
     role: "Frontend",
     intro: "아기사자 14기 프론트엔드 임도영입니다.",
@@ -51,6 +54,7 @@ export const members = [
     motto: "꾸준히 노력하고 적극적인 참여를 통해 성장하는 개발자가 되겠습니다.",
   },
   {
+    id: 4,
     name: "김나함",
     role: "Frontend",
     intro: "분야를 넘나들며 성장하는 개발자입니다.",
@@ -65,6 +69,7 @@ export const members = [
     motto: "부족한 점은 많지만 포기하지 않고 계속 노력하여 성장하는 아기사자가 되겠습니다!",
   },
   {
+    id: 5,
     name: "백태우",
     role: "Frontend",
     intro: "I'm Empty Stack Junior",
@@ -79,6 +84,7 @@ export const members = [
     motto: "모두가 원하는 개발자가 되어보겠습니다.",
   },
   {
+    id: 6,
     name: "이도은",
     role: "Frontend",
     intro: "열심히 배우는 프론트엔드 개발자입니다!",
@@ -93,6 +99,7 @@ export const members = [
     motto: "팀원들에게 든든한 개발자가 되고싶습니다.",
   },
   {
+    id: 7,
     name: "정서윤",
     role: "Frontend",
     intro: "열심히 배워가고있는 프론트엔드 개발자입니다!",
