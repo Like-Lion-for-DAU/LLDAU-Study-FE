@@ -137,6 +137,8 @@ export default function Week4Page() {
   //폼 닫힐때 포커스를 이 버튼으로 되돌리기위해 사용
   const addBtnRef = useRef(null);
 
+  const fillControllerRef = useRef(null); //개선 2
+
   //컴포넌트 마운트시 1회 실행되는 cleanup등록 useEffect
   //의존성 배열이 []이므로 마운트시한번 언마운트시 cleanup실행
   useEffect(() => {
@@ -144,6 +146,7 @@ export default function Week4Page() {
     return () => {
       if (statusResetTimerRef.current) clearTimeout(statusResetTimerRef.current); //메모리 누수 방지하기위해 남아있는 상태 리셋 타이머가 있으면 정리함
       if (latestControllerRef.current) latestControllerRef.current.abort();//언마운트후 setState호출을 방지하기위해 진행중인 fetch요청이있으면 취소함
+      if (fillControllerRef.current) fillControllerRef.current.abort();
     };
   }, []);
 
@@ -185,8 +188,10 @@ export default function Week4Page() {
   const handleFillRandom = async () => {
     if (isFilling) return; //이미 로딩중이면 중복 호출 방지함
     setIsFilling(true); //로딩상태 시작
-    const controller = new AbortController(); //이 요청 전용 AbortController 생성
-    let timedOut = false; //타임아웃 여부 추적용 지역변수
+    if (fillControllerRef.current) fillControllerRef.current.abort(); // 이전 요청 취소
+    const controller = new AbortController();
+    fillControllerRef.current = controller; // ref에 저장
+    let timedOut = false;
     
     //TIMEOUT_MS 후 자동 abort및 timedOut플래그 설정
     const timeoutId = setTimeout(() => {
