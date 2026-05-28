@@ -281,3 +281,48 @@
 }
 .activityMsg  { font-size: 14px; color: #e6edf3; }
 .activityDate { font-size: 12px; color: #6e7681; }
+
+/* 커밋 5에서 추가 — 모바일 반응형
+   768px 이하에서 사이드바가 세로로 쌓이도록 변경 */
+
+@media (max-width: 768px) {
+  .root {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+    border-right: none;
+    border-bottom: 1px solid #21262d;
+    padding: 20px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .avatar { width: 100%; justify-content: flex-start; }
+
+  /* 모바일에서 아바타 너무 크면 레이아웃 깨져서 축소 */
+  .avatarImg {
+    width: 72px;
+    height: 72px;
+  }
+
+  .displayName { font-size: 18px; }
+  .username    { font-size: 15px; }
+
+  .repoGrid { grid-template-columns: 1fr; }
+
+  .grassGrid { gap: 1px; }
+
+  /* 모바일에서 잔디 셀 살짝 줄임 */
+  .grassCell { width: 8px; height: 8px; }
+}
+
+@media (max-width: 480px) {
+  .sidebar { padding: 16px; }
+  .content { padding: 16px 16px 40px; }
+}
