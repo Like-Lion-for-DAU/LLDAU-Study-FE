@@ -217,3 +217,67 @@
 @media (max-width: 768px) {
   .repoGrid { grid-template-columns: 1fr; }
 }
+
+/* 픽셀 아트 잔디 그래프 + 액티비티 */
+
+.grassWrap {
+  background: #161b22;
+  border: 1px solid #21262d;
+  border-radius: 6px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.grassHeader { display: flex; justify-content: space-between; align-items: center; }
+.grassTitle { font-size: 14px; color: #8b949e; }
+.grassTitle strong { color: #39d353; font-weight: 700; font-family: monospace; font-size: 16px; }
+.grassSub { font-size: 12px; color: #6e7681; }
+.grassScroll { overflow-x: auto; }
+.grassGrid {
+  display: flex; gap: 2px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+.grassWeek { display: flex; flex-direction: column; gap: 2px; }
+
+.grassCell { width: 11px; height: 11px; border-radius: 0; }
+.g0 { background: #161b22; outline: 1px solid #21262d; }
+.g1 { background: #0e4429; }
+.g2 { background: #006d32; }
+.g3 { background: #26a641; }
+.g4 { background: #39d353; }
+
+.grassLegend {
+  display: flex; align-items: center; gap: 3px;
+  font-size: 11px; color: #6e7681;
+  justify-content: flex-end;
+}
+
+.activityList {
+  display: flex; flex-direction: column;
+  padding-left: 14px;
+  border-left: 2px solid #21262d;
+}
+.activityRow {
+  position: relative;
+  padding: 0 0 20px 20px;
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.activityDot {
+  position: absolute;
+  left: -7px; top: 5px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  border: 2px solid #0d1117;
+}
+.activityBody { display: flex; flex-direction: column; gap: 4px; }
+.activityTop  { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.activityType {
+  font-size: 11px; font-weight: 600;
+  font-family: ui-monospace, monospace;
+  padding: 1px 7px; border-radius: 2em;
+  border: 1px solid;
+}
+.activityMsg  { font-size: 14px; color: #e6edf3; }
+.activityDate { font-size: 12px; color: #6e7681; }

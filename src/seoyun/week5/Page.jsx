@@ -2,6 +2,43 @@ import { useState } from "react";
 import styles from "./Page.module.css";
 import pfp from "./pfp.png";
 
+// 52주 × 7일 잔디 그리드 생성
+// 배경은 랜덤 노이즈(레벨 1~2), 중앙에 하트 픽셀 아트(레벨 4) 오버레이
+function generatePixelGrass() {
+  const cols = 52;
+  const rows = 7;
+  const grid = Array.from({ length: cols }, () => Array(rows).fill(0));
+
+  for (let c = 0; c < cols; c++) {
+    for (let r = 0; r < rows; r++) {
+      const seed = ((c * 7 + r) * 9301 + 49297) % 233280;
+      grid[c][r] = seed < 60000 ? 0 : seed < 120000 ? 1 : seed < 180000 ? 2 : 1;
+    }
+  }
+
+  // 11×7 하트 픽셀 맵
+  const HEART = [
+    [0,1,1,0,0,0,1,1,0,0,0],
+    [1,1,1,1,0,1,1,1,1,0,0],
+    [1,1,1,1,1,1,1,1,1,0,0],
+    [0,1,1,1,1,1,1,1,0,0,0],
+    [0,0,1,1,1,1,1,0,0,0,0],
+    [0,0,0,1,1,1,0,0,0,0,0],
+    [0,0,0,0,1,0,0,0,0,0,0],
+  ];
+
+  const startCol = Math.floor((cols - 11) / 2);
+  for (let r = 0; r < 7; r++) {
+    for (let c = 0; c < 11; c++) {
+      if (HEART[r][c]) grid[startCol + c][r] = 4;
+    }
+  }
+
+  return grid;
+}
+
+const GRASS = generatePixelGrass();
+
 const REPOS = [
   {
     name: "LLDAU-Study-FE",
@@ -23,12 +60,22 @@ const REPOS = [
   },
 ];
 
+const ACTIVITY = [
+  { date: "2026-03-02", msg: "chore: 멋쟁이사자처럼 디스이즈 활동 시작", type: "chore" },
+  { date: "2026-03-02", msg: "init: 동아대학교 26학번 입학", type: "feat" },
+];
+
 const SKILLS_STAT = [
   { lang: "JavaScript", pct: 42, color: "#f1e05a" },
   { lang: "Python",     pct: 28, color: "#3572A5" },
   { lang: "HTML/CSS",   pct: 20, color: "#e34c26" },
   { lang: "기타",       pct: 10, color: "#333" },
 ];
+
+const TYPE_COLOR = {
+  feat:  "#238636",
+  chore: "#6e7681",
+};
 
 export default function Page() {
   const [tab, setTab] = useState("overview");
@@ -114,6 +161,38 @@ export default function Page() {
 
         {tab === "overview" && (
           <div className={styles.tabContent}>
+
+            {/* 잔디 그래프: 픽셀 아트 하트를 배경 노이즈 위에 오버레이 */}
+            <div className={styles.grassWrap}>
+              <div className={styles.grassHeader}>
+                <span className={styles.grassTitle}>
+                  <strong>서윤</strong> contributions this year
+                </span>
+                <span className={styles.grassSub}>pixel art 🎮</span>
+              </div>
+              <div className={styles.grassScroll}>
+                <div className={styles.grassGrid}>
+                  {GRASS.map((week, wi) => (
+                    <div key={wi} className={styles.grassWeek}>
+                      {week.map((level, di) => (
+                        <div
+                          key={di}
+                          className={`${styles.grassCell} ${styles[`g${level}`]}`}
+                        />
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className={styles.grassLegend}>
+                <span>Less</span>
+                {[0,1,2,3,4].map(l => (
+                  <div key={l} className={`${styles.grassCell} ${styles[`g${l}`]}`} />
+                ))}
+                <span>More</span>
+              </div>
+            </div>
+
             <div className={styles.readmeWrap}>
               <div className={styles.readmeHeader}>
                 <span className={styles.readmeTitle}>wad8228 / wad8228</span>
@@ -189,11 +268,32 @@ export default function Page() {
 
         {tab === "activity" && (
           <div className={styles.tabContent}>
-            <p style={{ color: "#8b949e" }}>준비 중...</p>
+            <div className={styles.activityList}>
+              {ACTIVITY.map(({ date, msg, type }) => (
+                <div key={date + msg} className={styles.activityRow}>
+                  <div
+                    className={styles.activityDot}
+                    style={{ background: TYPE_COLOR[type] ?? "#30363d" }}
+                  />
+                  <div className={styles.activityBody}>
+                    <div className={styles.activityTop}>
+                      <span
+                        className={styles.activityType}
+                        style={{ color: TYPE_COLOR[type], borderColor: TYPE_COLOR[type] + "44" }}
+                      >
+                        {type}
+                      </span>
+                      <span className={styles.activityMsg}>{msg.replace(/^\w+: /, "")}</span>
+                    </div>
+                    <span className={styles.activityDate}>{date}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
-      </main>
 
+      </main>
     </div>
   );
 }
