@@ -213,7 +213,6 @@ export default function Week5Page() {
         <button className={styles["refrashButton"]} disabled={fetching === "loading"} onClick={handleRefresh}>
           전체 새로고침
         </button>
-        <span className={styles["refrashState"]} role="alert">{fetchMessage[fetching]}</span>
         {fetching === "error" && (
           <button onClick={handleRetry} className={styles["retryButton"]}>재시도</button>
         )}
@@ -221,6 +220,7 @@ export default function Week5Page() {
 
       {/* ── 파트 / 정렬 ── */}
       <div className={styles["sortLabelRow"]}>
+        <span className={styles["refrashState"]} role="alert">{fetchMessage[fetching]}</span>
         <label className={styles["sortLabel"]} htmlFor="sortPart">파트</label>
         <select name="sortPart" id="sortPart" className={styles["sortSelect"]}
           value={sortPart} onChange={(e) => { setSortPart(e.target.value); setBannerIdx(0); }}>

@@ -1,8 +1,11 @@
 /* ── 기본 페이지 ── */
 .week-page {
   padding: 32px;
-  background-color: #f0f5e8;
+  background-color: #fff;
   min-height: 100vh;
+  max-width: 1440px;
+  width: 100%;
+  margin: auto;
 }
 
 .week-page h2 {
@@ -91,12 +94,11 @@
 .refrashButton:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .refrashState {
-  font-size: 0.75rem;
-  color: #5a7a3a;
-  background: #e4eecc;
-  border-radius: 10px;
-  padding: 6px 12px;
-  margin-left: auto;
+  font-size: 0.9rem;
+  color: #c8cdd0;
+  margin-right: auto;
+  margin-left: 10px;
+  font-weight: bold;
 }
 
 .retryButton {
@@ -115,8 +117,11 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  padding-right: 8px;
+  padding-top: 1%;
+  padding-bottom: 1%;
   flex-wrap: wrap;
-  margin-bottom: 12px;
+  justify-content: flex-end;
 }
 
 .sortLabel {
@@ -124,6 +129,7 @@
   font-weight: 600;
   color: #5a7a3a;
   white-space: nowrap;
+  justify-content: flex-end;
 }
 
 .sortSelect {
@@ -154,7 +160,6 @@
   border-radius: 20px;
   padding: 5px 14px;
   font-weight: 600;
-  margin-left: auto;
 }
 
 /* ── 그리드 ── */
@@ -180,26 +185,23 @@
   flex-direction: column;
   position: relative;
   border-radius: 16px;
-  border: 1px solid #d5e6b0;
   height: auto;
   padding-bottom: 12px;
-  background-color: #fff;
-  box-shadow: 3px 3px 8px #d5e6b0;
+  background-color: #f7f7f7;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   cursor: pointer;
 }
 
 .mainProfile:hover {
   transform: translateY(-4px);
-  border: 2px solid #5a9e2f;
-  box-shadow: 6px 6px 14px #c0dd97;
+  box-shadow: 6px 6px 14px gainsboro;
 }
 
 .profileImage {
   max-width: 220px;
   height: 220px;
   margin: 10px auto;
-  border-radius: 8px;
+  border-radius: 4px;
   object-fit: cover;
   display: block;
 }
@@ -572,6 +574,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 5px;
+  background-color: #EAFDD0;
+  margin-bottom: 2%;
 }
 
 /* 뷰포트: overflow hidden으로 양옆 카드를 1/5만 노출 */
@@ -606,13 +611,13 @@
 
 /* 사이드 카드: 각 20% 너비, 나머지는 overflow hidden으로 잘림 */
 .bannerCardSide {
-  flex: 0 0 20%;
+  flex: 0 0 18%;
   aspect-ratio: 1 / 1;
-  opacity: 0.65;
+  opacity: 0.9;
   transition: opacity 0.2s ease;
 }
 
-.bannerCardSide:hover { opacity: 0.9; }
+.bannerCardSide:hover { opacity: 1; }
 
 .bannerCardLeft  { order: -1; }
 .bannerCardCenter { order: 0; }
@@ -641,10 +646,10 @@
 .bannerBadge {
   position: absolute;
   top: 16px;
-  left: 16px;
+  right: 10px;
   background: #f5c842;
   color: #2a4a10;
-  font-size: 11px;
+  font-size: 9px;
   font-weight: 700;
   border-radius: 12px;
   padding: 4px 12px;
@@ -654,7 +659,7 @@
 .bannerInfo {
   position: absolute;
   bottom: 48px;
-  left: 20px;
+  left: 10px;
   right: 20px;
   z-index: 2;
   color: #fff;
