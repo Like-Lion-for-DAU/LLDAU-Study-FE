@@ -13,11 +13,19 @@ export default function Week5Page() {
   const [sortSearch, setSortSearch] = useState("");
   const [bannerIdx, setBannerIdx] = useState(0);
   const [showGrid, setShowGrid] = useState(false);
+  const [showExtra, setShowExtra] = useState(false);
 
   const statusResetTimerRef = useRef(null);
   const lastAction = useRef(null);
   const nextIdRef = useRef(initialMembers.length + 1);
   const touchStartX = useRef(null);
+  const viewportRef = useRef(null);
+
+  // 드래그 관련
+  const dragStartX = useRef(null);
+  const dragDelta = useRef(0);
+  const isDragging = useRef(false);
+  const [dragOffset, setDragOffset] = useState(0);
 
   usePageScrollDown(selected, () => setSelected(null));
   usePageScrollDown(showAdd, () => setShowAdd(false));
@@ -166,15 +174,59 @@ export default function Week5Page() {
     touchStartX.current = null;
   };
 
+  // 마우스 드래그
+  const handleMouseDown = (e) => {
+    dragStartX.current = e.clientX;
+    dragDelta.current = 0;
+    isDragging.current = false;
+    setDragOffset(0);
+
+    const handleMouseMove = (e) => {
+      const delta = e.clientX - dragStartX.current;
+      dragDelta.current = delta;
+      isDragging.current = Math.abs(delta) > 5;
+      setDragOffset(delta);
+    };
+
+    const handleMouseUp = () => {
+      const delta = dragDelta.current;
+      if (Math.abs(delta) > 60) {
+        delta < 0 ? goNext() : goPrev();
+      }
+      setDragOffset(0);
+      dragStartX.current = null;
+      dragDelta.current = 0;
+      setTimeout(() => { isDragging.current = false; }, 0);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+  };
+
   const currentMember = displayList[bannerIdx] ?? null;
 
-  // 앞뒤 멤버 (무한 루프)
+  // 앞뒤 멤버 (무한 루프) — 5장 구조
   const prevMember = displayList.length > 1
     ? displayList[(bannerIdx - 1 + displayList.length) % displayList.length]
     : null;
   const nextMember = displayList.length > 1
     ? displayList[(bannerIdx + 1) % displayList.length]
     : null;
+  const prevPrevMember = displayList.length > 1
+    ? displayList[(bannerIdx - 2 + displayList.length) % displayList.length]
+    : null;
+  const nextNextMember = displayList.length > 1
+    ? displayList[(bannerIdx + 2) % displayList.length]
+    : null;
+
+  // 트랙 기본 오프셋: 5장 구조에서 3번째 카드(current)를 뷰포트 가운데에 고정
+  // 앞에 카드 2장(pp + p) + gap 2개가 있으므로
+  // baseOffset = 0.2vw - 2×(0.6vw + gap) = 0.2vw - 1.2vw - 2×gap = -(vw + 2×gap)
+  const vw = viewportRef.current?.offsetWidth || 600;
+  const GAP = 10;
+  const baseOffset = -(vw + 2 * GAP);
 
   return (
     <div className={styles["week-page"]}>
@@ -192,35 +244,50 @@ export default function Week5Page() {
         />
       </div>
 
-      {/* ── 추가 / 제거 버튼 ── */}
-      <div className={styles["actionRow"]}>
-        <button className={styles["addButton"]} onClick={() => { setShowAdd(true); reset(); }}>
-          아기 사자 추가
-        </button>
-        <button className={styles["removeButton"]} onClick={() => setMemberList((prev) => prev.slice(0, -1))}>
-          마지막 아기 사자 제거
+      {/* ── 추가 기능 토글 버튼 ── */}
+      <div className={styles["extraToggleRow"]}>
+        <button
+          className={styles["extraToggleBtn"]}
+          onClick={() => setShowExtra((v) => !v)}
+        >
+          {showExtra ? "추가 기능 ▲" : "추가 기능 ▼"}
         </button>
       </div>
 
-      {/* ── 랜덤 추가 / 전체 새로고침 ── */}
-      <div className={styles["randomButtonsRow"]}>
-        <button className={styles["randomOneButton"]} disabled={fetching === "loading"} onClick={handleFetchRandom}>
-          랜덤 1명 추가
-        </button>
-        <button className={styles["randomFiveButton"]} disabled={fetching === "loading"} onClick={handleFetchFiveRandom}>
-          랜덤 5명 추가
-        </button>
-        <button className={styles["refrashButton"]} disabled={fetching === "loading"} onClick={handleRefresh}>
-          전체 새로고침
-        </button>
-        {fetching === "error" && (
-          <button onClick={handleRetry} className={styles["retryButton"]}>재시도</button>
-        )}
-      </div>
+      {/* ── 추가 기능 패널 ── */}
+      {showExtra && (
+        <div className={styles["extraPanel"]}>
+          {/* 추가 / 제거 버튼 */}
+          <div className={styles["actionRow"]}>
+            <button className={styles["addButton"]} onClick={() => { setShowAdd(true); reset(); }}>
+              아기 사자 추가
+            </button>
+            <button className={styles["removeButton"]} onClick={() => setMemberList((prev) => prev.slice(0, -1))}>
+              마지막 아기 사자 제거
+            </button>
+          </div>
+
+          {/* 랜덤 추가 / 전체 새로고침 */}
+          <div className={styles["randomButtonsRow"]}>
+            <button className={styles["randomOneButton"]} disabled={fetching === "loading"} onClick={handleFetchRandom}>
+              랜덤 1명 추가
+            </button>
+            <button className={styles["randomFiveButton"]} disabled={fetching === "loading"} onClick={handleFetchFiveRandom}>
+              랜덤 5명 추가
+            </button>
+            <button className={styles["refrashButton"]} disabled={fetching === "loading"} onClick={handleRefresh}>
+              전체 새로고침
+            </button>
+            <span className={styles["refrashState"]} role="alert">{fetchMessage[fetching]}</span>
+            {fetching === "error" && (
+              <button onClick={handleRetry} className={styles["retryButton"]}>재시도</button>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* ── 파트 / 정렬 ── */}
       <div className={styles["sortLabelRow"]}>
-        <span className={styles["refrashState"]} role="alert">{fetchMessage[fetching]}</span>
         <label className={styles["sortLabel"]} htmlFor="sortPart">파트</label>
         <select name="sortPart" id="sortPart" className={styles["sortSelect"]}
           value={sortPart} onChange={(e) => { setSortPart(e.target.value); setBannerIdx(0); }}>
@@ -247,15 +314,41 @@ export default function Week5Page() {
         <div className={styles["bannerSection"]}>
           {/* 슬라이더 뷰포트 */}
           <div
+            ref={viewportRef}
             className={styles["bannerViewport"]}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
+            onMouseDown={handleMouseDown}
+            style={{ cursor: isDragging.current ? "grabbing" : "grab" }}
           >
-            {/* 왼쪽 이전 카드 (1/5 노출) */}
+            <div
+              className={styles["bannerTrack"]}
+              style={{
+                transform: `translateX(${baseOffset + dragOffset}px)`,
+                transition: dragOffset === 0 ? "transform 0.3s ease" : "none",
+              }}
+            >
+            {/* pp: 왼쪽 두번째 카드 */}
+            {prevPrevMember && (
+              <div
+                className={`${styles["bannerCard"]} ${styles["bannerCardSide"]}`}
+                onClick={() => { if (!isDragging.current) goPrev(); }}
+              >
+                <img
+                  className={styles["bannerBg"]}
+                  src={prevPrevMember.image}
+                  alt={prevPrevMember.name}
+                  onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = "https://picsum.photos/seed/fallback/400/300"; }}
+                />
+                <div className={styles["bannerOverlay"]} />
+              </div>
+            )}
+
+            {/* prev: 왼쪽 이전 카드 */}
             {prevMember && (
               <div
                 className={`${styles["bannerCard"]} ${styles["bannerCardSide"]} ${styles["bannerCardLeft"]}`}
-                onClick={goPrev}
+                onClick={() => { if (!isDragging.current) goPrev(); }}
               >
                 <img
                   className={styles["bannerBg"]}
@@ -270,7 +363,7 @@ export default function Week5Page() {
             {/* 중앙 현재 카드 */}
             <div
               className={`${styles["bannerCard"]} ${styles["bannerCardCenter"]}`}
-              onClick={() => setSelected(currentMember)}
+              onClick={() => { if (!isDragging.current) setSelected(currentMember); }}
             >
               <img
                 className={styles["bannerBg"]}
@@ -281,8 +374,8 @@ export default function Week5Page() {
               <div className={styles["bannerOverlay"]} />
               <span className={styles["bannerBadge"]}>{currentMember.badge}</span>
               <div className={styles["bannerInfo"]}>
-                <h3 className={styles["bannerName"]}>{currentMember.name}</h3>
                 <b className={styles["bannerPart"]}>{currentMember.part}</b>
+                <h3 className={styles["bannerName"]}>{currentMember.name}</h3>
                 <p className={styles["bannerIntro"]}>{currentMember.intro}</p>
               </div>
               <button
@@ -293,11 +386,11 @@ export default function Week5Page() {
               </button>
             </div>
 
-            {/* 오른쪽 다음 카드 (1/5 노출) */}
+            {/* next: 오른쪽 다음 카드 */}
             {nextMember && (
               <div
                 className={`${styles["bannerCard"]} ${styles["bannerCardSide"]} ${styles["bannerCardRight"]}`}
-                onClick={goNext}
+                onClick={() => { if (!isDragging.current) goNext(); }}
               >
                 <img
                   className={styles["bannerBg"]}
@@ -308,6 +401,23 @@ export default function Week5Page() {
                 <div className={styles["bannerOverlay"]} />
               </div>
             )}
+
+            {/* nn: 오른쪽 두번째 카드 */}
+            {nextNextMember && (
+              <div
+                className={`${styles["bannerCard"]} ${styles["bannerCardSide"]}`}
+                onClick={() => { if (!isDragging.current) goNext(); }}
+              >
+                <img
+                  className={styles["bannerBg"]}
+                  src={nextNextMember.image}
+                  alt={nextNextMember.name}
+                  onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = "https://picsum.photos/seed/fallback/400/300"; }}
+                />
+                <div className={styles["bannerOverlay"]} />
+              </div>
+            )}
+            </div> {/* bannerTrack 닫기 */}
           </div>
 
           {/* 인디케이터 도트 */}
@@ -357,7 +467,7 @@ export default function Week5Page() {
               <div className={styles["pushLionRow"]}>
                 <div className={styles["field"]}>
                   <div className={styles["halfWidth"]}>
-                    <label htmlFor="name" className={styles["pushLabel"]}>이름</label>
+                    <label htmlFor="name">이름</label>
                     <input id="name" type="text" className={styles["inputName"]}
                       placeholder="예: 홍아기사자"
                       value={formData.name} onChange={handleInput("name")} />
@@ -377,7 +487,7 @@ export default function Week5Page() {
               </div>
 
               <div className={`${styles["pushLionRow"]} ${styles["fullWidth"]}`}>
-                <label htmlFor="skills" className={styles["pushLabel"]}>관심기술 (쉼표로 구분)</label>
+                <label htmlFor="skills">관심기술 (쉼표로 구분)</label>
                 <input id="skills" name="skills" className={styles["inputLongtype"]}
                   placeholder="예: JavaScript, React, HTML/CSS"
                   value={formData.skills} onChange={handleInput("skills")} />

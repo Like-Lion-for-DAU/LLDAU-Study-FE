@@ -1,17 +1,14 @@
 /* ── 기본 페이지 ── */
 .week-page {
   padding: 32px;
-  background-color: #fff;
+  background-color: white;
   min-height: 100vh;
-  max-width: 1440px;
-  width: 100%;
-  margin: auto;
 }
 
 .week-page h2 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #2a4a10;
+  color: black;
   margin-bottom: 16px;
 }
 
@@ -22,12 +19,12 @@
 
 .searchInput {
   width: 100%;
-  background: #fff;
-  border: 1.5px solid #d5e6b0;
+  background: #f0f1f5;
+  border: none;
   border-radius: 14px;
   padding: 10px 16px;
-  font-size: 0.85rem;
-  color: #2a4a10;
+  font-size: 0.9rem;
+  color: #9ca4aa;
   outline: none;
   font-family: inherit;
   transition: border-color 0.2s ease;
@@ -49,9 +46,9 @@
 }
 
 .randomOneButton {
-  background-color: #fff;
-  color: #5a9e2f;
-  border: 1.5px solid #5a9e2f;
+  background-color: #7fa668;
+  color: #e8f2e4;
+  border: none;
   border-radius: 10px;
   padding: 7px 14px;
   font-size: 0.7rem;
@@ -64,9 +61,9 @@
 .randomOneButton:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .randomFiveButton {
-  background-color: #fff;
-  color: #5a9e2f;
-  border: 1.5px solid #5a9e2f;
+  background-color: #7fa668;
+  color: #e8f2e4;
+  border: none;
   border-radius: 10px;
   padding: 7px 14px;
   font-size: 0.7rem;
@@ -79,9 +76,9 @@
 .randomFiveButton:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .refrashButton {
-  background-color: #fff;
-  color: #5a9e2f;
-  border: 1.5px solid #5a9e2f;
+  background-color: #7fa668;
+  color: #e8f2e4;
+  border: none;
   border-radius: 10px;
   padding: 7px 14px;
   font-size: 0.7rem;
@@ -95,10 +92,9 @@
 
 .refrashState {
   font-size: 0.9rem;
-  color: #c8cdd0;
+  color: #c1d1bb;
+  padding: 6px 12px;
   margin-right: auto;
-  margin-left: 10px;
-  font-weight: bold;
 }
 
 .retryButton {
@@ -117,28 +113,24 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding-right: 8px;
-  padding-top: 1%;
-  padding-bottom: 1%;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  margin-bottom: 12px;
 }
 
 .sortLabel {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #5a7a3a;
+  color: black;
   white-space: nowrap;
-  justify-content: flex-end;
 }
 
 .sortSelect {
   background: #fff;
-  border: 1.5px solid #d5e6b0;
-  border-radius: 10px;
+  border: 1.5px solid #eaecee;
+  border-radius: 12px;
   padding: 6px 24px 6px 10px;
-  font-size: 0.75rem;
-  color: #2a4a10;
+  font-size: 0.8rem;
+  color: #aaafb3;
   font-weight: 600;
   cursor: pointer;
   outline: none;
@@ -153,13 +145,14 @@
 .sortSelect:focus { border-color: #5a9e2f; }
 
 .countLion {
-  font-size: 0.7rem;
-  background-color: #5a9e2f;
-  color: #fff;
+  font-size: 0.8rem;
+  background-color: #f6f7f9;
+  color: black;
   border: none;
   border-radius: 20px;
   padding: 5px 14px;
   font-weight: 600;
+  margin-left: auto;
 }
 
 /* ── 그리드 ── */
@@ -185,23 +178,26 @@
   flex-direction: column;
   position: relative;
   border-radius: 16px;
+  border: 1px solid #d5e6b0;
   height: auto;
   padding-bottom: 12px;
-  background-color: #f7f7f7;
+  background-color: #fff;
+  box-shadow: 3px 3px 8px #d5e6b0;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   cursor: pointer;
 }
 
 .mainProfile:hover {
   transform: translateY(-4px);
-  box-shadow: 6px 6px 14px gainsboro;
+  border: 2px solid #5a9e2f;
+  box-shadow: 6px 6px 14px #c0dd97;
 }
 
 .profileImage {
   max-width: 220px;
   height: 220px;
   margin: 10px auto;
-  border-radius: 4px;
+  border-radius: 8px;
   object-fit: cover;
   display: block;
 }
@@ -244,6 +240,47 @@
   color: #5a7a3a;
 }
 
+/* ── 추가 기능 토글 ── */
+.extraToggleRow {
+  margin-top: 8px;
+}
+
+.extraToggleBtn {
+  background: transparent;
+  border: none;
+  color: #5a7a3a;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s ease;
+}
+
+.extraToggleBtn:hover {
+  color: #3e7220;
+}
+
+.extraPanel {
+  background-image: linear-gradient(to top right, #4a7741, #76af3e);
+  border: 1px solid #d5e6b0;
+  border-radius: 0px 0px 10px 10px;
+  padding: 12px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  animation: fadeSlideDown 0.2s ease;
+}
+
+@keyframes fadeSlideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* ── 추가 / 제거 버튼 행 ── */
 .actionRow {
   display: flex;
@@ -255,8 +292,8 @@
 
 /* 추가 버튼: OLIVE BETTER 베이지 */
 .addButton {
-  background-color: #c8c2a4;
-  color: #4a4030;
+  background-color: #83dc28;
+  color: #fcfef7;
   border: none;
   border-radius: 12px;
   padding: 10px 18px;
@@ -270,8 +307,9 @@
 
 .removeButton {
   background-color: transparent;
-  color: #b94040;
-  border: 1.5px solid #d88888;
+  background-color: #d5e4c6;
+  color: #412c0f;
+  border: none;
   border-radius: 12px;
   padding: 10px 18px;
   font-size: 0.8rem;
@@ -380,7 +418,7 @@
 
 .pushLionAddButton {
   position: absolute;
-  right: 85px;
+  right: 70px;
   bottom: 3%;
   background-color: #c8c2a4;
   color: #4a4030;
@@ -403,7 +441,7 @@
 
 .pushRandomButton {
   position: absolute;
-  right: 150px;
+  right: 180px;
   bottom: 3%;
   background-color: #fff;
   color: #5a9e2f;
@@ -446,8 +484,7 @@
   color: #2a4a10;
   border: 1.5px solid #d5e6b0;
   border-radius: 8px;
-  margin-top: 4px;
-  padding: 4px;
+  padding: 8px;
   width: 95%;
   outline: none;
   font-family: inherit;
@@ -460,7 +497,7 @@
   color: #2a4a10;
   border: 1.5px solid #d5e6b0;
   border-radius: 8px;
-  padding: 4px;
+  padding: 8px;
   width: 95%;
   outline: none;
   font-family: inherit;
@@ -470,8 +507,7 @@
   color: #2a4a10;
   border: 1.5px solid #d5e6b0;
   border-radius: 8px;
-  margin-top: -10px;
-  padding: 4px;
+  padding: 8px;
   width: 100%;
   outline: none;
   font-family: inherit;
@@ -487,7 +523,6 @@
   border: 1.5px solid #d5e6b0;
   border-radius: 8px;
   height: 90px;
-  margin-top: -10px;
   padding: 8px;
   width: 100%;
   font-family: inherit;
@@ -542,6 +577,7 @@
   color: #2a4a10;
   font-weight: 600;
   font-size: 0.85rem;
+  margin-bottom: 4px;
   display: block;
 }
 
@@ -574,19 +610,20 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 5px;
-  background-color: #EAFDD0;
-  margin-bottom: 2%;
 }
 
-/* 뷰포트: overflow hidden으로 양옆 카드를 1/5만 노출 */
+/* 뷰포트: 고정 클리핑 창 역할, 움직이지 않음 */
 .bannerViewport {
   width: 100%;
-  max-width: 1000px;
-  display: flex;
-  align-items: stretch;
   overflow: hidden;
+}
+
+/* 트랙: 카드들을 담고 translateX로 움직임 */
+.bannerTrack {
+  display: flex;
+  align-items: center;
   gap: 10px;
+  width: 100%;
 }
 
 /* 공통 카드 베이스 */
@@ -603,25 +640,18 @@
 .bannerCardCenter {
   flex: 0 0 60%;
   aspect-ratio: 1 / 1;
-  transition: transform 0.2s ease;
-  /* 중앙 정렬: 양쪽 사이드(각 20%) + gap을 고려해 margin auto */
-  margin-left: auto;
-  margin-right: auto;
 }
 
-/* 사이드 카드: 각 20% 너비, 나머지는 overflow hidden으로 잘림 */
+/* 사이드 카드: 중앙 카드와 동일한 크기, 가장자리만 노출 */
 .bannerCardSide {
-  flex: 0 0 18%;
-  aspect-ratio: 1 / 1;
-  opacity: 0.9;
+  flex: 0 0 60%;
+  aspect-ratio: 5 / 4;
+  opacity: 0.65;
   transition: opacity 0.2s ease;
 }
 
-.bannerCardSide:hover { opacity: 1; }
+.bannerCardSide:hover { opacity: 0.9; }
 
-.bannerCardLeft  { order: -1; }
-.bannerCardCenter { order: 0; }
-.bannerCardRight { order: 1; }
 
 .bannerBg {
   position: absolute;
@@ -646,10 +676,10 @@
 .bannerBadge {
   position: absolute;
   top: 16px;
-  right: 10px;
-  background: #f5c842;
-  color: #2a4a10;
-  font-size: 9px;
+  right: 16px;
+  background: #83dc28;
+  color: #fcfef7;
+  font-size: 11px;
   font-weight: 700;
   border-radius: 12px;
   padding: 4px 12px;
@@ -659,7 +689,7 @@
 .bannerInfo {
   position: absolute;
   bottom: 48px;
-  left: 10px;
+  left: 20px;
   right: 20px;
   z-index: 2;
   color: #fff;
@@ -699,7 +729,7 @@
 .bannerViewAll {
   position: absolute;
   bottom: 14px;
-  right: 16px;
+  right: 12px;
   z-index: 3;
   background: none;
   border: none;
@@ -708,15 +738,9 @@
   font-weight: 700;
   color: #fff;
   cursor: pointer;
-  backdrop-filter: none;
-  appearance: none;
 }
 
-.bannerViewAll:hover{
-  background: transparent;
-  filter: none;
-  opacity: 1;
-}
+.bannerViewAll:hover { background: none; }
 
 /* 인디케이터 도트 */
 .bannerDots {
