@@ -374,8 +374,8 @@ export default function Week5Page() {
               <div className={styles["bannerOverlay"]} />
               <span className={styles["bannerBadge"]}>{currentMember.badge}</span>
               <div className={styles["bannerInfo"]}>
-                <b className={styles["bannerPart"]}>{currentMember.part}</b>
                 <h3 className={styles["bannerName"]}>{currentMember.name}</h3>
+                <b className={styles["bannerPart"]}>{currentMember.part}</b>
                 <p className={styles["bannerIntro"]}>{currentMember.intro}</p>
               </div>
               <button
@@ -571,6 +571,7 @@ export default function Week5Page() {
         <div className={styles["modalOverlay"]} onClick={() => setSelected(null)}>
           <div className={styles["modalContent"]} onClick={(e) => e.stopPropagation()}>
             <h2 className={styles["name"]}>{selected.name}</h2>
+            <br/>
             <b className={styles["blueRule"]}>{selected.part}</b>
             <p className={styles["joinClub"]}>{selected.club}</p>
             <hr className={styles["modalDivider"]} />

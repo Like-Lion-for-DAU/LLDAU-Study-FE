@@ -3,6 +3,8 @@
   padding: 32px;
   background-color: white;
   min-height: 100vh;
+  max-width: 100vh;
+  margin: auto;
 }
 
 .week-page h2 {
@@ -178,11 +180,9 @@
   flex-direction: column;
   position: relative;
   border-radius: 16px;
-  border: 1px solid #d5e6b0;
   height: auto;
   padding-bottom: 12px;
   background-color: #fff;
-  box-shadow: 3px 3px 8px #d5e6b0;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   cursor: pointer;
 }
@@ -190,7 +190,20 @@
 .mainProfile:hover {
   transform: translateY(-4px);
   border: 2px solid #5a9e2f;
-  box-shadow: 6px 6px 14px #c0dd97;
+}
+
+.mainProfile:hover .badgeSpace{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  border-radius: 50%;
+  aspect-ratio: 1 / 1;
+  background-color: #f5e700;
+  color: #41ba93;
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
 }
 
 .profileImage {
@@ -203,24 +216,33 @@
 }
 
 .badgeSpace {
-  background-color: #f5c842;
-  color: #2a4a10;
-  border-radius: 12px;
-  padding: 2px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  border-radius: 50%;
+  aspect-ratio: 1 / 1;
+  background-color: #7dd225;
+  color: #3b5114;
   font-weight: 700;
-  font-size: 10px;
+  font-size: 16px;
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
 }
 
 .badge {
   position: absolute;
   top: 7px;
   right: 8px;
-  font-size: 10px;
   margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .blueRule {
-  color: #5a9e2f;
+  color: #df6461;
   padding-inline: 10px;
   font-size: 16px;
   overflow: auto;
@@ -231,6 +253,8 @@
   overflow: auto;
   color: #2a4a10;
   font-size: 1.2rem;
+  display: inline;
+
 }
 
 .lineIntroduce {
@@ -328,7 +352,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(42, 74, 16, 0.2);
+  background-color: rgba(0, 0, 0, 0.4);
   z-index: 1000;
 }
 
@@ -349,23 +373,21 @@
 
 .modalDivider {
   border: none;
-  border-top: 2px solid #d5e6b0;
+  border-top: 2px solid rgba(77, 77, 77, 0.4);
   margin-right: 16px;
 }
 
 .introduceTitle {
   padding-inline: 3px;
   margin-top: 8px;
-  color: #2a4a10;
+  color: black;
 }
 
 .introduceLast {
-  font-style: italic;
-  color: #3e7220;
+  font-style: bold;
+  color: black;
   font-weight: 600;
-  border-left: 4px solid #5a9e2f;
-  background: #f0f5e8;
-  border-radius: 8px;
+  background: #f6f7f9;
   padding: 8px 12px;
   margin: 4px 16px 4px 12px;
 }
@@ -384,7 +406,8 @@
 
 .joinClub {
   padding-inline: 10px;
-  color: #5a7a3a;
+  color: black;
+  font: bold;
   font-weight: 600;
   margin-bottom: 10px;
 }
@@ -679,11 +702,20 @@
   top: 16px;
   right: 16px;
   background: #83dc28;
-  color: #fcfef7;
+  color: #ef3ec4;
+  text-shadow: -1px 0px white, 0px 1px white, 1px 0px white, 0px -1px white;
   font-size: 11px;
   font-weight: 700;
-  border-radius: 12px;
+  border-radius: 100%;
   padding: 4px 12px;
+  width: 60px;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
   z-index: 2;
 }
 

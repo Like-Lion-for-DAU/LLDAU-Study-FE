@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 
 const emptyForm = { name: "", part: "Frontend", club:"", skills: "", introduce: "", introduceDetail: "", email: "", phone: "", website: "", last: "" };
 const randomParts = ["Frontend", "Backend", "PM", "Design"];
-const randomSkills = ["HTML / CSS", "JavaScript", "React", "Node.js", "Python", "Django", "Flask", "TypeScript", "GraphQL", "Docker"];
+const randomSkills = ["HTML/CSS", "JavaScript", "React", "Node.js", "Python", "Django", "Flask", "TypeScript", "GraphQL", "Docker"];
 const randomLast = [
   "열심히 배우고 있습니다!",
   "프론트엔드 개발자로 성장하고 싶습니다.",
@@ -65,11 +65,11 @@ export const members = [
     part: "Frontend",
     intro: "아기사자 14기 프론트엔드 임도영입니다.",
     club: "DAU_DSIS",
-    badge: "HTML / CSS",
+    badge: "HTML/CSS",
     image: idyJPG,
     introduce: ["동아대 26학번 컴퓨터공학과, 아기사자 14기 임도영입니다. 이번 활동을 통해 많이 공부하며, 공부한 것을 활동 및 대회 참여를 통해 활용해나가며 경험과 기술을 쌓기 위해 노력하겠습니다. 앞으로 잘 부탁드립니다."],
     contact: { email: "dlaehdud342@naver.com", phone: "010-3516-6306", website: { label: "https://www.google.com/", url: "https://www.google.com/" } },
-    skills: ["HTML / CSS", "JavaScript", "React", "JAVA", "C / C++"],
+    skills: ["HTML/CSS", "JavaScript", "React", "JAVA", "C / C++"],
     last: "꾸준히 노력하고 적극적인 참여를 통해 성장하는 개발자가 되겠습니다.",
   },
   {
@@ -78,7 +78,7 @@ export const members = [
     part: "Frontend",
     intro: "분야를 넘나들며 성장하는 개발자입니다.",
     club: "DAU_DSIS",
-    badge: "HTML / CSS",
+    badge: "HTML/CSS",
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2QuItPJLx65Rb2kqBsMRU7t3BmKc8jn98lw&s",
     introduce: ["동아대학교 응용생물공학과 25학번 김나함입니다. 멋쟁이사자처럼을 통해 처음 프론트엔드에 도전하는 중입니다."],
     contact: { email: "naham9488@gmail.com", phone: "010-3626-9488", website: { label: "@kim_naham", url: "https://www.instagram.com/kim_naham/" } },
@@ -118,11 +118,11 @@ export const members = [
     part: "Frontend",
     intro: "열심히 배우는 프론트엔드 개발자입니다!",
     club: "DAU_DSIS",
-    badge: "HTML / CSS",
+    badge: "HTML/CSS",
     image: "https://i.pinimg.com/736x/4f/6a/e8/4f6ae87f63609f8d7f1f38b3617cbe1c.jpg",
     introduce: ["안녕하세요! 말하는 감자입니다. 잘부탁드립니다. 배움에는 끝이없다..!"],
     contact: { email: "dodo55860@gmail.com", phone: "010-2686-5586", website: { label: "구글로 이동", url: "https://www.google.com/" } },
-    skills: ["HTML / CSS", "JavaScript", "React (학습 중)"],
+    skills: ["HTML/CSS", "JavaScript", "React (학습 중)"],
     last: "팀원들에게 든든한 개발자가 되고싶습니다.",
   },
   {
