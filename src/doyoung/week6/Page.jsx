@@ -62,12 +62,10 @@ function ContactList({contact}) {
 
 //마찬가지로 재사용을 위해 컴포넌트 나눔
 function DetailCard({ 
-  member,
-  isFocused,
-  innerRef,
+  member
 }) {
   return (
-    <div ref = {innerRef} className={`${styles["detailcard"]} ${isFocused ? styles["isFocused"] : ""}`}>
+    <div className={styles["detailcard"]}>
       <h3>{member.name}</h3>
       <span className={styles["frontend"]}>{member.role}</span>
       <p className={styles["dsis"]}>동아리명 : {member.club}</p>
@@ -298,17 +296,33 @@ export default function Week4Page() {
 
   const [partFilter, setPartFilter] =
   useState("ALL");
-
-  const [focusedId, setFocusedId] =
-  useState(null);
-
-  const detailRefs = useRef({});
   
   const nextIdRef = useRef(
     initialMembers.length === 0 
     ? 1 
     : Math.max(...initialMembers.map((m) => m.id)) + 1
   );
+
+  const [selectedMember, setSelectedMember] =
+  useState(
+    members.find((m) => m.isMe) ||
+    members[0]
+  );
+
+  const frontendCount =
+  members.filter(
+    (m) => m.role === "Frontend"
+  ).length;
+
+  const backendCount =
+  members.filter(
+    (m) => m.role === "Backend"
+  ).length;
+
+  const designCount =
+  members.filter(
+    (m) => m.role === "Design"
+  ).length;
 
   function makeNextId() {
     const id = nextIdRef.current;
@@ -377,16 +391,22 @@ export default function Week4Page() {
   }
 
   function handleRemoveLast() {
-    setMembers((prev) =>
-    prev.slice(0, -1));
+    setMembers((prev) => {
+      const lastIndex = prev.findLastIndex((member) => !member.isMe);
+
+      if (lastIndex === -1) return prev;
+
+      return prev.filter(
+        (_, index) => index !== lastIndex
+      );
+    });
   }
 
   function handleCardClick(id) {
-    detailRefs.current[id]?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-    setFocusedId(id);
+    const member =
+    members.find((m) => m.id === id);
+
+    setSelectedMember(member);
 
     if (focusResetTimerRef.current) clearTimeout(focusResetTimerRef.current);
     focusResetTimerRef.current = setTimeout(() => {
@@ -449,36 +469,112 @@ export default function Week4Page() {
     <div className={styles["week-page"]}>
       <h2>4주차</h2>
 
-      <section>
-        <div className={styles["controlInner"]}>
+      <section className={styles["controlSection"]}>
+
+        <h2 className={styles["controlTitle"]}>
+          멋쟁이사자처럼 아기사자 명단
+        </h2>
+
+        <div className={styles["searchSection"]}>
+
+          <input
+          type="text"
+          value={search}
+          onChange={(e) => 
+            setSearch(e.target.value)
+          }
+          className={styles["nametext"]}
+          placeholder="이름으로 검색"/>
+        </div>
+
+        <div className={styles["statusBar"]}>
+
+          <span
+          className={styles["count"]}>
+            총 {visibleMembers.length}명
+          </span>
+
+          {fetchStatus === "idle" && (
+            <p className={styles["statusText"]}>준비 완료</p>
+          )}
+
+          {fetchStatus === "loading" && (
+            <p className={styles["statusText"]}>불러오는 중...</p>
+          )}
+
+          {fetchStatus === "success" && (
+            <p className={styles["statusSuccess"]}>완료!</p>
+          )}
+
+          {fetchStatus === "error" && (
+            <div>
+              <p className={styles["statusError"]}>
+                불러오기 실패 : 
+                {statusMessage}
+              </p>
+
+              <button
+              className={styles["retryBtn"]}
+              onClick={handleRetry}>
+                재시도
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className={styles["filterSection"]}>
+          <select
+          value={partFilter}
+          onChange={(e) => 
+            setPartFilter(e.target.value)
+          }
+          className={styles["filterControl"]}>
+            <option value="ALL">전체</option>
+            <option value="Frontend">Frontend</option>
+            <option value="Backend">Backend</option>
+            <option value="Design">Design</option>
+          </select>
+
+          <select
+          value={sortType}
+          className={styles["filterControl"]}
+          onChange={(e) =>
+            setSortType(e.target.value)
+          }>
+            <option value="recent">최신추가순</option>
+            <option value="name">이름순</option>
+          </select>
+        </div>
+
+        <div className={styles["actionSection"]}>
           <button
           type="button"
-          className={styles["btnIcon"]}
+          className={styles["primaryBtn"]}
           onClick={() => setShowForm(true)}>
             아기사자추가
           </button>
+
           <button
           type="button"
           className={styles["btnIcon"]}
           onClick={handleRemoveLast}>
             마지막 아기 사자 삭제
           </button>
-          <span
-          className={styles["count"]}>
-            총 {visibleMembers.length}명
-          </span>
+
           <button
           type="button"
-          className={styles["btnIcon"]}
+          className={styles["primaryBtn"]}
           onClick={() => fetchRandomUsers(1, "add")}>
             랜덤 1명 추가
           </button>
+
           <button
           type="button"
-          className={styles["btnIcon"]}
+          className={styles["primaryBtn"]}
           onClick={() => fetchRandomUsers(5, "add")}>
             랜덤 5명 추가
           </button>
+
           <button
           type="button"
           className={styles["btnIcon"]}
@@ -491,71 +587,8 @@ export default function Week4Page() {
           }>
             전체 새로고침
           </button>
-          <div>
-            <span className = {styles["text"]}>파트</span>
-            <select
-            value={partFilter}
-            onChange={(e) => setPartFilter(e.target.value)}
-            className={styles["btnIcon"]}>
-              <option value="ALL">전체</option>
-              <option value="Frontend">Frontend</option>
-              <option value="Backend">Backend</option>
-              <option value="Design">Design</option>
-            </select>
-          </div>
-
-          <div
-          className={styles["txet"]}>
-            {fetchStatus === "idle" && (
-              <p className={styles["text"]}>준비 완료</p>
-            )}
-
-            {fetchStatus === "loading" && (
-              <p className={styles["text"]}>불러오는 중...</p>
-            )}
-
-            {fetchStatus === "success" && (
-              <p className={styles["text"]}>완료!</p>
-            )}
-
-            {fetchStatus === "error" && (
-              <div>
-                <p className={styles["text"]}>
-                  불러오기 실패 : 
-                  {statusMessage}
-                </p>
-
-                <button
-                className={styles["btnIcon"]}
-                onClick={handleRetry}>
-                  재시도
-                </button>
-              </div>
-            )}
-          </div>
-          
-          <div>
-            <span className={styles["text"]}>정렬</span>
-            <select
-            value={sortType}
-            className={styles["btnIcon"]}
-            onChange={(e) =>
-              setSortType(e.target.value)
-            }>
-              <option value="recent">최신추가순</option>
-              <option value="name">이름순</option>
-            </select>
-          </div>
-          <div>   
-            <span className={styles["text"]}>검색</span>
-            <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className={styles["nametext"]}
-            placeholder="이름으로 검색"/>
-          </div>
         </div>
+
       </section>
 
       {showForm && (
@@ -761,14 +794,73 @@ export default function Week4Page() {
       {visibleMembers.length === 0 ? (
         <p>조건에 맞는 아기사자가 없습니다.</p>
       ) : (
-        <section className={styles["cardpack"]}>
-          {visibleMembers.map((member) => (
-            <SummaryCard 
-            key={member.id}
-            member={member}
-            onClick={() => handleCardClick(member.id)} />
-          ))}
-        </section>
+
+        <div>
+          <div className={styles["mainLayout"]}>
+
+            <aside className={styles["sidebar"]}>
+
+              {members
+              .filter((m) => m.isMe)
+              .map((member) => (
+                <SummaryCard
+                key={member.id}
+                member={member}
+                onClick={() =>
+                  setSelectedMember(member)
+                }/>
+              ))}
+
+              <div className={styles["statsCard"]}>
+                <h4>파트별 통계</h4>
+                <div className={styles["statsGrid"]}>
+                  <div className={styles["statItem"]}>
+                    <div className={styles["statValue"]}>
+                      {frontendCount}
+                    </div>
+                    <span>Frontend</span>
+                  </div>
+                  <div className={styles["statItem"]}>
+                    <div className={styles["statValue"]}>{backendCount}</div>
+                    <span>Backend</span>
+                  </div>
+                  <div className={styles["statItem"]}>
+                    <div className={styles["statValue"]}>{designCount}</div>
+                    <span>Design</span>
+                  </div>
+                  <div className={styles["statItem"]}>
+                    <div className={styles["statValue"]}>{members.length}</div>
+                    <span>전체</span>
+                  </div>
+                </div>
+              </div>
+
+            </aside>
+
+            <section className={styles.memberList}>
+              {visibleMembers
+              .filter((m) => !m.isMe)
+              .map((member) => (
+                <SummaryCard
+                key={member.id}
+                member={member}
+                onClick={() =>
+                  setSelectedMember(member)
+                }
+                />
+              ))}
+            </section>
+          </div>
+          {selectedMember && (
+            <section
+              className={styles.detailcardpack}
+            >
+              <DetailCard
+                member={selectedMember}
+              />
+            </section>
+          )}
+        </div>
       )}
       
       <section className={styles["detailcardpack"]}>
@@ -776,14 +868,7 @@ export default function Week4Page() {
           <DetailCard
           key={member.id}
           member={member}
-          isFocused={focusedId === member.id}
-          innerRef={(el) => {
-            if (el) {
-              detailRefs.current[
-                member.id
-              ] = el;
-            }
-          }}/>
+          />
           ))}
       </section>
     </div>
