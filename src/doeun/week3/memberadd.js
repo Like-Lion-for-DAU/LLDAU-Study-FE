@@ -10,7 +10,9 @@ export const createNewMember = (event) => {
     email: formData.get("email"),
     phone: formData.get("phone"),
     website: formData.get("website"),
-    comment: formData.get("comment")
+    comment: formData.get("comment"),
+    image: formData.get("image"),
+    isMe: false
   };
 };
 

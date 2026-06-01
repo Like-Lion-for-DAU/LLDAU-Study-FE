@@ -1,37 +1,28 @@
 import React, { useState } from "react";
 import styles from "./Page.module.css";
 import { memberspro } from "./memberData.js";
-import defaultProfile from "./default-profile.jpg"
+import defaultProfile from "./default-profile.jpg";
 
 // 랜덤 유저 API 데이터 가져오기
 const initData = async (number) => {
   const res = await fetch(
     `https://randomuser.me/api/?results=${number}&nat=us,gb,ca,au,nz`
   );
-
   if (!res.ok) {
     throw new Error("API 요청 실패");
   }
-
   const data = await res.json();
-
   return data.results.map((user, idx) => ({
     id: Date.now() + idx,
-
     name: `${user.name.first} ${user.name.last}`,
-
     part: ["Frontend", "Backend", "Design"][
       Math.floor(Math.random() * 3)
     ],
-
     intro: "새로 합류한 아기 사자입니다!",
-
     image: user.picture.large,
-
     tech: ["React", "Node", "Figma"][
       Math.floor(Math.random() * 3)
     ],
-
     isMe: false,
   }));
 };
@@ -45,19 +36,18 @@ const removeLastMember = (list) => {
 const createNewMember = (e) => {
   return {
     id: Date.now(),
-
     name: e.target.name.value,
-
     part: e.target.part.value,
-
+    tech: e.target.tech.value,
+    summary: e.target.summary.value,
     intro: e.target.intro.value,
-
+    email: e.target.email.value,
+    phone: e.target.phone.value,
+    website: e.target.website.value,
+    message: e.target.message.value,
     image:
       e.target.image?.value ||
-      defaultProfile, // 기본 이미지
-
-    tech: e.target.tech.value,
-
+      defaultProfile,
     isMe: false,
   };
 };
@@ -69,33 +59,24 @@ export default function Week4Page() {
 
   // 컴포넌트 내부
   const [formData, setFormData] = useState(initialFormState);
-
   const [memberList, setMemberList] = useState(memberspro);
-
   const [showForm, setShowForm] = useState(false);
-
   const [selectedMember, setSelectedMember] = useState(null);
 
   // 로딩 / 에러 상태
   const [loading, setLoading] = useState(false);
-
   const [error, setError] = useState("");
-
   const [success, setSuccess] = useState(false);
 
   // 직접 추가
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const newMember = createNewMember(e);
-
     setMemberList((prev) => [
       ...prev,
       newMember,
     ]);
-
     setShowForm(false);
-
     e.target.reset();
   };
 
@@ -110,12 +91,35 @@ const handleInputChange = (e) => {
   setFormData((prev) => ({ ...prev, [name]: value }));
 };
 
-// 랜덤 값 채우기 클릭 시
 const handleFillRandomData = async () => {
   try {
     setLoading(true);
-    const [randomUser] = await initData(1); // 방법 1의 수정된 initData 활용
-    setFormData(randomUser); // 받아온 정보를 통째로 폼 state에 주입!
+    setError("");
+    const res = await fetch(
+      "https://randomuser.me/api/?results=1&nat=us,gb,ca,au,nz"
+    );
+    if (!res.ok) {
+      throw new Error("API 요청 실패");
+    }
+    const data = await res.json();
+    const user = data.results[0];
+    setFormData({
+      name: `${user.name.first} ${user.name.last}`,
+      part: ["Frontend", "Backend", "Design"][
+        Math.floor(Math.random() * 3)
+      ],
+      tech: ["React", "Node.js", "Figma"][
+        Math.floor(Math.random() * 3)
+      ],
+      summary: `${user.location.country}에서 온 아기사자입니다!`,
+      intro: `안녕하세요. ${user.name.first}입니다. 다양한 프로젝트를 경험하며 성장하고 있습니다.`,
+      email: user.email,
+      phone: user.phone,
+      website: `https://github.com/${user.login.username}`,
+      message: "열심히 배우고 성장하겠습니다!",
+      image: user.picture.large,
+    });
+
     setSuccess(true);
   } catch (err) {
     setError(err.message);
@@ -128,13 +132,9 @@ const handleFillRandomData = async () => {
   const addRandomMember = async () => {
     try {
       setLoading(true);
-
       setError("");
-
       setSuccess(false);
-
       const newMembers = await initData(1);
-
       setMemberList((prev) => [
         ...prev,
         ...newMembers,
@@ -154,13 +154,9 @@ const handleFillRandomData = async () => {
   const addRandomFiveMembers = async () => {
     try {
       setLoading(true);
-
       setError("");
-
       setSuccess(false);
-
       const newMembers = await initData(5);
-
       setMemberList((prev) => [
         ...prev,
         ...newMembers,
@@ -180,14 +176,10 @@ const handleFillRandomData = async () => {
   const refreshMembers = async () => {
     try {
       setLoading(true);
-
       setError("");
-
       setSuccess(false);
-
       // 기본 멤버로 초기화
       setMemberList(memberspro);
-
       setSuccess(true);
     } catch (error) {
       setError(
@@ -302,6 +294,8 @@ const handleFillRandomData = async () => {
               <input
                 type="text"
                 name="name"
+                value={formData.name}
+                onChange={handleInputChange}
                 placeholder="이름"
                 required
               />
@@ -310,18 +304,14 @@ const handleFillRandomData = async () => {
             <div className={styles.inputGroup}>
               <label>파트</label>
 
-              <select name="part">
-                <option value="Frontend">
-                  Frontend
-                </option>
-
-                <option value="Backend">
-                  Backend
-                </option>
-
-                <option value="Design">
-                  Design
-                </option>
+              <select
+                name="part"
+                value={formData.part}
+                onChange={handleInputChange}
+              >
+                <option value="Frontend">Frontend</option>
+                <option value="Backend">Backend</option>
+                <option value="Design">Design</option>
               </select>
             </div>
           </div>
@@ -335,6 +325,8 @@ const handleFillRandomData = async () => {
             <input
               type="text"
               name="tech"
+              value={formData.tech}
+              onChange={handleInputChange}
               placeholder="JavaScript, React, HTML/CSS"
               required
             />
@@ -347,8 +339,9 @@ const handleFillRandomData = async () => {
             </label>
 
             <input
-              type="text"
               name="summary"
+              value={formData.summary}
+              onChange={handleInputChange}
               placeholder="Frontend에서 합류했어요!"
               required
             />
@@ -362,6 +355,8 @@ const handleFillRandomData = async () => {
 
             <textarea
               name="intro"
+              value={formData.intro}
+              onChange={handleInputChange}
               rows="6"
               placeholder="자기소개 입력"
               required
@@ -374,8 +369,9 @@ const handleFillRandomData = async () => {
               <label>Email</label>
 
               <input
-                type="email"
                 name="email"
+                value={formData.email}
+                onChange={handleInputChange}
                 placeholder="이메일"
                 required
               />
@@ -385,8 +381,9 @@ const handleFillRandomData = async () => {
               <label>Phone</label>
 
               <input
-                type="text"
                 name="phone"
+                value={formData.phone}
+                onChange={handleInputChange}
                 placeholder="전화번호"
                 required
               />
@@ -398,8 +395,9 @@ const handleFillRandomData = async () => {
             <label>Website</label>
 
             <input
-              type="text"
               name="website"
+              value={formData.website}
+              onChange={handleInputChange}
               placeholder="https://example.com"
               required
             />
@@ -410,8 +408,9 @@ const handleFillRandomData = async () => {
             <label>한 마디</label>
 
             <input
-              type="text"
               name="message"
+              value={formData.message}
+              onChange={handleInputChange}
               placeholder="데이터가 바뀌면 UI도 바뀐다!"
               required
             />
@@ -422,6 +421,7 @@ const handleFillRandomData = async () => {
             <button
               type="button"
               className={styles.randomBtn}
+              onClick={handleFillRandomData} // 클릭 이벤트 넣기
             >
               랜덤 값 채우기
             </button>
@@ -429,7 +429,6 @@ const handleFillRandomData = async () => {
             <button
               type="submit"
               className={styles.submitBtn}
-              onClick={handleFillRandomData} // 클릭 이벤트 넣기
             >
               추가하기
             </button>
@@ -520,6 +519,46 @@ const handleFillRandomData = async () => {
           ))
         )}
       </div>
+      {selectedMember && (
+        <div
+          className={styles.modalOverlay}
+          onClick={() => setSelectedMember(null)}
+        >
+        <div
+          className={styles.profileModal}
+          onClick={(e) => e.stopPropagation()}
+        >
+        <img
+          src={selectedMember.image}
+          alt={selectedMember.name}
+          className={styles.profileImage}
+        />
+
+        <h2>{selectedMember.name}</h2>
+
+        <p className={styles.profilePart}>
+         {selectedMember.part}
+        </p>
+
+        <p className={styles.profileTech}>
+          관심 기술 : {selectedMember.tech}
+        </p>
+
+        <p className={styles.profileIntro}>
+          {selectedMember.intro}
+        </p>
+
+        <button
+          onClick={() =>
+            setSelectedMember(null)
+          }
+          className={styles.closeBtn}
+        >
+          닫기
+        </button>
+      </div>
+    </div>
+  )}
     </div>
   );
 }
