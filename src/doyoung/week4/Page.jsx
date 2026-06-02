@@ -2,6 +2,7 @@ import styles from "./Page.module.css";
 import { members as initialMembers} from "./members";
 import { useEffect, useRef, useState } from "react";
 
+//멤버의 요약카드들을 재사용 및 유지보수에 편하게 하기 위해 나눔
 function SummaryCard({ member, onClick }) {
   return (
     <div
@@ -15,6 +16,7 @@ function SummaryCard({ member, onClick }) {
   );
 }
 
+//이메일과 핸드폰, 링크 등의 것들을 클릭하면 볼 수 있도록 하기 위해 function을 사용해 재사용하도록 함
 function ContactList({contact}) {
   if (!contact) return null;
   return (
@@ -47,6 +49,8 @@ function ContactList({contact}) {
   );
 }
 
+
+//마찬가지로 재사용을 위해 컴포넌트 나눔
 function DetailCard({ 
   member,
   isFocused,
@@ -121,9 +125,10 @@ export default function Week4Page() {
   const timeoutId = setTimeout(() => {
     timedOut = true;
     controller.abort();
-  }, TIMEOUT_MS);
+  }, TIMEOUT_MS); 
 
   const fetchRandomUsers = async (count, type = "add") => {
+    //값을 1 증가시키고 저장
     const requestId = ++latestRequestIdRef.current;
 
     if(latestControllRef.current) latestControllRef.current.abort();
@@ -223,6 +228,8 @@ export default function Week4Page() {
     }, 5000);
     try{
       setFetchStatus("loading");
+
+      //다시 시도하기 위해 fillRandomData에 저장?
       setRetryAction(() => fillRandomData);
 
       await new Promise((resolve) =>
@@ -308,7 +315,7 @@ export default function Week4Page() {
 
     return matchPart && matchSearch;
   })
-
+//a, b로 나눠진 이유 => a와 b를 비교하기 위해
   .sort((a,b) => {
     if (sortType === "name") {
       return a.name.localeCompare(b.name);
