@@ -9,7 +9,7 @@ import {
 } from "./script.js";
 import { useState, useEffect, useRef } from "react";
 
-export default function Week5Page() {
+export default function Week6Page() {
   // ── 데이터/UI 상태 ──
   const [memberList, setMemberList] = useState(initialMembers);
   const [selected, setSelected] = useState(null);

@@ -2,7 +2,7 @@ import styles from "./Page.module.css";
 import { members as initialMembers, pushRandomMembers, usePageScrollDown, useFormData, randomResult, randomNewMember} from "./script.js";
 import { useState, useEffect, useRef } from "react";
 
-export default function Week5Page() {
+export default function Week6Page() {
   const [memberList, setMemberList] = useState(initialMembers);
   const [selected, setSelected] = useState(null);
   const [showAdd, setShowAdd] = useState(false);
