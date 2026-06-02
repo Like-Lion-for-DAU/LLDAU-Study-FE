@@ -21,6 +21,8 @@ function pick(arr) {
 function transformUser(user, id) {
   const part = pick(PARTS);
   const badge = pick(BADGES);
+  const club = pick(CLUBS);
+  const motto = pick(MOTTOS);
   return {
     id,
     name: `${user.name.first} ${user.name.last}`,
@@ -28,13 +30,13 @@ function transformUser(user, id) {
     intro: `${user.location.country} 출신의 아기사자입니다.`,
     image: user.picture.large,
     badge,
-    club: pick(CLUBS),
+    club,
     bio: `안녕하세요, ${user.name.first} ${user.name.last}입니다. ${user.location.city}, ${user.location.country} 출신입니다.`,
     email: user.email,
     phone: user.phone,
     website: "",
     skills: [badge],
-    motto: pick(MOTTOS),
+    motto,
     isMe: false,
   };
 }
@@ -68,7 +70,6 @@ function SummaryCard({ member, onClick }) {
             }}
           />
         )}
-        <span className={styles.badge}>{member.badge || "New"}</span>
       </div>
       <p className={styles.name}>{member.name}</p>
       <p className={styles.end}>{member.role}</p>
