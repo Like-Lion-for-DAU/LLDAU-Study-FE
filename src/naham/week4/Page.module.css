@@ -170,8 +170,6 @@
     color: #333;
 }
 
-/* 기존에 있던 스타일들은 그대로 유지하시고, 아래 내용들을 추가해 주세요 */
-
 .loadingBanner {
   text-align: center;
   padding: 15px;
@@ -245,4 +243,40 @@
 
 .emptyState h2 {
   margin-bottom: 10px;
+}
+
+.totalCount {
+  margin-left: 15px;
+  font-weight: 500;
+}
+
+.cardPart {
+  font-weight: bold;
+  color: #555;
+  margin: 0 20px; 
+  display: block;
+}
+
+.cardIntro {
+  margin: 10px 20px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.searchInput {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.formError {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
 }
