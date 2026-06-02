@@ -633,12 +633,163 @@
   margin-bottom: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
 }
 
-/* 뷰포트: 고정 클리핑 창 역할, 움직이지 않음 */
+/* 배너 헤더 (전체보기 토글 영역) */
+.bannerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding: 0 4px;
+}
+
+.bannerTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #2a4a10;
+  margin: 0;
+}
+
+.viewAllBtn {
+  background: #f5f7f3;
+  color: #5a9e2f;
+  border: 1px solid #d5e6b0;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.viewAllBtn:hover {
+  background: #e4eecc;
+}
+
+/* 보기 모드 토글 (카드/리스트) */
+.viewModeToggle {
+  display: inline-flex;
+  background: #f5f7f3;
+  border: 1px solid #d5e6b0;
+  border-radius: 20px;
+  padding: 2px;
+  gap: 0;
+}
+
+.viewModeBtn {
+  background: transparent;
+  border: none;
+  color: #8aa07a;
+  width: 32px;
+  height: 30px;
+  border-radius: 18px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  padding: 0;
+}
+
+.viewModeBtn:hover {
+  color: #5a9e2f;
+}
+
+.viewModeBtnActive {
+  background: #5a9e2f;
+  color: #fff;
+}
+
+.viewModeBtnActive:hover {
+  background: #4a8a25;
+  color: #fff;
+}
+
+/* 리스트 뷰 */
+.listContainer {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.listItem {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #fff;
+  border: 1px solid #eef2e8;
+  border-radius: 14px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.listItem:hover {
+  border-color: #5a9e2f;
+  box-shadow: 0 4px 12px rgba(90, 158, 47, 0.1);
+  transform: translateX(2px);
+}
+
+.listImage {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.listInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.listName {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #2a4a10;
+  margin: 0;
+}
+
+.listPart {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #5a9e2f;
+}
+
+.listIntro {
+  font-size: 0.8rem;
+  color: #6b7a5a;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.listBadge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #2a4a10;
+  background: #d5e6b0;
+  border-radius: 12px;
+  padding: 4px 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* 뷰포트: 고정 클리핑 창 역할, 움직이지 않음
+   부모(week-page)의 좌우 32px 패딩을 음수 마진으로 무효화하여 화면 끝까지 확장 */
 .bannerViewport {
-  width: 100%;
+  width: calc(100% + 64px);
+  margin-left: -32px;
+  margin-right: -32px;
   overflow: hidden;
 }
 

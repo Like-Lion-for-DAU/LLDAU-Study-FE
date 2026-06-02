@@ -12,7 +12,7 @@ export default function Week5Page() {
   const [sortType, setSortType] = useState("newest");
   const [sortSearch, setSortSearch] = useState("");
   const [bannerIdx, setBannerIdx] = useState(0);
-  const [showGrid, setShowGrid] = useState(false);
+  const [viewMode, setViewMode] = useState("card");   // "card" | "list"
   const [showExtra, setShowExtra] = useState(false);
 
   const statusResetTimerRef = useRef(null);
@@ -26,6 +26,8 @@ export default function Week5Page() {
   const dragDelta = useRef(0);
   const isDragging = useRef(false);
   const [dragOffset, setDragOffset] = useState(0);
+  const [snapping, setSnapping] = useState(false);
+  const [viewportWidth, setViewportWidth] = useState(0);
 
   usePageScrollDown(selected, () => setSelected(null));
   usePageScrollDown(showAdd, () => setShowAdd(false));
@@ -48,6 +50,17 @@ export default function Week5Page() {
       if (statusResetTimerRef.current) clearTimeout(statusResetTimerRef.current);
     };
   }, []);
+
+  // 뷰포트 너비 측정 + 리사이즈/CSS 변경/모드 전환 시 모두 자동 갱신
+  useEffect(() => {
+    const node = viewportRef.current;
+    if (!node) return;
+    const updateWidth = () => setViewportWidth(node.offsetWidth);
+    updateWidth();
+    const observer = new ResizeObserver(updateWidth);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [viewMode]);
 
   // bannerIdx가 범위 벗어나지 않도록
   useEffect(() => {
@@ -160,22 +173,65 @@ export default function Week5Page() {
   };
 
   // 무한 루프 이전/다음
-  const goPrev = () =>
+  const goPrev = () => {
+    if (displayList.length === 0) return;
     setBannerIdx((i) => (i - 1 + displayList.length) % displayList.length);
-  const goNext = () =>
+  };
+  const goNext = () => {
+    if (displayList.length === 0) return;
     setBannerIdx((i) => (i + 1) % displayList.length);
+  };
+
+  // 슬라이드 애니메이션 설정
+  const SNAP_MS = 300;
+  const GAP = 10;
+
+  // 슬라이드 → 데이터 교체 → 위치 instant 리셋 (3단계)
+  const snapToNext = (delta) => {
+    if (snapping) return;
+    const direction = delta < 0 ? -1 : 1;
+    const cardWidth = viewportWidth * 0.6;   // bannerCardCenter가 60%
+    setSnapping(true);
+    setDragOffset(direction * (cardWidth + GAP));
+
+    setTimeout(() => {
+      delta < 0 ? goNext() : goPrev();
+      setSnapping(false);
+      setDragOffset(0);
+    }, SNAP_MS);
+  };
+
+  // 작은 드래그는 원위치로 복귀만
+  const snapBack = () => {
+    setSnapping(true);
+    setDragOffset(0);
+    setTimeout(() => setSnapping(false), SNAP_MS);
+  };
 
   // 터치 스와이프
-  const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
+  const handleTouchStart = (e) => {
+    if (snapping) return;
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const handleTouchMove = (e) => {
+    if (touchStartX.current === null) return;
+    const delta = e.touches[0].clientX - touchStartX.current;
+    setDragOffset(delta);
+  };
   const handleTouchEnd = (e) => {
     if (touchStartX.current === null) return;
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 40) { diff > 0 ? goNext() : goPrev(); }
+    const delta = e.changedTouches[0].clientX - touchStartX.current;
+    if (Math.abs(delta) > 40) {
+      snapToNext(delta);
+    } else {
+      snapBack();
+    }
     touchStartX.current = null;
   };
 
   // 마우스 드래그
   const handleMouseDown = (e) => {
+    if (snapping) return;
     dragStartX.current = e.clientX;
     dragDelta.current = 0;
     isDragging.current = false;
@@ -191,9 +247,10 @@ export default function Week5Page() {
     const handleMouseUp = () => {
       const delta = dragDelta.current;
       if (Math.abs(delta) > 60) {
-        delta < 0 ? goNext() : goPrev();
+        snapToNext(delta);
+      } else {
+        snapBack();
       }
-      setDragOffset(0);
       dragStartX.current = null;
       dragDelta.current = 0;
       setTimeout(() => { isDragging.current = false; }, 0);
@@ -224,9 +281,7 @@ export default function Week5Page() {
   // 트랙 기본 오프셋: 5장 구조에서 3번째 카드(current)를 뷰포트 가운데에 고정
   // 앞에 카드 2장(pp + p) + gap 2개가 있으므로
   // baseOffset = 0.2vw - 2×(0.6vw + gap) = 0.2vw - 1.2vw - 2×gap = -(vw + 2×gap)
-  const vw = viewportRef.current?.offsetWidth || 600;
-  const GAP = 10;
-  const baseOffset = -(vw + 2 * GAP);
+  const baseOffset = -(viewportWidth + 2 * GAP);
 
   return (
     <div className={styles["week-page"]}>
@@ -312,11 +367,51 @@ export default function Week5Page() {
         <p className={styles["noResult"]}>조건에 맞는 아기 사자가 없습니다.</p>
       ) : (
         <div className={styles["bannerSection"]}>
-          {/* 슬라이더 뷰포트 */}
+          {/* 슬라이더 헤더 (보기 모드 토글) */}
+          <div className={styles["bannerHeader"]}>
+            <h3 className={styles["bannerTitle"]}>아기 사자들</h3>
+            <div className={styles["viewModeToggle"]}>
+              <button
+                type="button"
+                className={`${styles["viewModeBtn"]} ${viewMode === "card" ? styles["viewModeBtnActive"] : ""}`}
+                onClick={() => setViewMode("card")}
+                aria-label="카드로 보기"
+                title="카드로 보기"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <rect x="3" y="3" width="7" height="7" />
+                  <rect x="14" y="3" width="7" height="7" />
+                  <rect x="14" y="14" width="7" height="7" />
+                  <rect x="3" y="14" width="7" height="7" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                className={`${styles["viewModeBtn"]} ${viewMode === "list" ? styles["viewModeBtnActive"] : ""}`}
+                onClick={() => setViewMode("list")}
+                aria-label="리스트로 보기"
+                title="리스트로 보기"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <line x1="8" y1="6" x2="21" y2="6" />
+                  <line x1="8" y1="12" x2="21" y2="12" />
+                  <line x1="8" y1="18" x2="21" y2="18" />
+                  <line x1="3" y1="6" x2="3.01" y2="6" />
+                  <line x1="3" y1="12" x2="3.01" y2="12" />
+                  <line x1="3" y1="18" x2="3.01" y2="18" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* 카드 모드: 슬라이더 뷰포트 */}
+          {viewMode === "card" && (
+          <>
           <div
             ref={viewportRef}
             className={styles["bannerViewport"]}
             onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
             onMouseDown={handleMouseDown}
             style={{ cursor: isDragging.current ? "grabbing" : "grab" }}
@@ -325,7 +420,7 @@ export default function Week5Page() {
               className={styles["bannerTrack"]}
               style={{
                 transform: `translateX(${baseOffset + dragOffset}px)`,
-                transition: dragOffset === 0 ? "transform 0.3s ease" : "none",
+                transition: snapping ? `transform ${SNAP_MS}ms ease` : "none",
               }}
             >
             {/* pp: 왼쪽 두번째 카드 */}
@@ -378,12 +473,6 @@ export default function Week5Page() {
                 <b className={styles["bannerPart"]}>{currentMember.part}</b>
                 <p className={styles["bannerIntro"]}>{currentMember.intro}</p>
               </div>
-              <button
-                className={styles["bannerViewAll"]}
-                onClick={(e) => { e.stopPropagation(); setShowGrid((v) => !v); }}
-              >
-                {showGrid ? "－ 접기" : "+ 전체보기"}
-              </button>
             </div>
 
             {/* next: 오른쪽 다음 카드 */}
@@ -430,32 +519,34 @@ export default function Week5Page() {
               />
             ))}
           </div>
-        </div>
-      )}
+          </>
+          )}
 
-      {/* ── 전체보기 그리드 (토글) ── */}
-      {showGrid && (
-        <div className={styles["gridContainer"]}>
-          {displayList.map((member) => (
-            <div
-              key={member.id}
-              onClick={() => setSelected(member)}
-              className={styles["mainProfile"]}
-            >
-              <p className={styles["badge"]}>
-                <span className={styles["badgeSpace"]}>{member.badge}</span>
-              </p>
-              <img
-                className={styles["profileImage"]}
-                src={member.image}
-                alt={`${member.name} 프로필 사진`}
-                onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = "https://picsum.photos/seed/fallback/200/200"; }}
-              />
-              <h2 className={styles["name"]}>{member.name}</h2>
-              <b className={styles["blueRule"]}>{member.part}</b>
-              <p className={styles["lineIntroduce"]}>{member.intro}</p>
-            </div>
-          ))}
+          {/* 리스트 모드 */}
+          {viewMode === "list" && (
+            <ul className={styles["listContainer"]}>
+              {displayList.map((member) => (
+                <li
+                  key={member.id}
+                  className={styles["listItem"]}
+                  onClick={() => setSelected(member)}
+                >
+                  <img
+                    className={styles["listImage"]}
+                    src={member.image}
+                    alt={`${member.name} 프로필 사진`}
+                    onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = "https://picsum.photos/seed/fallback/120/120"; }}
+                  />
+                  <div className={styles["listInfo"]}>
+                    <h3 className={styles["listName"]}>{member.name}</h3>
+                    <span className={styles["listPart"]}>{member.part}</span>
+                    <p className={styles["listIntro"]}>{member.intro}</p>
+                  </div>
+                  <span className={styles["listBadge"]}>{member.badge}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
 
