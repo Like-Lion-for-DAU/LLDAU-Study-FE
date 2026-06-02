@@ -101,6 +101,9 @@ export default function Week4Page() {
   //랜덤값 채우기 버튼이 현재 요청중인지 여부 상태
   //true면 버튼 비활성화 및 로딩 텍스트 표시
   const [isFilling, setIsFilling] = useState(false);
+
+
+  const [fillError, setFillError] = useState(""); //개선 1
   
   
   //다음 멤버에 부여할 id를 저장하는 ref
@@ -134,6 +137,8 @@ export default function Week4Page() {
   //폼 닫힐때 포커스를 이 버튼으로 되돌리기위해 사용
   const addBtnRef = useRef(null);
 
+  const fillControllerRef = useRef(null); //개선 2
+
   //컴포넌트 마운트시 1회 실행되는 cleanup등록 useEffect
   //의존성 배열이 []이므로 마운트시한번 언마운트시 cleanup실행
   useEffect(() => {
@@ -141,6 +146,7 @@ export default function Week4Page() {
     return () => {
       if (statusResetTimerRef.current) clearTimeout(statusResetTimerRef.current); //메모리 누수 방지하기위해 남아있는 상태 리셋 타이머가 있으면 정리함
       if (latestControllerRef.current) latestControllerRef.current.abort();//언마운트후 setState호출을 방지하기위해 진행중인 fetch요청이있으면 취소함
+      if (fillControllerRef.current) fillControllerRef.current.abort();
     };
   }, []);
 
@@ -182,8 +188,10 @@ export default function Week4Page() {
   const handleFillRandom = async () => {
     if (isFilling) return; //이미 로딩중이면 중복 호출 방지함
     setIsFilling(true); //로딩상태 시작
-    const controller = new AbortController(); //이 요청 전용 AbortController 생성
-    let timedOut = false; //타임아웃 여부 추적용 지역변수
+    if (fillControllerRef.current) fillControllerRef.current.abort(); // 이전 요청 취소
+    const controller = new AbortController();
+    fillControllerRef.current = controller; // ref에 저장
+    let timedOut = false;
     
     //TIMEOUT_MS 후 자동 abort및 timedOut플래그 설정
     const timeoutId = setTimeout(() => {
@@ -218,11 +226,10 @@ export default function Week4Page() {
 
       //AbortError 이면서 timedOut이면 취소함
       if (err?.name === "AbortError" && timedOut) {
-        alert("랜덤 값 채우기 실패: 시간 초과");
-      } else if (err?.name !== "AbortError") {
-        //AbortError가 아닌 에러
-        alert(`랜덤 값 채우기 실패: ${err?.message}`);
-      }
+      setFillError("랜덤 값 채우기 실패: 시간 초과");
+    } else if (err?.name !== "AbortError") {
+      setFillError(`랜덤 값 채우기 실패: ${err?.message || "알 수 없는 오류"}`);
+    }
       //AbortError이지만 Timeout이아니면 사용자가 의도적으로 취소한것이므로 무시함
     } finally {
       //성공 실패 모두 로딩 상태 해제함
@@ -609,6 +616,7 @@ export default function Week4Page() {
               >
                 {isFilling ? "불러오는 중..." : "랜덤 값 채우기"}
               </button>
+              {fillError && <span className={styles["fill-error"]}>{fillError}</span>}
               {/* 추가하기 form submit트리거 */}
               <button type="submit" className={`${styles["btn"]} ${styles["btn-primary"]}`}>
                 추가하기
