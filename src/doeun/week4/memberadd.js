@@ -16,8 +16,8 @@ export const createNewMember = (event) => {
   };
 };
 
-/**
- * 리스트에서 마지막 요소를 제거한 새 배열을 반환합니다.
+/*
+  리스트에서 마지막 요소를 제거한 새 배열을 반환합니다.
  */
 export const removeLastMember = (list) => {
   if (list.length === 0) return list;
