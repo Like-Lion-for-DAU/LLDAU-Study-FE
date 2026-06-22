@@ -393,17 +393,15 @@ export default function Week7Page() {
           {/* ── 파트 / 정렬 ── */}
           <div className={styles["sortLabelRow"]}>
             <span className={styles["countLion"]}>총 {memberList.length}명</span>
-            <label className={styles["sortLabel"]} htmlFor="sortPart">파트</label>
-            <select name="sortPart" id="sortPart" className={styles["sortSelect"]}
+            <select name="sortPart" id="sortPart" className={styles["sortSelectPart"]}
               value={sortPart} onChange={(e) => { setSortPart(e.target.value); setBannerIdx(0); }}>
-              <option value="all">전체</option>
+              <option value="all">직군</option>
               <option value="Frontend">Frontend</option>
               <option value="Backend">Backend</option>
               <option value="PM">PM</option>
               <option value="Design">Design</option>
             </select>
-            <label className={styles["sortLabel"]} htmlFor="sortType">정렬</label>
-            <select name="sortType" id="sortType" className={styles["sortSelect"]}
+            <select name="sortType" id="sortType" className={styles["sortSelectSort"]}
               value={sortType} onChange={(e) => setSortType(e.target.value)}>
               <option value="newest">최신 업데이트순</option>
               <option value="nameAsc">이름 오름차순</option>
