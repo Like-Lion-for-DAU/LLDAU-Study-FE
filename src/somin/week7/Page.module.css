@@ -1,8 +1,570 @@
-.week-page {
-  padding: 32px;
+.weekPage {
+  background: #121212;
+  min-height: 100vh;
+  padding: 24px 0;
 }
 
-.week-page h2 {
-  font-size: 1.5rem;
+.weekPageInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.controlBar {
+  background: #181818;
+  padding: 0 24px;
+  border-radius: 20px;
+  margin-bottom: 24px;
+}
+
+.status_idle {
+  background: #f3f4f6;
+  color: navy
+}
+
+.status_loading {
+  background: #dbeafe;
+  color: blue;
+}
+
+.status_success {
+  background: #dcfce7;
+  color: green;
+}
+
+.status_fail {
+  background: #fee2e2;
+  color: red;
+}
+
+.controlBarInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0 10px;
+  flex-wrap: wrap;
+}
+
+.totalCount {
+  font-size: 1rem;
   font-weight: 700;
+  background: #1DB954;
+  color: white;
+  padding: 6px 16px;
+  border-radius: 100px;
+}
+
+.totalCount span {
+  color: white;
+}
+
+.controlBtns {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.fetchBar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 0;
+  flex-wrap: wrap;
+}
+
+.fetchBtns {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.asyncStatus {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 100px;
+  border: 1px solid transparent;
+  transition: background 0.2s, color 0.2s;
+}
+
+.viewOptions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0 12px;
+  flex-wrap: wrap;
+}
+
+.viewSelect {
+  font-size: 0.83rem;
+  font-weight: 600;
+  padding: 7px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+
+  background: #242424;
+  border: 1px solid #333;
+  color: white;
+}
+
+.viewSearch:focus,
+.viewSelect:focus {
+  border-color: #1DB954;
+}
+
+.searchWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 160px;
+  max-width: 280px;
+}
+
+.viewSearch {
+  width: 100%;
+  font-size: 0.83rem;
+  padding: 7px 12px 7px 30px;
+  border-radius: 8px;
+  outline: none;
+  box-sizing: border-box;
+
+  background: #242424;
+  border: 1px solid #333;
+  color: white;
+}
+
+/* 버튼 공통 */
+.btn {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 12px;
+
+  background: #1DB954;
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  background: #1ed760;
+  transform: translateY(-2px);
+}
+
+/* 추가 폼 */
+.formSection {
+  background: #181818;
+  border-radius: 20px;
+  padding: 32px 0;
+}
+
+.formInner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.formHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.formTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formGroupFull {
+  grid-column: 1 / -1;
+}
+
+.formGroup label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #374151;
+}
+.formGroup label small {
+  font-weight: 400;
+  color: #9ca3af;
+}
+
+.formGroup input,
+.formGroup select,
+.formGroup textarea,
+.viewSearch,
+.viewSelect {
+  background: #242424;
+  color: white;
+  border: 1px solid #333;
+  border-radius: 14px;
+}
+
+.required {
+  color: red;
+}
+
+.formActions {
+  display: flex;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.cardSection {
+  padding-top: 48px;
+}
+
+.emptyMsg {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 1rem;
+  padding: 64px 0;
+  background: white;
+  border-radius: 12px;
+  border: 1.5px dashed white;
+}
+
+/* 요약 카드 */
+.cardIntro {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(240px,1fr));
+  gap: 24px;
+}
+
+.cardLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.card {
+  width: 100%;
+
+  max-width: none;
+  min-height: 380px;
+  background: #181818;
+  border: none;
+  color: white;
+  border-radius: 12px;
+  box-shadow: none;
+  padding: 16px;
+  gap : 8px;
+  transition: all .25s ease;
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.card:hover {
+  background: #282828;
+  transform: translateY(-8px);
+  box-shadow: 0 10px 25px rgba(0,0,0,.35);
+}
+
+.playBtn {
+  position: absolute;
+  right: 20px;
+  bottom: 70px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #1DB954;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  font-weight: 700;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: .25s;
+}
+
+.card:hover .playBtn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.myCard {
+  border: 3px solid #1DB954;
+  box-shadow: 0 4px 16px rgba(0, 51, 100, 0.25);
+  transform: translateY(-2px);
+}
+
+.profileimg {
+  width: 100%;
+  height: 0;
+  position: relative;
+  overflow: hidden;
+  background: white;
+
+  padding-top: 100%;
+  border-radius: 10px;
+}
+.profileimg img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.cardName {
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 8px;
+  color : white;
+}
+.cardEnd {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1DB954;
+}
+
+.detailName {
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 8px;
+  color : white;
+}
+.detailEnd {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1DB954;
+}
+
+/* 상세 카드 */
+.cardDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.detail {
+  padding: 36px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  background: #181818;
+  color: white;
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,.3);
+}
+
+.focused {
+  border-color: #1DB954;
+  box-shadow: 0 0 0 2px rgba(29,185,84,0.3);
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.club {
+  font-size: 15px;
+  color: #b3b3b3;
+}
+
+.introduce,
+.contact,
+.interest,
+.gako {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.introduce > p:first-child,
+.contact > p:first-child,
+.interest > p:first-child,
+.gako > p:first-child {
+  font-weight: 700;
+  font-size: 17px;
+  margin-bottom: 5px;
+}
+
+.contact ul,
+.interest ul {
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.contact ul li,
+.interest ul li {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.contact ul li a {
+  color: #1DB954;
+}
+
+.gako {
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #d1d5db;
+  border-top-color: #003364;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.formError {
+  margin-top: 8px;
+  margin-bottom: 12px;
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.heroBanner {
+  height: 320px;
+  border-radius: 24px;
+  margin-bottom: 32px;
+  background:
+    linear-gradient(
+      rgba(0,0,0,.2),
+      rgba(0,0,0,.8)
+    ),
+    linear-gradient(
+      135deg,
+      #1DB954,
+      #121212 70%
+    );
+
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.heroOverlay {
+  padding: 40px;
+}
+
+.heroLabel {
+  color: #b3b3b3;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.heroTitle {
+  font-size: 72px;
+  font-weight: 900;
+  color: white;
+  margin: 0;
+}
+
+.heroSub {
+  color: #b3b3b3;
+  font-size: 16px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 1000px) {
+  .cardIntro {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .card {
+    min-height: 480px;
+    padding: 20px;
+  }
+  .detail {
+    padding: 24px 28px;
+  }
+}
+
+@media (max-width: 600px) {
+  .weekPage {
+    padding: 0 16px 40px;
+  }
+  .cardIntro {
+    grid-template-columns: 1fr;
+  }
+  .card {
+    max-width: 100%;
+    min-height: auto;
+    padding: 16px;
+  }
+  .detail {
+    padding: 20px 16px;
+  }
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+  .formGroupFull {
+    grid-column: 1;
+  }
+  .controlBarInner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .fetchBar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .viewOptions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .searchWrap {
+    max-width: 100%;
+  }
+  .heroTitle {
+    font-size: 40px;
+  }
+  .heroBanner {
+    height: 220px;
+  }
+  .heroOverlay {
+    padding: 24px;
+  }
 }
