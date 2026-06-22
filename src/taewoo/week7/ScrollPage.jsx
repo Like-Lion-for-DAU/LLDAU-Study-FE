@@ -635,7 +635,7 @@ export default function Week7Page() {
           <div className={styles["modalContent"]} onClick={(e) => e.stopPropagation()}>
             <h2 className={styles["name"]}>{selected.name}</h2>
             <br/>
-            <b className={styles["blueRule"]}>{selected.part}</b>
+            <b className={styles["redText"]}>{selected.part}</b>
             <p className={styles["joinClub"]}>{selected.club}</p>
             <hr className={styles["modalDivider"]} />
 

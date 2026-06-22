@@ -207,7 +207,7 @@
 
 .profileImage {
   width: 100%;
-  height: 220px;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
   display: block;
   border: 2px solid #d5e6b0;
@@ -222,7 +222,7 @@
   border-radius: 50%;
   aspect-ratio: 1 / 1;
   background-color: #7dd225;
-  color: #3b5114;
+  color: white;
   font-weight: 700;
   font-size: 16px;
   white-space: normal;
@@ -240,7 +240,7 @@
   align-items: center;
 }
 
-.blueRule {
+.redText {
   color: #df6461;
   padding-inline: 10px;
   font-size: 16px;
@@ -248,10 +248,11 @@
 }
 
 .name {
-  margin-left: 10px;
+  margin-left: 9px;
   overflow: auto;
-  color: #2a4a10;
-  font-size: 1.2rem;
+  color: black;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .lineIntroduce {

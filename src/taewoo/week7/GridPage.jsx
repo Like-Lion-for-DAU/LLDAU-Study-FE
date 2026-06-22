@@ -249,8 +249,8 @@ export default function GridPage() {
                   alt={`${member.name} 프로필 사진`}
                   onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = "https://picsum.photos/seed/fallback/200/200"; }}
                 />
-                <h2 className={styles["name"]}>{member.name}</h2>
-                <b className={styles["blueRule"]}>{member.part}</b>
+                <p className={styles["name"]}>{member.name}</p>
+                <b className={styles["redText"]}>{member.part}</b>
                 <p className={styles["lineIntroduce"]}>{member.intro}</p>
               </div>
             ))}
@@ -370,7 +370,7 @@ export default function GridPage() {
         <div className={styles["modalOverlay"]} onClick={() => setSelected(null)}>
           <div className={styles["modalContent"]} onClick={(e) => e.stopPropagation()}>
             <h2 className={styles["name"]}>{selected.name}</h2>
-            <b className={styles["blueRule"]}>{selected.part}</b>
+            <b className={styles["redText"]}>{selected.part}</b>
             <p className={styles["joinClub"]}>{selected.club}</p>
             <hr className={styles["modalDivider"]} />
 
