@@ -157,83 +157,80 @@
   margin-left: auto;
 }
 
-/* ── 그리드 ── */
+/* ── 리스트 ── */
 .gridContainer {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   width: 100%;
   box-sizing: border-box;
 }
 
-@media (max-width: 880px) {
-  .gridContainer { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 480px) {
-  .gridContainer { grid-template-columns: 1fr; }
-}
-
-/* ── 멤버 카드 ── */
+/* ── 멤버 카드 (가로형) ── */
 .mainProfile {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto auto;
+  align-content: center;
+  row-gap: 3px;
+  column-gap: 10px;
   position: relative;
-  height: auto;
-  padding-bottom: 12px;
-  background-color: #fff;
+  padding: 27px 12px 27px 0;
   overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  background-color: #fff;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
   cursor: pointer;
 }
 
 .mainProfile:hover {
-  transform: translateY(-4px);
+  box-shadow: 0 4px 14px rgba(65, 186, 147,0.2);
+  transform: translateY(-5px);
 }
 
-.mainProfile:hover .badgeSpace{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 60px;
-  border-radius: 50%;
-  aspect-ratio: 1 / 1;
+.mainProfile:hover .badgeSpace {
   background-color: #f5e700;
   color: #41ba93;
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
 }
 
 .profileImage {
-  width: 100%;
+  grid-column: 1;
+  grid-row: 1 / 4;
+  width: auto;
   aspect-ratio: 1 / 1;
+  align-self: stretch;
   object-fit: cover;
   display: block;
-  border: 2px solid #d5e6b0;
+  margin-top: -27px;
+  margin-bottom: -27px;
+  height: calc(100% + 54px);
+  max-height: 120px;
   border-radius: 4px 4px 4px 4px;
+  border: 3px solid;
+  border-image: linear-gradient(to bottom, #caebb5, #5a9e2f) 1;
 }
 
 .badgeSpace {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 60px;
+  width: 28px;
   border-radius: 50%;
   aspect-ratio: 1 / 1;
   background-color: #7dd225;
   color: white;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 8px;
   white-space: normal;
   text-align: center;
   word-break: break-all;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+/* 이미지 오른쪽 상단 모서리 기준 */
 .badge {
   position: absolute;
-  top: 7px;
-  right: 8px;
+  top: 5px;
+  left: 85px;
   margin: 0;
   display: flex;
   justify-content: center;
@@ -241,29 +238,37 @@
 }
 
 .redText {
-  color: #df6461;
   padding-inline: 10px;
-  font-size: 16px;
+  color: #df6461;
+  font-size: 14px;
   overflow: auto;
 }
 
 .name {
-  margin-left: 9px;
-  overflow: auto;
+  padding-inline: 10px;
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0;
   color: black;
-  font-size: 20px;
+  font-size: 17px;
   font-weight: bold;
 }
 
 .lineIntroduce {
-  padding-inline: 11px;
-  overflow: auto;
-  font-size: 0.85rem;
-  color: black;
+  padding-inline: 10px;
+  grid-column: 2;
+  grid-row: 3;
+  margin: 0;
+  overflow: hidden;
+  font-size: 0.82rem;
+  color: #555;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 /* ── 추가 기능 토글 ── */
 .extraToggleRow {
+  position: relative;
   margin-top: 8px;
 }
 
@@ -286,12 +291,15 @@
 }
 
 .extraPanel {
-  background-image: linear-gradient(to top right, #4a7741, #76af3e);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background-image: linear-gradient(to top right, rgba(74, 119, 65, 0.98), rgba(118, 175, 62, 0.98));
   border: 1px solid #d5e6b0;
   border-radius: 0px 0px 10px 10px;
   padding: 12px;
-  margin-top: 6px;
-  margin-bottom: 6px;
   display: flex;
   flex-direction: column;
   gap: 0;

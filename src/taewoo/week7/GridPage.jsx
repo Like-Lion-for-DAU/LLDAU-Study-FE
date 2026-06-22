@@ -20,6 +20,7 @@ export default function GridPage() {
   const statusResetTimerRef = useRef(null);
   const lastAction = useRef(null);
   const nextIdRef = useRef(memberList.length + 1);
+  const extraToggleRef = useRef(null);
 
   usePageScrollDown(selected, () => setSelected(null));
   usePageScrollDown(showAdd, () => setShowAdd(false));
@@ -27,6 +28,17 @@ export default function GridPage() {
   useEffect(() => {
     return () => { if (statusResetTimerRef.current) clearTimeout(statusResetTimerRef.current); };
   }, []);
+
+  useEffect(() => {
+    if (!showExtra) return;
+    const handleClickOutside = (e) => {
+      if (extraToggleRef.current && !extraToggleRef.current.contains(e.target)) {
+        setShowExtra(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showExtra]);
 
   const fetchMessage = {
     ready: "준비 완료!",
@@ -154,60 +166,37 @@ export default function GridPage() {
       </div>
 
       {/* 추가 기능 토글 버튼 */}
-      <div className={styles["extraToggleRow"]}>
+      <div className={styles["extraToggleRow"]} ref={extraToggleRef}>
         <button className={styles["extraToggleBtn"]} onClick={() => setShowExtra((v) => !v)}>
           {showExtra ? "추가 기능 ▲" : "추가 기능 ▼"}
         </button>
-      </div>
-
-      {/* 추가 기능 패널 */}
-      {showExtra && (
-        <div className={styles["extraPanel"]}>
-          <div className={styles["actionRow"]}>
-            <button className={styles["addButton"]} onClick={() => { setShowAdd(true); reset(); }}>
-              아기 사자 추가
-            </button>
-            <button className={styles["removeButton"]} onClick={() => setMemberList((prev) => prev.slice(0, -1))}>
-              마지막 아기 사자 제거
-            </button>
+        {showExtra && (
+          <div className={styles["extraPanel"]}>
+            <div className={styles["actionRow"]}>
+              <button className={styles["addButton"]} onClick={() => { setShowAdd(true); reset(); }}>
+                아기 사자 추가
+              </button>
+              <button className={styles["removeButton"]} onClick={() => setMemberList((prev) => prev.slice(0, -1))}>
+                마지막 아기 사자 제거
+              </button>
+            </div>
+            <div className={styles["randomButtonsRow"]}>
+              <button className={styles["randomOneButton"]} disabled={fetching === "loading"} onClick={handleFetchRandom}>
+                랜덤 1명 추가
+              </button>
+              <button className={styles["randomFiveButton"]} disabled={fetching === "loading"} onClick={handleFetchFiveRandom}>
+                랜덤 5명 추가
+              </button>
+              <button className={styles["refrashButton"]} disabled={fetching === "loading"} onClick={handleRefresh}>
+                전체 새로고침
+              </button>
+              <span className={styles["refrashState"]} role="alert">{fetchMessage[fetching]}</span>
+              {fetching === "error" && (
+                <button onClick={handleRetry} className={styles["retryButton"]}>재시도</button>
+              )}
+            </div>
           </div>
-          <div className={styles["randomButtonsRow"]}>
-            <button className={styles["randomOneButton"]} disabled={fetching === "loading"} onClick={handleFetchRandom}>
-              랜덤 1명 추가
-            </button>
-            <button className={styles["randomFiveButton"]} disabled={fetching === "loading"} onClick={handleFetchFiveRandom}>
-              랜덤 5명 추가
-            </button>
-            <button className={styles["refrashButton"]} disabled={fetching === "loading"} onClick={handleRefresh}>
-              전체 새로고침
-            </button>
-            <span className={styles["refrashState"]} role="alert">{fetchMessage[fetching]}</span>
-            {fetching === "error" && (
-              <button onClick={handleRetry} className={styles["retryButton"]}>재시도</button>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* 파트 / 정렬 */}
-      <div className={styles["sortLabelRow"]}>
-        <label className={styles["sortLabel"]} htmlFor="sortPart">파트</label>
-        <select id="sortPart" className={styles["sortSelect"]}
-          value={sortPart} onChange={(e) => setSortPart(e.target.value)}>
-          <option value="all">전체</option>
-          <option value="Frontend">Frontend</option>
-          <option value="Backend">Backend</option>
-          <option value="PM">PM</option>
-          <option value="Design">Design</option>
-        </select>
-        <label className={styles["sortLabel"]} htmlFor="sortType">정렬</label>
-        <select id="sortType" className={styles["sortSelect"]}
-          value={sortType} onChange={(e) => setSortType(e.target.value)}>
-          <option value="newest">최신 업데이트순</option>
-          <option value="nameAsc">이름 오름차순</option>
-          <option value="nameDesc">이름 내림차순</option>
-        </select>
-        <span className={styles["countLion"]}>총 {memberList.length}명</span>
+        )}
       </div>
 
       {/* 리스트 */}
@@ -232,6 +221,27 @@ export default function GridPage() {
                   <line x1="3" y1="18" x2="3.01" y2="18" />
                 </svg></button>
           </div>
+        </div>
+
+        {/* 파트 / 정렬 */}
+        <div className={styles["sortLabelRow"]}>
+          <span className={styles["countLion"]}>총 {memberList.length}명</span>
+          <label className={styles["sortLabel"]} htmlFor="sortPart">파트</label>
+          <select id="sortPart" className={styles["sortSelect"]}
+            value={sortPart} onChange={(e) => setSortPart(e.target.value)}>
+            <option value="all">전체</option>
+            <option value="Frontend">Frontend</option>
+            <option value="Backend">Backend</option>
+            <option value="PM">PM</option>
+            <option value="Design">Design</option>
+          </select>
+          <label className={styles["sortLabel"]} htmlFor="sortType">정렬</label>
+          <select id="sortType" className={styles["sortSelect"]}
+            value={sortType} onChange={(e) => setSortType(e.target.value)}>
+            <option value="newest">최신 업데이트순</option>
+            <option value="nameAsc">이름 오름차순</option>
+            <option value="nameDesc">이름 내림차순</option>
+          </select>
         </div>
 
         {displayList.length === 0 ? (
@@ -369,7 +379,7 @@ export default function GridPage() {
       {selected && (
         <div className={styles["modalOverlay"]} onClick={() => setSelected(null)}>
           <div className={styles["modalContent"]} onClick={(e) => e.stopPropagation()}>
-            <h2 className={styles["name"]}>{selected.name}</h2>
+            <p className={styles["name"]}>{selected.name}</p>
             <b className={styles["redText"]}>{selected.part}</b>
             <p className={styles["joinClub"]}>{selected.club}</p>
             <hr className={styles["modalDivider"]} />
