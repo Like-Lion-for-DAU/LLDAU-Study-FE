@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import styles from "./Page.module.css";
 import NotFoundPage from "./NotFoundPage";
+import { ContactList } from "./Page";
 
 export default function DetailPage({ members }) {
   const { id } = useParams();

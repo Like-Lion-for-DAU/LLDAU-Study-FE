@@ -197,7 +197,6 @@ export default function Week4Page() {
     return list;
   })();
 
-export default function Week6Page() {
   return (
     <div className={styles.weekPage}>
       

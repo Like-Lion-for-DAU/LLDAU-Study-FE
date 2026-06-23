@@ -10,9 +10,9 @@ function SummaryCard({ member }) {
   const navigate = useNavigate();
   return (
     <div
-      className={`${styles["card"]} ${member.isMe ? styles["my-card"] : ""}`} 
-      onClick={() => 
-        navigate(`/week7/${member.id}`)
+      className={`${styles["card"]} ${member.isMe ? styles["my-card"] : ""}`}
+      onClick={() =>
+        navigate(`/doyoung/week7/${member.id}`)
       }
       >
       <img
@@ -31,7 +31,7 @@ function SummaryCard({ member }) {
   );
 }
 
-function ContactList({contact}) {
+export function ContactList({contact}) {
   if (!contact) return null;
   return (
     <ul>
@@ -63,7 +63,7 @@ function ContactList({contact}) {
   );
 }
 
-export default function WeekPage() {
+export default function WeekPage({ members, setMembers }) {
 
   const [retryAction, setRetryAction] =
   useState(null);
@@ -251,9 +251,6 @@ export default function WeekPage() {
   const [search, setSearch] =
   useState("")
 
-  const [members, setMembers] =
-  useState(initialMembers);
-
   const [showForm, setShowForm] =
   useState(false);
 
@@ -282,8 +279,11 @@ export default function WeekPage() {
   ).length;
 
   function makeNextId(user) {
-    return `${user.name.first}${user.name.last}${Date.now()}`
-    .toLowerCase();
+    if (user) {
+      return `${user.name.first}${user.name.last}${Date.now()}`
+      .toLowerCase();
+    }
+    return `manual-${Date.now()}`;
   }
 
   const [memberInput, setmemberInput] =
@@ -381,7 +381,7 @@ export default function WeekPage() {
   function handleSubmit(event) {
     event.preventDefault();
     const newMember = {
-      id: makeNextId(user),
+      id: makeNextId(),
       name : memberInput.name,
       role : memberInput.role,
       intro : memberInput.intro,

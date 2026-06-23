@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import { members as initialMembers } from "./members";
 import WeekPage from "./Page";
-import DetailPage from "./DetailPage";
+import DetailPage from "./Detailcard";
 import NotFoundPage from "./NotFoundPage";
 
 function App() {
@@ -10,9 +10,9 @@ function App() {
 
   return (
     <Routes>
-      <Route path="week7" element={<Week7Page members={members} setMembers={setMembers} />} />
-      <Route path="week7/:id" element={<DetailPage members={members} />} />
-      <Route path="week7/:id/*" element={<NotFoundPage />} />
+      <Route index element={<WeekPage members={members} setMembers={setMembers} />} />
+      <Route path=":id" element={<DetailPage members={members} />} />
+      <Route path=":id/*" element={<NotFoundPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
