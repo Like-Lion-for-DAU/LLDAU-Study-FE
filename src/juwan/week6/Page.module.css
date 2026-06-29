@@ -1,8 +1,362 @@
-.week-page {
-  padding: 32px;
+.weekPage {
+  max-width: 1440px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 24px;
+  background-color: #c0c0c0;
+  color: #000000;
+  font-family: Tahoma, "MS Sans Serif", Arial, sans-serif;
 }
 
-.week-page h2 {
-  font-size: 1.5rem;
+.controlArea {
+  margin-bottom: 32px;
+  padding: 8px;
+  background-color: #c0c0c0;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+}
+
+.controlRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-top: 1px solid #dfdfdf;
+  border-left: 1px solid #dfdfdf;
+  border-right: 1px solid #808080;
+  border-bottom: 1px solid #808080;
+  flex-wrap: wrap;
+}
+
+.controlRow + .controlRow {
+  margin-top: 8px;
+}
+
+.button {
+  padding: 6px 12px;
+  border-radius: 0;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+  background-color: #c0c0c0;
+  color: #000000;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: Tahoma, "MS Sans Serif", Arial, sans-serif;
+  cursor: pointer;
+}
+
+.button:active {
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+}
+
+.button:disabled {
+  color: #808080;
+  cursor: not-allowed;
+}
+
+.totalText {
+  padding: 4px 8px;
+  color: #000000;
+  font-size: 15px;
   font-weight: 700;
+}
+
+.statusText {
+  padding: 4px 8px;
+  background-color: #ffffff;
+  color: #000000;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #000000;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.input,
+.select,
+.textarea {
+  padding: 6px 8px;
+  border-radius: 0;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  background-color: #ffffff;
+  color: #000000;
+  font-size: 14px;
+  font-family: Tahoma, "MS Sans Serif", Arial, sans-serif;
+  outline: none;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  background-color: #ffffff;
+  outline: 1px dotted #000000;
+}
+
+.input {
+  min-width: 220px;
+}
+
+.select {
+  min-width: 180px;
+}
+
+.textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.formBox {
+  margin-bottom: 32px;
+  padding: 8px;
+  background-color: #c0c0c0;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.textarea,
+.formButtons {
+  grid-column: 1 / -1;
+}
+
+.formButtons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  padding-top: 8px;
+}
+
+.cardContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 18px;
+}
+
+.card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0;
+  background-color: #c0c0c0;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+  box-shadow: none;
+}
+
+.card::before {
+  content: "MEMBER.EXE";
+  display: block;
+  padding: 4px 8px;
+  background: linear-gradient(to right, #000080, #1084d0);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.mainCard {
+  border-top: 2px solid #ffffcc;
+  border-left: 2px solid #ffffcc;
+  border-right: 2px solid #000080;
+  border-bottom: 2px solid #000080;
+}
+
+.mainCard::before {
+  content: "MY_PROFILE.EXE";
+  background: linear-gradient(to right, #000080, #1084d0);
+}
+
+.cardImage {
+  width: calc(100% - 16px);
+  height: 300px;
+  margin: 8px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  background-color: #ffffff;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+}
+
+.badge {
+  position: absolute;
+  top: 34px;
+  right: 16px;
+  padding: 4px 8px;
+  border-radius: 0;
+  background-color: #ffffcc;
+  color: #000000;
+  font-size: 12px;
+  font-weight: 700;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+}
+
+.cardContent {
+  margin: 8px;
+  padding: 12px;
+  background-color: #ffffff;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+}
+
+.name {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #000000;
+}
+
+.role {
+  margin: 0 0 8px;
+  color: #000080;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.introduce {
+  margin: 0;
+  line-height: 1.5;
+  color: #000000;
+  font-size: 14px;
+}
+
+.emptyText {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 0;
+  background-color: #ffffff;
+  color: #000000;
+  font-size: 16px;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+}
+
+.detailSection {
+  margin-top: 40px;
+  padding: 8px;
+  background-color: #c0c0c0;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+}
+
+.detailTitle {
+  margin: 0 0 8px;
+  padding: 4px 8px;
+  background: linear-gradient(to right, #000080, #1084d0);
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.detailList {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.detailCard {
+  padding: 12px;
+  border-radius: 0;
+  background-color: #ffffff;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+}
+
+.detailCard h3 {
+  margin: 0 0 8px;
+  padding: 4px 8px;
+  background-color: #000080;
+  color: #ffffff;
+  font-size: 15px;
+}
+
+.detailCard p {
+  margin: 6px 0;
+  line-height: 1.5;
+  color: #000000;
+  font-size: 14px;
+}
+
+.errorMsg {
+  padding: 4px 8px;
+  background-color: #ffffcc;
+  color: #800000;
+  font-size: 14px;
+  font-weight: 700;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+}
+
+@media (max-width: 1024px) {
+  .cardContainer {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .formBox {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .weekPage {
+    padding: 12px;
+  }
+
+  .controlRow {
+    align-items: stretch;
+  }
+
+  .cardContainer {
+    grid-template-columns: 1fr;
+  }
+
+  .cardImage {
+    height: 240px;
+  }
+
+  .input,
+  .select {
+    width: 100%;
+    min-width: 0;
+  }
 }

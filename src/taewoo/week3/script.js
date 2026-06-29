@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 
 const emptyForm = { name: "", part: "Frontend", skills: "", introduce: "", introduceDetail: "", email: "", phone: "", website: "", last: "" };
 
-const validateEmail   = (v) => v.includes("@");
+const validateEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 const validateWebsite = (v) => /^https?:\/\/.+\..+/.test(v);
-const validatePhone   = (v) => (v.match(/-/g) || []).length === 2 && v.length <= 13;
+const validatePhone = (v) => /^010-\d{3,4}-\d{4}$/.test(v);
 const validators = { email: validateEmail, website: validateWebsite, phone: validatePhone };
 
 export function useFormData() {
@@ -32,6 +32,8 @@ export function useFormData() {
 
   return { formData, handleInput, isFormValid, warn, warnFormat, reset };
 }
+
+
 
 export const members = [
   {
@@ -144,7 +146,7 @@ export const members = [
   },
 ];
 
-export function Page_Scroll_Down([selected, setSelected]) {
+export function usePageScrollDown(selected, setSelected) {
   useEffect(() => {
     if (!selected) return;
     const handleEsc = (e) => {
