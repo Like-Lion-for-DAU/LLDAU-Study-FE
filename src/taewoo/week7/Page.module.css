@@ -976,3 +976,80 @@
   color: #5a7a3a;
   margin-top: 50px;
 }
+
+/* ── 공통 헤더 ── */
+.week7Header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 32px;
+  background: #fff;
+  border-bottom: 1px solid #e8f0e0;
+}
+
+.week7HeaderTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #2a4a10;
+  text-decoration: none;
+}
+
+.week7HeaderTitle:hover {
+  color: #5a9e2f;
+}
+
+.week7HeaderCount {
+  font-size: 0.8rem;
+  color: #8aa07a;
+  background: #f0f6e8;
+  border-radius: 12px;
+  padding: 2px 10px;
+}
+
+.week7HeaderBack {
+  margin-left: auto;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #5a9e2f;
+  text-decoration: none;
+}
+
+.week7HeaderBack:hover {
+  color: #3e7220;
+}
+
+/* ── 상세 페이지 ── */
+.detailCard {
+  background: #fff;
+  border-radius: 20px;
+  max-width: 600px;
+  margin: 24px auto;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(42, 74, 16, 0.1);
+}
+
+.detailImage {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 16px;
+  border: 3px solid #5a9e2f;
+}
+
+/* ── 404 / Not Found 페이지 ── */
+.notFoundPage {
+  padding: 60px 32px;
+  text-align: center;
+}
+
+.notFoundPage h2 {
+  color: #5a7a3a;
+  margin-bottom: 16px;
+}
+
+.notFoundPage a {
+  color: #5a9e2f;
+  font-weight: 600;
+}
