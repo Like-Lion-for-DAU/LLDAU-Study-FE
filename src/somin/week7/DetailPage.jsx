@@ -1,19 +1,14 @@
 import { useParams, Link } from "react-router-dom";
 import styles from "./Page.module.css";
+import NotFoundPage from "./NotFoundPage";
 
 export default function DetailPage({membersList,}) {
   const { id } = useParams();
 
-  const member = membersList.find(
-    (m) => m.id === Number(id)
-  );
+  const member = membersList.find((m) => String(m.id) === id);
 
   if (!member) {
-    return (
-      <div className={styles.weekPage}>
-        존재하지 않는 아기사자입니다.
-      </div>
-    );
+    return <NotFoundPage type="lion" />;
   }
 
   return (
@@ -25,11 +20,7 @@ export default function DetailPage({membersList,}) {
         >
           ← 목록으로
         </Link>
-
-        <div
-          className={styles.detail}
-          style={{ marginTop: "24px" }}
-        >
+        <div className={styles.detail} style={{ marginTop: "24px" }}>
           <div className={styles.main}>
             <p className={styles.detailName}>
               {member.name}

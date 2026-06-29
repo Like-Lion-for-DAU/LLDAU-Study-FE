@@ -55,15 +55,8 @@ async function fetchRandomUsers(count, signal) {
 // 요약 카드
 function SummaryCard({ member }) {
   return (
-    <Link
-      to={`/somin/week7/lions/${member.id}`}
-      className={styles.cardLink}
-    >
-      <div
-        className={`${styles.card} ${
-          member.isMe ? styles.myCard : ""
-        }`}
-      >
+    <Link to={`/somin/week7/lions/${member.id}`}className={styles.cardLink}>
+      <div className={`${styles.card} ${member.isMe ? styles.myCard : ""}`}>
         <div className={styles.profileimg}>
           {member.image && (
             <img
@@ -177,11 +170,9 @@ export default function Week7Page({ membersList, setMembersList,}) {
     if (sort !== "latest") {
       params.sort = sort;
     }
-    if (q.trim()) {
-      params.q = q;
-    }
-    setSearchParams(params);
-  };
+    if (q.trim()) params.q = q.trim();  
+      setSearchParams(params);
+    };
 
   // ESC 닫기
   useEffect(() => {
@@ -372,16 +363,6 @@ export default function Week7Page({ membersList, setMembersList,}) {
   return (
     <div className={styles.weekPage}>
       <div className={styles.weekPageInner}>
-        <div className={styles.heroBanner}>
-        <div className={styles.heroOverlay}>
-          <p className={styles.heroLabel}>LLDAU STUDY</p>
-          <h1 className={styles.heroTitle}>멋쟁이 아기사자</h1>
-          <p className={styles.heroSub}>
-            {membersList.length}명의 멤버 · Spotify
-          </p>
-        </div>
-      </div>
-
       <div className={styles.controlBar}>
         <div className={styles.controlBarInner}>
           <span className={styles.totalCount}>
@@ -448,9 +429,9 @@ export default function Week7Page({ membersList, setMembersList,}) {
           </div>
         </div>
       </div>
-
       {isFormOpen && (
-        <div className={styles.formSection}>
+      <div className={styles.modalOverlay} onClick={() => setIsFormOpen(false)}>
+        <div className={styles.formSection} onClick={(e) => e.stopPropagation()}>
           <div className={styles.formInner}>
             <div className={styles.formHeader}>
               <h2 className={styles.formTitle}>새 아기사자 추가</h2>
@@ -545,6 +526,7 @@ export default function Week7Page({ membersList, setMembersList,}) {
             </form>
           </div>
         </div>
+      </div>
       )}
 
       <section className={styles.cardSection}>
