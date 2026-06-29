@@ -7,7 +7,7 @@ import Week4Page from "./week4/Page";
 import Week5Page from "./week5/Page";
 import Week6Page from "./week6/Page";
 import Week7Router from "./week7/Router";
-import Week8Page from "./week8/Router";
+import Week8Router from "./week8/Router";
 import Week9Page from "./week9/Page";
 import Week10Page from "./week10/Page";
 
@@ -23,7 +23,7 @@ export default function TaewooPage() {
         <Route path="week5" element={<Week5Page />} />
         <Route path="week6" element={<Week6Page />} />
         <Route path="week7/*" element={<Week7Router />} />
-        <Route path="week8/*" element={<Week8Page />} />
+        <Route path="week8/*" element={<Week8Router />} />
         <Route path="week9/*" element={<Week9Page />} />
         <Route path="week10/*" element={<Week10Page />} />
       </Routes>

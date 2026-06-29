@@ -1,31 +1,96 @@
 import idyJPG from "../../assets/doyoung/week2/idy.jpg";
 import jsmPNG from "../../assets/doyoung/week2/jsm.png";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
+import type { ChangeEvent } from "react";
 
-const emptyForm = { name: "", part: "Frontend", club:"", skills: "", introduce: "", introduceDetail: "", email: "", phone: "", website: "", last: "" };
-const randomParts = ["Frontend", "Backend", "PM", "Design"];
-const randomSkills = ["HTML/CSS", "JavaScript", "React", "Node.js", "Python", "Django", "Flask", "TypeScript", "GraphQL", "Docker"];
+// ── 타입 정의 ──────────────────────────────────────────────────────────────
+
+export interface Member {
+  id: number;
+  isMe?: boolean;
+  name: string;
+  part: string;
+  intro: string;
+  club: string;
+  badge: string;
+  image: string;
+  introduce: string[];
+  contact: {
+    email: string;
+    phone: string;
+    website: { label: string; url: string };
+    github?: string;
+  } | null;
+  skills: string[] | null;
+  last: string | null;
+}
+
+export interface FormFields {
+  name: string;
+  part: string;
+  club: string;
+  skills: string;
+  introduce: string;
+  introduceDetail: string;
+  email: string;
+  phone: string;
+  website: string;
+  last: string;
+}
+
+interface RandomUserResult {
+  name: { first: string; last: string };
+  location: { country: string; state: string; city: string };
+  email: string;
+  phone: string;
+  picture: { large: string };
+}
+
+// ── 내부 상수 ──────────────────────────────────────────────────────────────
+
+const emptyForm: FormFields = {
+  name: "", part: "Frontend", club: "", skills: "",
+  introduce: "", introduceDetail: "", email: "", phone: "", website: "", last: "",
+};
+
+const randomParts = ["Frontend", "Backend", "PM", "Design"] as const;
+const randomSkills = [
+  "HTML/CSS", "JavaScript", "React", "Node.js", "Python",
+  "Django", "Flask", "TypeScript", "GraphQL", "Docker",
+];
 const randomLast = [
   "열심히 배우고 있습니다!",
   "프론트엔드 개발자로 성장하고 싶습니다.",
   "팀원들과 함께 멋진 프로젝트를 만들고 싶습니다.",
-]
+];
 const randomIntroduce = [
   "안녕하세요! 새로운 멤버입니다. 잘 부탁드립니다!",
   "프론트엔드 개발에 관심이 많습니다. 열심히 배우겠습니다!",
   "멋쟁이사자처럼에서 좋은 경험 쌓고 싶습니다.",
-]
+];
 
-const validateEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-const validateWebsite = (v) => /^https?:\/\/.+\..+/.test(v);
-const validatePhone = (v) => /^010-\d{3,4}-\d{4}$/.test(v);
-const validators = { email: validateEmail, website: validateWebsite, phone: validatePhone };
+// ── 유효성 검사 ────────────────────────────────────────────────────────────
+
+const validateEmail = (v: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+const validateWebsite = (v: string): boolean => /^https?:\/\/.+\..+/.test(v);
+const validatePhone = (v: string): boolean => /^010-\d{3,4}-\d{4}$/.test(v);
+
+type ValidatorKey = "email" | "website" | "phone";
+const validators: Record<ValidatorKey, (v: string) => boolean> = {
+  email: validateEmail,
+  website: validateWebsite,
+  phone: validatePhone,
+};
+
+// ── useFormData 훅 ─────────────────────────────────────────────────────────
+
+type InputChangeEvent = ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
 
 export function useFormData() {
-  const [formData, setFormData] = useState(emptyForm);
-  const [touched, setTouched] = useState({});
+  const [formData, setFormData] = useState<FormFields>(emptyForm);
+  const [touched, setTouched] = useState<Partial<Record<keyof FormFields, boolean>>>({});
 
-  const handleInput = (field) => (e) => {
+  const handleInput = (field: keyof FormFields) => (e: InputChangeEvent) => {
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
     setTouched((prev) => ({ ...prev, [field]: true }));
   };
@@ -36,16 +101,27 @@ export function useFormData() {
     validateWebsite(formData.website) &&
     validatePhone(formData.phone);
 
-  const warn = (field) => touched[field] && !formData[field].trim();
-  const warnFormat = (field) =>
-    touched[field] && !!formData[field].trim() && validators[field] && !validators[field](formData[field]);
+  const warn = (field: keyof FormFields): boolean =>
+    !!touched[field] && !formData[field].trim();
+
+  const warnFormat = (field: keyof FormFields): boolean => {
+    const isValidatorKey = (f: string): f is ValidatorKey => f in validators;
+    return (
+      !!touched[field] &&
+      !!formData[field].trim() &&
+      isValidatorKey(field) &&
+      !validators[field](formData[field])
+    );
+  };
 
   const reset = () => { setFormData(emptyForm); setTouched({}); };
 
   return { formData, setFormData, handleInput, isFormValid, warn, warnFormat, reset };
 }
 
-export const members = [
+// ── 멤버 데이터 ────────────────────────────────────────────────────────────
+
+export const members: Member[] = [
   {
     id: 1,
     name: "김주완",
@@ -166,11 +242,13 @@ export const members = [
   },
 ];
 
-export function usePageScrollDown(selected, setSelected) {
+// ── usePageScrollDown 훅 ───────────────────────────────────────────────────
+
+export function usePageScrollDown(selected: unknown, onClose: () => void): void {
   useEffect(() => {
     if (!selected) return;
-    const handleEsc = (e) => {
-      if (e.key === "Escape") setSelected(null);
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
     };
     window.addEventListener("keydown", handleEsc);
     const original = document.documentElement.style.overflow;
@@ -182,18 +260,18 @@ export function usePageScrollDown(selected, setSelected) {
   }, [selected]);
 }
 
+// ── API 유틸 ──────────────────────────────────────────────────────────────
 
-
-export async function randomResult(number) {
+export async function randomResult(number: number): Promise<RandomUserResult[]> {
   const fetchURL = `https://randomuser.me/api/?results=${number}&nat=us,gb,ca,au,nz`;
   const res = await fetch(fetchURL);
-  const data = await res.json();
+  const data = (await res.json()) as { results: RandomUserResult[] };
   return data.results;
 }
 
-export function randomNewMember(user) {
+export function randomNewMember(user: RandomUserResult): Omit<Member, "id"> {
   const randomPart = randomParts[Math.floor(Math.random() * randomParts.length)];
-  const skillspoint = parseInt(Math.random() * (randomSkills.length - 3)) + 1;
+  const skillspoint = parseInt(String(Math.random() * (randomSkills.length - 3))) + 1;
   return {
     name: `${user.name.first} ${user.name.last}`,
     part: randomPart,
@@ -201,30 +279,39 @@ export function randomNewMember(user) {
     club: "랜덤 유저 클럽",
     badge: randomSkills[skillspoint],
     image: user.picture.large,
-    introduce: [`${user.name.first} ${user.name.last}입니다.`, `저는 ${randomPart}입니다.`, `현재 ${user.location.country} ${user.location.state}에 살고 있습니다.`],
-    contact: { email: user.email, phone: user.phone, website: { label: "Random User Profile", url: user.picture.large } },
+    introduce: [
+      `${user.name.first} ${user.name.last}입니다.`,
+      `저는 ${randomPart}입니다.`,
+      `현재 ${user.location.country} ${user.location.state}에 살고 있습니다.`,
+    ],
+    contact: {
+      email: user.email,
+      phone: user.phone,
+      website: { label: "Random User Profile", url: user.picture.large },
+    },
     skills: randomSkills.slice(skillspoint, skillspoint + 3),
-    last: randomLast[parseInt(Math.random() * randomLast.length)],
+    last: randomLast[parseInt(String(Math.random() * randomLast.length))],
   };
 }
 
-export async function pushRandomMembers() {
+export async function pushRandomMembers(): Promise<FormFields> {
   const users = await randomResult(1);
   const user = users[0];
-  const randomPart = randomParts[parseInt(Math.random() * randomParts.length)];
-  const skillspoint = parseInt(Math.random() * (randomSkills.length - 3));
+  const randomPart = randomParts[parseInt(String(Math.random() * randomParts.length))];
+  const skillspoint = parseInt(String(Math.random() * (randomSkills.length - 3)));
   const selectedSkills = randomSkills.slice(skillspoint, skillspoint + 3);
-  const randomPhone = `010-${String(parseInt(Math.random() * 9000) + 1000)}-${String(parseInt(Math.random() * 9000) + 1000)}`;
+  const randomPhone = `010-${String(parseInt(String(Math.random() * 9000)) + 1000)}-${String(parseInt(String(Math.random() * 9000)) + 1000)}`;
 
   return {
     name: `${user.name.first} ${user.name.last}`,
     part: randomPart,
+    club: "",
     skills: selectedSkills.join(", "),
-    introduce: randomIntroduce[parseInt(Math.random() * randomIntroduce.length)],
+    introduce: randomIntroduce[parseInt(String(Math.random() * randomIntroduce.length))],
     introduceDetail: `${user.location.city}에서 왔습니다. ${randomPart} 분야에 관심이 많습니다.`,
     email: user.email,
     phone: randomPhone,
     website: `https://randomuser.me`,
-    last: randomLast[parseInt(Math.random() * randomLast.length)],
+    last: randomLast[parseInt(String(Math.random() * randomLast.length))],
   };
 }
