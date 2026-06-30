@@ -1,9 +1,14 @@
 import { useParams, Link } from "react-router-dom";
 import styles from "./Page.module.css";
 import NotFoundPage from "./NotFoundPage";
+import type { Member } from "./types";
 
-export default function DetailPage({membersList,}) {
-  const { id } = useParams();
+interface DetailPageProps {
+  membersList: Member[];
+}
+
+export default function DetailPage({ membersList }: DetailPageProps) {
+  const { id } = useParams<{ id: string }>();
 
   const member = membersList.find((m) => String(m.id) === id);
 
@@ -14,23 +19,14 @@ export default function DetailPage({membersList,}) {
   return (
     <div className={styles.weekPage}>
       <div className={styles.weekPageInner}>
-        <Link
-          to="/somin/week7"
-          className={styles.btn}
-        >
+        <Link to="/somin/week8" className={styles.btn}>
           ← 목록으로
         </Link>
         <div className={styles.detail} style={{ marginTop: "24px" }}>
           <div className={styles.main}>
-            <p className={styles.detailName}>
-              {member.name}
-            </p>
-            <p className={styles.detailEnd}>
-              {member.role}
-            </p>
-            <p className={styles.club}>
-              {member.club}
-            </p>
+            <p className={styles.detailName}>{member.name}</p>
+            <p className={styles.detailEnd}>{member.role}</p>
+            <p className={styles.club}>{member.club}</p>
           </div>
 
           <div className={styles.introduce}>
@@ -43,15 +39,10 @@ export default function DetailPage({membersList,}) {
             <ul>
               <li>Email : {member.email}</li>
               <li>Phone : {member.phone}</li>
-
               {member.website && (
                 <li>
                   Website :
-                  <a
-                    href={member.website}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
+                  <a href={member.website} target="_blank" rel="noreferrer">
                     {member.website}
                   </a>
                 </li>
