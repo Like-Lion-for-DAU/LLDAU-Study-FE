@@ -1,4 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type SyntheticEvent,
+} from "react";
 import styles from "./Page.module.css";
 import {
   initialMembers,
@@ -8,23 +15,62 @@ import {
   QUOTE_PRESETS,
   DEFAULT_IMAGES,
 } from "./lions";
+import type { Member, Part, RandomUser } from "./types";
 
 const TIMEOUT_MS = 5000;
 
-const PART_COLOR = { Frontend: "#3fb950", Backend: "#58a6ff", Design: "#bc8cff" };
+const PART_COLOR: Record<Part, string> = {
+  Frontend: "#3fb950",
+  Backend: "#58a6ff",
+  Design: "#bc8cff",
+};
 
-function pickRandom(arr) {
+// ── UI 전용 타입 ──
+type FetchStatus = "idle" | "loading" | "success" | "error";
+type SortKey = "default" | "name" | "part";
+type PartFilter = "all" | Part;
+type DetailTab = "overview" | "skills" | "contact";
+
+// 추가 폼은 모든 값이 문자열, skills는 쉼표 구분 문자열로 보관
+interface MemberForm {
+  name: string;
+  part: Part | "";
+  badge: string;
+  intro: string;
+  image: string;
+  club: string;
+  about: string;
+  skills: string;
+  email: string;
+  phone: string;
+  website: string;
+  quote: string;
+}
+
+interface FetchContext {
+  signal: AbortSignal;
+  isLatest: () => boolean;
+}
+type FetchAction = (ctx: FetchContext) => Promise<void>;
+
+const TABS: { key: DetailTab; label: string }[] = [
+  { key: "overview", label: "Overview" },
+  { key: "skills", label: "Skills" },
+  { key: "contact", label: "Contact" },
+];
+
+function pickRandom<T>(arr: readonly T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function pickSkills(part) {
+function pickSkills(part: Part): string[] {
   const pool = SKILLS_BY_PART[part] ?? [];
-  const set = new Set();
+  const set = new Set<string>();
   while (set.size < Math.min(3, pool.length)) set.add(pickRandom(pool));
   return [...set];
 }
 
-function handleOf(m) {
+function handleOf(m: Pick<Member, "name" | "email" | "website">): string {
   if (m.website?.includes("github.com/")) {
     return m.website.split("github.com/")[1].replace(/\/$/, "");
   }
@@ -32,15 +78,18 @@ function handleOf(m) {
   return m.name;
 }
 
-async function fetchRandomUsers(count, signal) {
+async function fetchRandomUsers(
+  count: number,
+  signal: AbortSignal
+): Promise<RandomUser[]> {
   const url = `https://randomuser.me/api/?results=${count}&inc=name,email,phone,picture,login&noinfo`;
   const res = await fetch(url, { signal });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const data = await res.json();
+  const data: { results?: RandomUser[] } = await res.json();
   return data.results ?? [];
 }
 
-function mapApiUser(u, id) {
+function mapApiUser(u: RandomUser, id: number): Member {
   const part = pickRandom(PARTS);
   const skills = pickSkills(part);
   return {
@@ -49,7 +98,7 @@ function mapApiUser(u, id) {
     part,
     badge: skills[0] ?? part,
     intro: `${part} 파트에서 함께 성장 중인 아기사자입니다.`,
-    image: u.picture?.large,
+    image: u.picture?.large ?? "",
     isMine: false,
     club: "LION TRACK",
     about: pickRandom(ABOUT_PRESETS),
@@ -61,12 +110,12 @@ function mapApiUser(u, id) {
   };
 }
 
-const EMPTY_FORM = {
+const EMPTY_FORM: MemberForm = {
   name: "", part: "", badge: "", intro: "", image: "", club: "",
   about: "", skills: "", email: "", phone: "", website: "", quote: "",
 };
 
-function hashSeed(str) {
+function hashSeed(str: string): number {
   let h = 2166136261;
   for (let i = 0; i < str.length; i++) {
     h ^= str.charCodeAt(i);
@@ -75,9 +124,11 @@ function hashSeed(str) {
   return h >>> 0;
 }
 
-function generatePixelGrass(seed) {
+function generatePixelGrass(seed: number): number[][] {
   const cols = 52, rows = 7;
-  const grid = Array.from({ length: cols }, () => Array(rows).fill(0));
+  const grid: number[][] = Array.from({ length: cols }, () =>
+    Array<number>(rows).fill(0)
+  );
   for (let c = 0; c < cols; c++) {
     for (let r = 0; r < rows; r++) {
       const v = ((c * 7 + r) * 9301 + 49297 + seed) % 233280;
@@ -86,7 +137,7 @@ function generatePixelGrass(seed) {
   }
 
   // 11×7 하트 픽셀 맵
-  const HEART = [
+  const HEART: number[][] = [
     [0,1,1,0,0,0,1,1,0,0,0],
     [1,1,1,1,0,1,1,1,1,0,0],
     [1,1,1,1,1,1,1,1,1,0,0],
@@ -102,17 +153,26 @@ function generatePixelGrass(seed) {
   return grid;
 }
 
-function fallbackImg(e, id) {
+function fallbackImg(e: SyntheticEvent<HTMLImageElement>, id: number): void {
   e.currentTarget.onerror = null;
   e.currentTarget.src = `https://picsum.photos/seed/lion${id}/240/240`;
 }
 
-function DetailModal({ member, following, onToggleFollow, onClose }) {
-  const [tab, setTab] = useState("overview");
+interface DetailModalProps {
+  member: Member;
+  following: boolean;
+  onToggleFollow: (id: number) => void;
+  onClose: () => void;
+}
+
+function DetailModal({ member, following, onToggleFollow, onClose }: DetailModalProps) {
+  const [tab, setTab] = useState<DetailTab>("overview");
   const grass = useMemo(() => generatePixelGrass(hashSeed(String(member.id))), [member.id]);
 
   useEffect(() => {
-    const onKey = (e) => e.key === "Escape" && onClose();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
@@ -125,7 +185,6 @@ function DetailModal({ member, following, onToggleFollow, onClose }) {
         </button>
 
         <div className={styles.modalBody}>
-          {/* 사이드바: 프로필 정보 고정 영역 */}
           <aside className={styles.sidebar}>
             <div className={styles.avatar}>
               <div className={styles.avatarImg}>
@@ -167,11 +226,7 @@ function DetailModal({ member, following, onToggleFollow, onClose }) {
 
           <main className={styles.content}>
             <div className={styles.tabs}>
-              {[
-                { key: "overview", label: "Overview" },
-                { key: "skills", label: "Skills" },
-                { key: "contact", label: "Contact" },
-              ].map(({ key, label }) => (
+              {TABS.map(({ key, label }) => (
                 <button
                   key={key}
                   className={`${styles.tab} ${tab === key ? styles.tabActive : ""}`}
@@ -184,7 +239,6 @@ function DetailModal({ member, following, onToggleFollow, onClose }) {
 
             {tab === "overview" && (
               <div className={styles.tabContent}>
-                {/* 잔디 그래프: 픽셀 아트 하트를 배경 노이즈 위에 오버레이 */}
                 <div className={styles.grassWrap}>
                   <div className={styles.grassHeader}>
                     <span className={styles.grassTitle}>
@@ -269,13 +323,25 @@ function DetailModal({ member, following, onToggleFollow, onClose }) {
   );
 }
 
-function AddForm({ onAdd, onClose, onFill, isFilling, fillError, fillData, formError }) {
-  const [form, setForm] = useState(EMPTY_FORM);
-  const nameRef = useRef(null);
+interface AddFormProps {
+  onAdd: (form: MemberForm) => void;
+  onClose: () => void;
+  onFill: () => void;
+  isFilling: boolean;
+  fillError: string;
+  fillData: MemberForm | null;
+  formError: string;
+}
+
+function AddForm({ onAdd, onClose, onFill, isFilling, fillError, fillData, formError }: AddFormProps) {
+  const [form, setForm] = useState<MemberForm>(EMPTY_FORM);
+  const nameRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     nameRef.current?.focus();
-    const onKey = (e) => e.key === "Escape" && onClose();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
@@ -284,7 +350,10 @@ function AddForm({ onAdd, onClose, onFill, isFilling, fillError, fillData, formE
     if (fillData) setForm(fillData);
   }, [fillData]);
 
-  const input = (field) => (e) => setForm((prev) => ({ ...prev, [field]: e.target.value }));
+  const input =
+    (field: keyof MemberForm) =>
+    (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+      setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
@@ -292,7 +361,7 @@ function AddForm({ onAdd, onClose, onFill, isFilling, fillError, fillData, formE
         <div className={styles.formTop}>
           <h3 className={styles.formTitle}>아기사자 추가</h3>
           <button className={styles.fillBtn} onClick={onFill} disabled={isFilling}>
-            {isFilling ? "불러오는 중…" : "🎲 랜덤 값 채우기"}
+            {isFilling ? "불러오는 중" : "랜덤 값 채우기"}
           </button>
         </div>
         {fillError && <span className={styles.fillError}>{fillError}</span>}
@@ -350,7 +419,13 @@ function AddForm({ onAdd, onClose, onFill, isFilling, fillError, fillData, formE
   );
 }
 
-function MemberCard({ member, onOpen, onDelete }) {
+interface MemberCardProps {
+  member: Member;
+  onOpen: (id: number) => void;
+  onDelete: (id: number) => void;
+}
+
+function MemberCard({ member, onOpen, onDelete }: MemberCardProps) {
   return (
     <div
       className={`${styles.memberCard} ${member.isMine ? styles.memberCardMine : ""}`}
@@ -391,32 +466,32 @@ function MemberCard({ member, onOpen, onDelete }) {
 }
 
 export default function Page() {
-  const [members, setMembers] = useState(initialMembers);
+  const [members, setMembers] = useState<Member[]>(initialMembers);
   const [query, setQuery] = useState("");
-  const [partFilter, setPartFilter] = useState("all");
-  const [sortKey, setSortKey] = useState("default");
-  const [selectedId, setSelectedId] = useState(null);
+  const [partFilter, setPartFilter] = useState<PartFilter>("all");
+  const [sortKey, setSortKey] = useState<SortKey>("default");
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [showForm, setShowForm] = useState(false);
-  const [following, setFollowing] = useState(() => new Set());
+  const [following, setFollowing] = useState<Set<number>>(() => new Set());
 
-  const [fetchStatus, setFetchStatus] = useState("idle");
+  const [fetchStatus, setFetchStatus] = useState<FetchStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
   const [isFilling, setIsFilling] = useState(false);
   const [fillError, setFillError] = useState("");
-  const [fillData, setFillData] = useState(null);
+  const [fillData, setFillData] = useState<MemberForm | null>(null);
   const [formError, setFormError] = useState("");
 
-  const latestControllerRef = useRef(null);
+  const latestControllerRef = useRef<AbortController | null>(null);
   const latestRequestIdRef = useRef(0);
-  const lastFetchActionRef = useRef(null);
-  const statusResetTimerRef = useRef(null);
-  const fillControllerRef = useRef(null);
-  const nextIdRef = useRef(
+  const lastFetchActionRef = useRef<FetchAction | null>(null);
+  const statusResetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const fillControllerRef = useRef<AbortController | null>(null);
+  const nextIdRef = useRef<number>(
     initialMembers.length ? Math.max(...initialMembers.map((m) => m.id)) + 1 : 1
   );
 
-  const makeNextId = () => {
+  const makeNextId = (): number => {
     const id = nextIdRef.current;
     nextIdRef.current += 1;
     return id;
@@ -435,7 +510,7 @@ export default function Page() {
     statusResetTimerRef.current = setTimeout(() => setFetchStatus("idle"), 2000);
   }
 
-  async function runFetchAction(actionFn) {
+  async function runFetchAction(actionFn: FetchAction): Promise<void> {
     const requestId = ++latestRequestIdRef.current;
     lastFetchActionRef.current = actionFn;
 
@@ -464,18 +539,19 @@ export default function Page() {
     } catch (err) {
       if (requestId !== latestRequestIdRef.current) return;
       clearTimeout(timeoutId);
-      if (err?.name === "AbortError" && timedOut) {
+      const e = err as { name?: string; message?: string };
+      if (e?.name === "AbortError" && timedOut) {
         setErrorMessage("불러오기 실패: 시간 초과");
         setFetchStatus("error");
         return;
       }
-      if (err?.name === "AbortError") return;
-      setErrorMessage(`불러오기 실패: ${err?.message || "알 수 없는 오류"}`);
+      if (e?.name === "AbortError") return;
+      setErrorMessage(`불러오기 실패: ${e?.message || "알 수 없는 오류"}`);
       setFetchStatus("error");
     }
   }
 
-  const handleFetchAdd = (count) =>
+  const handleFetchAdd = (count: number) =>
     runFetchAction(async (ctx) => {
       const users = await fetchRandomUsers(count, ctx.signal);
       if (!ctx.isLatest()) return;
@@ -491,7 +567,7 @@ export default function Page() {
       setMembers((prev) => [...prev.filter((m) => m.isMine), ...fresh]);
     });
 
-  const handleFillRandom = async () => {
+  const handleFillRandom = async (): Promise<void> => {
     if (isFilling) return;
     if (fillControllerRef.current) fillControllerRef.current.abort();
     const controller = new AbortController();
@@ -508,7 +584,9 @@ export default function Page() {
 
     try {
       const users = await fetchRandomUsers(1, controller.signal);
-      const m = mapApiUser(users[0], 0);
+      const first = users[0];
+      if (!first) throw new Error("응답이 비어 있습니다");
+      const m = mapApiUser(first, 0);
       setFillData({
         name: m.name, part: m.part, badge: m.badge, intro: m.intro,
         image: m.image, club: m.club, about: m.about,
@@ -516,15 +594,16 @@ export default function Page() {
         website: m.website, quote: m.quote,
       });
     } catch (err) {
-      if (err?.name === "AbortError" && timedOut) setFillError("랜덤 값 채우기 실패: 시간 초과");
-      else if (err?.name !== "AbortError") setFillError(`랜덤 값 채우기 실패: ${err?.message || "알 수 없는 오류"}`);
+      const e = err as { name?: string; message?: string };
+      if (e?.name === "AbortError" && timedOut) setFillError("랜덤 값 채우기 실패: 시간 초과");
+      else if (e?.name !== "AbortError") setFillError(`랜덤 값 채우기 실패: ${e?.message || "알 수 없는 오류"}`);
     } finally {
       clearTimeout(timeoutId);
       setIsFilling(false);
     }
   };
 
-  const handleAdd = (form) => {
+  const handleAdd = (form: MemberForm) => {
     const name = form.name.trim();
     const part = form.part.trim();
     if (!name || !part) {
@@ -532,10 +611,10 @@ export default function Page() {
       return;
     }
     const skills = form.skills.split(",").map((s) => s.trim()).filter(Boolean);
-    const newMember = {
+    const newMember: Member = {
       id: makeNextId(),
       name,
-      part,
+      part: part as Part,
       badge: form.badge.trim() || skills[0] || part,
       intro: form.intro.trim() || `${part} 파트 아기사자입니다.`,
       image: form.image.trim() || pickRandom(DEFAULT_IMAGES),
@@ -554,12 +633,13 @@ export default function Page() {
     setShowForm(false);
   };
 
-  const deleteMember = (id) => setMembers((prev) => prev.filter((m) => m.id !== id));
+  const deleteMember = (id: number) => setMembers((prev) => prev.filter((m) => m.id !== id));
 
-  const toggleFollow = (id) =>
+  const toggleFollow = (id: number) =>
     setFollowing((prev) => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
 
@@ -580,12 +660,13 @@ export default function Page() {
 
   const selected = members.find((m) => m.id === selectedId) ?? null;
 
-  const statusText = {
+  const statusMap: Record<FetchStatus, string> = {
     loading: "불러오는 중…",
     success: "완료되었습니다.",
     error: errorMessage,
     idle: "",
-  }[fetchStatus];
+  };
+  const statusText = statusMap[fetchStatus];
 
   const busy = fetchStatus === "loading";
 
@@ -617,7 +698,7 @@ export default function Page() {
         {fetchStatus === "error" && lastFetchActionRef.current && (
           <button
             className={`${styles.btn} ${styles.btnRetry}`}
-            onClick={() => runFetchAction(lastFetchActionRef.current)}
+            onClick={() => lastFetchActionRef.current && runFetchAction(lastFetchActionRef.current)}
           >
             재시도
           </button>
@@ -636,12 +717,12 @@ export default function Page() {
             <input className={styles.searchInput} placeholder="이름·스킬 검색…" value={query} onChange={(e) => setQuery(e.target.value)} />
           </div>
 
-          <select className={styles.select} value={partFilter} onChange={(e) => setPartFilter(e.target.value)}>
+          <select className={styles.select} value={partFilter} onChange={(e) => setPartFilter(e.target.value as PartFilter)}>
             <option value="all">전체 파트</option>
             {PARTS.map((p) => <option key={p} value={p}>{p}</option>)}
           </select>
 
-          <select className={styles.select} value={sortKey} onChange={(e) => setSortKey(e.target.value)}>
+          <select className={styles.select} value={sortKey} onChange={(e) => setSortKey(e.target.value as SortKey)}>
             <option value="default">기본순</option>
             <option value="name">이름순</option>
             <option value="part">파트순</option>
