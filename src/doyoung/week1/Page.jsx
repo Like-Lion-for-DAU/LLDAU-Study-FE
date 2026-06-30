@@ -1,4 +1,5 @@
 import styles from "./Page.module.css";
+import idyJPG from "../../assets/doyoung/week2/idy.jpg";
 
 export default function Week1Page() {
   return (
@@ -11,11 +12,7 @@ export default function Week1Page() {
 
       <section className={styles["card"]}>
         <article>
-          <img
-            src="https://i.pinimg.com/236x/4d/95/31/4d9531cd97ec55ed7ec35448fbe0e41d.jpg"
-            alt="프로필 사진"
-            width="300px"
-          />
+          <img src={idyJPG} alt="프로필 사진" className={styles["photo"]} />
           <h2>임도영</h2>
           <p className={styles["frontend"]}>Frontend</p>
           <p>
@@ -54,13 +51,13 @@ export default function Week1Page() {
 
         <section>
           <h2>관심 기술</h2>
-          <div className={styles["skills"]}>
-            <div>HTML / CSS</div>
-            <div>JavaScript</div>
-            <div>React</div>
-            <div>JAVA</div>
-            <div>C / C++</div>
-          </div>
+          <ul>
+            <li>HTML / CSS</li>
+            <li>JavaScript</li>
+            <li>React</li>
+            <li>JAVA</li>
+            <li>C / C++</li>
+          </ul>
         </section>
 
         <section>

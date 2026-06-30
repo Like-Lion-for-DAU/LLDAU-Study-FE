@@ -12,7 +12,7 @@
 }
 
 .subtitle {
-  color: #666;
+  color: var(--color-text-secondary);
   font-size: 0.9rem;
   margin-bottom: 24px;
 }
@@ -39,12 +39,15 @@
 .member-card {
   display: flex;
   flex-direction: column;
-  background-color: white;
+  background-color: var(--color-white);
   border: 2px solid transparent;
   border-radius: 16px;
   overflow: hidden;
   text-decoration: none;
   color: inherit;
+  text-align: left;
+  font-family: inherit;
+  padding: 0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   transition:
     transform 0.2s ease,
@@ -56,7 +59,7 @@
 .member-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  border-color: #6366f1;
+  border-color: var(--color-primary);
 }
 
 .card-image-wrap {
@@ -64,7 +67,7 @@
   width: 100%;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  background-color: #f5f5f5;
+  background-color: var(--color-gray-100);
 }
 
 .card-image {
@@ -89,11 +92,11 @@
   top: 16px;
   right: 16px;
   padding: 6px 14px;
-  background-color: white;
+  background-color: var(--color-white);
   border-radius: 999px;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--color-text-primary);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -108,19 +111,294 @@
   font-size: 1.3rem;
   font-weight: 700;
   margin: 0;
-  color: #1a1a1a;
+  color: var(--color-text-primary);
 }
 
 .member-role {
-  color: #6366f1;
+  color: var(--color-primary);
   font-size: 0.95rem;
   font-weight: 700;
 }
 
 .member-bio {
-  color: #555;
+  color: var(--color-text-secondary);
   font-size: 0.9rem;
   line-height: 1.5;
   margin: 4px 0 0;
   word-break: keep-all;
+}
+
+/* 모달 */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--color-overlay);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal {
+  position: relative;
+  background-color: var(--color-bg-primary);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.25s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background-color: var(--color-loading-overlay);
+  color: var(--color-secondary);
+  font-size: 1.5rem;
+  font-weight: 400;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition:
+    background-color 0.15s,
+    transform 0.15s;
+}
+
+.modal-close:hover {
+  background-color: var(--color-divider);
+  transform: rotate(90deg);
+}
+
+.modal-header {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  padding: 28px 28px 20px;
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.modal-image-wrap {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: var(--color-gray-100);
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.modal-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.modal-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-text-inverse);
+}
+
+.modal-name-area {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.modal-name {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--color-text-primary);
+}
+
+.modal-role {
+  color: var(--color-primary);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.modal-track {
+  color: var(--color-text-sub);
+  font-size: 0.85rem;
+  margin: 4px 0 0;
+  line-height: 1.4;
+  word-break: keep-all;
+}
+
+.modal-body {
+  padding: 24px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modal-section h4 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 10px;
+  letter-spacing: 0.02em;
+}
+
+.modal-section p {
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  margin: 0;
+  word-break: keep-all;
+}
+
+.skill-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-badge {
+  padding: 6px 14px;
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.contact-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contact-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+.contact-list a {
+  color: var(--color-primary);
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.contact-list a:hover {
+  text-decoration: underline;
+}
+
+.contact-label {
+  flex-shrink: 0;
+  width: 110px;
+  color: var(--color-gray-500);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.modal-motto {
+  background-color: var(--color-gray-50);
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-style: italic;
+  color: var(--color-secondary) !important;
+}
+
+.modal-empty {
+  text-align: center;
+  color: var(--color-text-sub);
+  font-size: 0.95rem;
+  padding: 20px;
+  background-color: var(--color-gray-50);
+  border-radius: 10px;
+}
+
+.modal-footer {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-divider);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal-link {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: color 0.15s;
+}
+
+.modal-link:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+@media (max-width: 540px) {
+  .modal-header {
+    flex-direction: column;
+    text-align: center;
+    padding: 28px 20px 20px;
+  }
+
+  .modal-name-area {
+    align-items: center;
+  }
+
+  .modal-body {
+    padding: 20px;
+  }
+
+  .contact-list li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .contact-label {
+    width: auto;
+  }
 }

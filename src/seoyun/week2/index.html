@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2주차 과제</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <main>
+
+    <!-- 요약 카드 목록 영역 -->
+    <section class="summary-section">
+      <h1 class="section-title">아기사자 소개</h1>
+      <ul class="card-grid">
+
+        <!-- 내 카드 (강조) -->
+        <li class="summary-card summary-card--mine">
+          <div class="card-image-wrap">
+            <img
+              src="pfp.png"
+              alt="정서윤 프로필 이미지"
+              class="card-image"
+            />
+            <span class="badge">FE</span>
+          </div>
+          <div class="card-body">
+            <h2 class="card-name">정서윤</h2>
+            <p class="card-part">FE</p>
+            <p class="card-intro">열심히 배워가고있는 프론트엔드 개발자입니다!</p>
+          </div>
+        </li>
+
+        <!-- 카드 2 -->
+        <li class="summary-card">
+          <div class="card-image-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&h=280&fit=crop"
+              alt="김아기사자 프로필 이미지"
+              class="card-image"
+            />
+            <span class="badge">FE</span>
+          </div>
+          <div class="card-body">
+            <h2 class="card-name">김아기사자</h2>
+            <p class="card-part">FE</p>
+            <p class="card-intro">구조적인 UI를 고민하는 프론트엔드 개발자입니다.</p>
+          </div>
+        </li>
+
+        <!-- 카드 3 -->
+        <li class="summary-card">
+          <div class="card-image-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=280&fit=crop"
+              alt="박아기사자 프로필 이미지"
+              class="card-image"
+            />
+            <span class="badge">BE</span>
+          </div>
+          <div class="card-body">
+            <h2 class="card-name">박아기사자</h2>
+            <p class="card-part">BE</p>
+            <p class="card-intro">안정적인 서버 구조에 관심이 많습니다.</p>
+          </div>
+        </li>
+
+        <!-- 카드 4 -->
+        <li class="summary-card">
+          <div class="card-image-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=400&h=280&fit=crop"
+              alt="이아기사자 프로필 이미지"
+              class="card-image"
+            />
+            <span class="badge">FE</span>
+          </div>
+          <div class="card-body">
+            <h2 class="card-name">이아기사자</h2>
+            <p class="card-part">FE</p>
+            <p class="card-intro">사용자 관점에서 디자인을 고민합니다.</p>
+          </div>
+        </li>
+
+        <!-- 카드 5 -->
+        <li class="summary-card">
+          <div class="card-image-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&h=280&fit=crop"
+              alt="최아기사자 프로필 이미지"
+              class="card-image"
+            />
+            <span class="badge">FE</span>
+          </div>
+          <div class="card-body">
+            <h2 class="card-name">최아기사자</h2>
+            <p class="card-part">FE</p>
+            <p class="card-intro">컴포넌트 단위 설계에 흥미가 있습니다.</p>
+          </div>
+        </li>
+
+        <!-- 카드 6 -->
+        <li class="summary-card">
+          <div class="card-image-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1510915228340-29c85a43dcfe?w=400&h=280&fit=crop"
+              alt="정아기사자 프로필 이미지"
+              class="card-image"
+            />
+            <span class="badge">BE</span>
+          </div>
+          <div class="card-body">
+            <h2 class="card-name">정아기사자</h2>
+            <p class="card-part">BE</p>
+            <p class="card-intro">데이터 흐름을 명확히 하는 개발을 지향합니다.</p>
+          </div>
+        </li>
+
+        <!-- 카드 7 -->
+        <li class="summary-card">
+          <div class="card-image-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=400&h=280&fit=crop"
+              alt="오아기사자 프로필 이미지"
+              class="card-image"
+            />
+            <span class="badge">FE</span>
+          </div>
+          <div class="card-body">
+            <h2 class="card-name">오아기사자</h2>
+            <p class="card-part">FE</p>
+            <p class="card-intro">디자인 시스템에 관심이 많습니다.</p>
+          </div>
+        </li>
+
+        <!-- 카드 8 -->
+        <li class="summary-card">
+          <div class="card-image-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=280&fit=crop"
+              alt="강아기사자 프로필 이미지"
+              class="card-image"
+            />
+            <span class="badge">FE</span>
+          </div>
+          <div class="card-body">
+            <h2 class="card-name">강아기사자</h2>
+            <p class="card-part">FE</p>
+            <p class="card-intro">레이아웃 구현에 강점을 가지고 있습니다.</p>
+          </div>
+        </li>
+
+        <!-- 카드 9 -->
+        <li class="summary-card">
+          <div class="card-image-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=280&fit=crop"
+              alt="윤아기사자 프로필 이미지"
+              class="card-image"
+            />
+            <span class="badge">BE</span>
+          </div>
+          <div class="card-body">
+            <h2 class="card-name">윤아기사자</h2>
+            <p class="card-part">BE</p>
+            <p class="card-intro">효율적인 API 설계를 고민합니다.</p>
+          </div>
+        </li>
+
+        <!-- 카드 10 -->
+        <li class="summary-card">
+          <div class="card-image-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400&h=280&fit=crop"
+              alt="한아기사자 프로필 이미지"
+              class="card-image"
+            />
+            <span class="badge">FE</span>
+          </div>
+          <div class="card-body">
+            <h2 class="card-name">한아기사자</h2>
+            <p class="card-part">FE</p>
+            <p class="card-intro">타이포그래피와 여백의 미학을 추구합니다.</p>
+          </div>
+        </li>
+
+      </ul>
+    </section>
+
+    <!-- 상세 카드 목록 영역 -->
+    <section class="detail-section">
+      <h2 class="section-title">상세 자기소개</h2>
+      <ol class="detail-list">
+
+        <!-- 상세 카드 1 - 내 카드 -->
+        <li class="detail-card">
+          <header class="detail-header">
+            <h3 class="detail-name">정서윤</h3>
+            <p class="detail-part">FE</p>
+            <p class="detail-club">디스이즈</p>
+          </header>
+
+          <section class="detail-section-inner">
+            <h4>자기소개</h4>
+            <p>안녕하세요, 프론트엔드를 맡고 있는 07년생 26학번 컴퓨터공학과 정서윤입니다. 아직 부족한 점이 많지만, 배우는 과정 자체를 즐기며 꾸준히 성장하고 있습니다. MBTI는 ESTP이고, 이번 멋사 리그에는 '쫄?'이라는 게임으로 참여했습니다. 많이 배우고 경험하는 것을 목표로 열심히 해보겠습니다. 감사합니다!</p>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>연락처</h4>
+            <address>
+              <ul class="contact-list">
+                <li>이메일: <a href="mailto:t01021124995@gmail.com">t01021124995@gmail.com</a></li>
+                <li>깃허브: <a href="https://github.com/dkjksd" target="_blank" rel="noopener noreferrer">github.com/dkjksd</a></li>
+                <li>휴대전화: 010-3846-5638</li>
+              </ul>
+            </address>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>관심 기술</h4>
+            <ul class="skill-list">
+              <li>TypeScript — 타입 기반 개발</li>
+              <li>SSR/SSG — 서버 사이드 렌더링</li>
+              <li>Utility-First CSS — 효율적인 스타일링</li>
+              <li>Server State Management — 데이터 관리 최적화</li>
+            </ul>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>각오 한 마디</h4>
+            <blockquote>기초를 탄탄히 다지며, 맡은 역할을 끝까지 책임지는 개발자가 되겠습니다.</blockquote>
+          </section>
+        </li>
+
+        <!-- 상세 카드 2 -->
+        <li class="detail-card">
+          <header class="detail-header">
+            <h3 class="detail-name">김아기사자</h3>
+            <p class="detail-part">FE</p>
+            <p class="detail-club">LION TRACK</p>
+          </header>
+
+          <section class="detail-section-inner">
+            <h4>자기소개</h4>
+            <p>HTML과 CSS를 처음 배우면서 화면이 어떻게 구성되는지에 흥미를 느꼈습니다. 단순히 보이는 결과보다, 왜 이런 구조가 필요한지 이해하려고 노력하고 있습니다. 시맨틱 태그의 중요성과 CSS의 계층적 구조를 깊이 있게 학습하면서, 사용자 경험을 향상시키는 구조적인 UI 설계에 매력을 느끼고 있습니다. 앞으로도 더 나은 웹 접근성과 유지보수 가능한 코드를 작성하는 것이 목표입니다.</p>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>연락처</h4>
+            <address>
+              <ul class="contact-list">
+                <li>Email: <a href="mailto:lionkim@example.com">lionkim@example.com</a></li>
+                <li>Phone: 010-1234-5678</li>
+                <li><a href="https://example.com">https://example.com</a></li>
+              </ul>
+            </address>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>관심 기술</h4>
+            <ul class="skill-list">
+              <li>React</li>
+              <li>JavaScript</li>
+              <li>CSS Animation</li>
+            </ul>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>한 마디</h4>
+            <blockquote>기본기를 탄탄히 다지는 개발자가 되고 싶습니다.</blockquote>
+          </section>
+        </li>
+
+        <!-- 상세 카드 3 -->
+        <li class="detail-card">
+          <header class="detail-header">
+            <h3 class="detail-name">박아기사자</h3>
+            <p class="detail-part">BE</p>
+            <p class="detail-club">LION TRACK</p>
+          </header>
+
+          <section class="detail-section-inner">
+            <h4>자기소개</h4>
+            <p>서버 개발을 배우며 데이터가 오가는 흐름에 관심을 가지게 되었습니다. 안정적인 서버 구조를 설계하는 것이 얼마나 중요한지 깨달았고, 비즈니스 로직을 효율적으로 처리하면서도 확장 가능한 아키텍처를 만드는 것에 매력을 느끼고 있습니다. 대용량 트래픽을 견딜 수 있는 서버 구축과 데이터베이스 최적화에 관심이 많으며, 사용자에게 신뢰할 수 있는 서비스를 제공하는 것이 가장 큰 목표입니다.</p>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>연락처</h4>
+            <address>
+              <ul class="contact-list">
+                <li>Email: <a href="mailto:lionpark@example.com">lionpark@example.com</a></li>
+                <li>Phone: 010-2345-6789</li>
+                <li><a href="https://backend.dev">https://backend.dev</a></li>
+              </ul>
+            </address>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>관심 기술</h4>
+            <ul class="skill-list">
+              <li>Java</li>
+              <li>Spring</li>
+              <li>Database</li>
+            </ul>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>한 마디</h4>
+            <blockquote>안정적인 서비스를 만드는 개발자가 되고 싶습니다.</blockquote>
+          </section>
+        </li>
+
+        <!-- 상세 카드 4 -->
+        <li class="detail-card">
+          <header class="detail-header">
+            <h3 class="detail-name">이아기사자</h3>
+            <p class="detail-part">FE</p>
+            <p class="detail-club">LION TRACK</p>
+          </header>
+
+          <section class="detail-section-inner">
+            <h4>자기소개</h4>
+            <p>사용자 경험을 중심에 두고 디자인을 고민합니다. 아름다운 화면보다 사용하기 편한 화면이 더 가치 있다고 생각하며, UX 리서치와 프로토타이핑에 관심을 갖고 있습니다.</p>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>연락처</h4>
+            <address>
+              <ul class="contact-list">
+                <li>Email: <a href="mailto:lionlee@example.com">lionlee@example.com</a></li>
+                <li>Phone: 010-3456-7890</li>
+                <li><a href="https://design.io">https://design.io</a></li>
+              </ul>
+            </address>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>관심 기술</h4>
+            <ul class="skill-list">
+              <li>Figma</li>
+              <li>Adobe XD</li>
+              <li>Prototyping</li>
+            </ul>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>한 마디</h4>
+            <blockquote>사용자 중심의 디자이너가 되겠습니다.</blockquote>
+          </section>
+        </li>
+
+        <!-- 상세 카드 5 -->
+        <li class="detail-card">
+          <header class="detail-header">
+            <h3 class="detail-name">최아기사자</h3>
+            <p class="detail-part">FE</p>
+            <p class="detail-club">LION TRACK</p>
+          </header>
+
+          <section class="detail-section-inner">
+            <h4>자기소개</h4>
+            <p>컴포넌트 단위로 UI를 설계하는 것에 흥미를 느끼고 있습니다. 재사용 가능한 컴포넌트를 만들어 생산성을 높이고, 타입 안정성을 통해 버그를 사전에 방지하는 개발 방식을 지향합니다.</p>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>연락처</h4>
+            <address>
+              <ul class="contact-list">
+                <li>Email: <a href="mailto:lionchoi@example.com">lionchoi@example.com</a></li>
+                <li>Phone: 010-4567-8901</li>
+                <li><a href="https://typescript.dev">https://typescript.dev</a></li>
+              </ul>
+            </address>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>관심 기술</h4>
+            <ul class="skill-list">
+              <li>TypeScript</li>
+              <li>React</li>
+              <li>Storybook</li>
+            </ul>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>한 마디</h4>
+            <blockquote>타입 안정성을 중시하는 개발자가 되겠습니다.</blockquote>
+          </section>
+        </li>
+
+        <!-- 상세 카드 6 -->
+        <li class="detail-card">
+          <header class="detail-header">
+            <h3 class="detail-name">정아기사자</h3>
+            <p class="detail-part">BE</p>
+            <p class="detail-club">LION TRACK</p>
+          </header>
+
+          <section class="detail-section-inner">
+            <h4>자기소개</h4>
+            <p>데이터 흐름을 명확히 이해하고 이를 코드로 표현하는 것을 중요하게 생각합니다. RESTful API 설계와 미들웨어 구현에 관심이 많으며, 클린 코드를 지향합니다.</p>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>연락처</h4>
+            <address>
+              <ul class="contact-list">
+                <li>Email: <a href="mailto:lionjeong@example.com">lionjeong@example.com</a></li>
+                <li>Phone: 010-5678-9012</li>
+                <li><a href="https://node.dev">https://node.dev</a></li>
+              </ul>
+            </address>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>관심 기술</h4>
+            <ul class="skill-list">
+              <li>Node.js</li>
+              <li>Express</li>
+              <li>MongoDB</li>
+            </ul>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>한 마디</h4>
+            <blockquote>깔끔한 API를 설계하는 개발자가 되겠습니다.</blockquote>
+          </section>
+        </li>
+
+        <!-- 상세 카드 7 -->
+        <li class="detail-card">
+          <header class="detail-header">
+            <h3 class="detail-name">오아기사자</h3>
+            <p class="detail-part">FE</p>
+            <p class="detail-club">LION TRACK</p>
+          </header>
+
+          <section class="detail-section-inner">
+            <h4>자기소개</h4>
+            <p>디자인 시스템을 구축하고 일관된 UI 규칙을 만드는 것에 관심이 있습니다. 팀 전체가 같은 언어로 소통할 수 있는 컴포넌트 라이브러리 구축을 목표로 합니다.</p>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>연락처</h4>
+            <address>
+              <ul class="contact-list">
+                <li>Email: <a href="mailto:lionoh@example.com">lionoh@example.com</a></li>
+                <li>Phone: 010-6789-0123</li>
+                <li><a href="https://designsystem.io">https://designsystem.io</a></li>
+              </ul>
+            </address>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>관심 기술</h4>
+            <ul class="skill-list">
+              <li>Sketch</li>
+              <li>FE Token</li>
+              <li>Zeplin</li>
+            </ul>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>한 마디</h4>
+            <blockquote>디자인 시스템으로 팀을 하나로 묶겠습니다.</blockquote>
+          </section>
+        </li>
+
+        <!-- 상세 카드 8 -->
+        <li class="detail-card">
+          <header class="detail-header">
+            <h3 class="detail-name">강아기사자</h3>
+            <p class="detail-part">FE</p>
+            <p class="detail-club">LION TRACK</p>
+          </header>
+
+          <section class="detail-section-inner">
+            <h4>자기소개</h4>
+            <p>CSS Grid와 Flexbox를 활용한 복잡한 레이아웃 구현에 강점을 가지고 있습니다. 반응형 웹 디자인과 접근성을 동시에 만족하는 마크업을 지향합니다.</p>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>연락처</h4>
+            <address>
+              <ul class="contact-list">
+                <li>Email: <a href="mailto:lionkang@example.com">lionkang@example.com</a></li>
+                <li>Phone: 010-7890-1234</li>
+                <li><a href="https://layout.dev">https://layout.dev</a></li>
+              </ul>
+            </address>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>관심 기술</h4>
+            <ul class="skill-list">
+              <li>CSS Grid</li>
+              <li>Flexbox</li>
+              <li>Accessibility</li>
+            </ul>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>한 마디</h4>
+            <blockquote>레이아웃 전문가 개발자가 되겠습니다.</blockquote>
+          </section>
+        </li>
+
+        <!-- 상세 카드 9 -->
+        <li class="detail-card">
+          <header class="detail-header">
+            <h3 class="detail-name">윤아기사자</h3>
+            <p class="detail-part">BE</p>
+            <p class="detail-club">LION TRACK</p>
+          </header>
+
+          <section class="detail-section-inner">
+            <h4>자기소개</h4>
+            <p>효율적인 API 설계와 데이터 쿼리 최적화에 관심이 있습니다. GraphQL을 통해 클라이언트가 필요한 데이터만 요청할 수 있는 유연한 API를 구축하고 싶습니다.</p>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>연락처</h4>
+            <address>
+              <ul class="contact-list">
+                <li>Email: <a href="mailto:lionyoon@example.com">lionyoon@example.com</a></li>
+                <li>Phone: 010-8901-2345</li>
+                <li><a href="https://graphql.dev">https://graphql.dev</a></li>
+              </ul>
+            </address>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>관심 기술</h4>
+            <ul class="skill-list">
+              <li>GraphQL</li>
+              <li>Apollo Server</li>
+              <li>PostgreSQL</li>
+            </ul>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>한 마디</h4>
+            <blockquote>데이터 중심의 API 전문가가 되겠습니다.</blockquote>
+          </section>
+        </li>
+
+        <!-- 상세 카드 10 -->
+        <li class="detail-card">
+          <header class="detail-header">
+            <h3 class="detail-name">한아기사자</h3>
+            <p class="detail-part">FE</p>
+            <p class="detail-club">LION TRACK</p>
+          </header>
+
+          <section class="detail-section-inner">
+            <h4>자기소개</h4>
+            <p>타이포그래피와 여백을 통해 콘텐츠에 집중할 수 있는 UI를 만드는 것을 좋아합니다. 글자 하나, 픽셀 하나에도 의미를 담는 섬세한 디자이너를 지향합니다.</p>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>연락처</h4>
+            <address>
+              <ul class="contact-list">
+                <li>Email: <a href="mailto:lionhan@example.com">lionhan@example.com</a></li>
+                <li>Phone: 010-9012-3456</li>
+                <li><a href="https://typography.design">https://typography.design</a></li>
+              </ul>
+            </address>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>관심 기술</h4>
+            <ul class="skill-list">
+              <li>Typography</li>
+              <li>Motion FE</li>
+              <li>Brand Identity</li>
+            </ul>
+          </section>
+
+          <section class="detail-section-inner">
+            <h4>한 마디</h4>
+            <blockquote>디테일에 강한 디자이너가 되겠습니다.</blockquote>
+          </section>
+        </li>
+
+      </ol>
+    </section>
+
+  </main>
+
+</body>
+</html>

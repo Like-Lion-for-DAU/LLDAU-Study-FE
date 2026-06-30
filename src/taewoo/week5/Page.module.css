@@ -6,3 +6,539 @@
   font-size: 1.5rem;
   font-weight: 700;
 }
+
+
+/* 버튼 스타일 */
+
+.addButton {
+  background-color: darkblue;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-right: 2px;
+}
+
+.addButton:hover {
+  background-color: rgb(0, 0, 139, 0.2);
+  color: black;
+}
+
+.removeButton {
+  background-color: darkblue;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-right: 2px;
+}
+
+.removeButton:hover {
+  background-color: rgb(0, 0, 139, 0.2);
+  color: black;
+}
+
+.countLion {
+  font-size: 0.7rem;
+  background-color: darkblue;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+}
+
+
+/* 그리드 스타일 */
+
+.gridContainer{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 1800px;
+  width: 130%;
+  margin: auto;
+}
+
+@media(max-width: 1960px) {
+  .gridContainer {
+    grid-template-columns: repeat(3, 1fr); /* 태블릿: 2열 */
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 880px) {
+  .gridContainer {
+    grid-template-columns: repeat(2, 1fr); /* 태블릿: 2열 */
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .gridContainer {
+    grid-template-columns: 1fr; /* 모바일: 1열 */
+    max-width: 100%;
+  }
+}
+
+.mainProfile {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border-radius: 10px; /* 원하는 둥근 정도 */
+  border: 1px solid gainsboro; /* 테이블 테두리 */
+  height: auto;
+  padding-bottom: 5px;
+  background-color: #fff;
+  box-shadow: 3px 3px 5px gainsboro
+}
+
+.mainProfile:hover {
+  transform: translateY(-4px);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border-radius: 10px; /* 원하는 둥근 정도 */
+  border: 2px solid skyblue; /* 테이블 테두리 */
+  height: auto;
+  padding-bottom: 5px;
+  background-color: #fff;
+  box-shadow: 6px 6px 7px gainsboro;
+  cursor: pointer;
+}
+
+
+/* 프로필 스타일 */
+
+.profileImage{
+  max-width: 220px;
+  height: 220px;
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.badgeSpace{
+  background-color: gainsboro;
+  border-radius: 12px;
+  padding: 2px 8px;
+}
+
+.badge{
+  position: absolute;
+  text-align: center;
+  top: 7px;
+  right: 8px;
+  font-size: 10px;
+}
+
+
+/* main_profile 글자 스타일 */
+
+.blueRule {
+  color : blue;
+  padding-inline: 10px;
+  font-size: 18px;
+  overflow: auto;
+}
+.name {
+  margin-left: 10px;
+  overflow: auto;
+}
+
+.lineIntroduce{
+  padding-inline: 11px;
+  overflow: auto;
+}
+
+/* 자기소개 모달 스타일 */
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  position: relative;
+  background-color: #fff;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 500px;
+  overflow-y: auto;
+  box-shadow: 0 0 20px black;
+  scrollbar-width: none;
+  padding-left: 10px;
+  padding-bottom: 10px;
+}
+
+.modalContent::-webkit-scrollbar {
+  display: none;
+  overflow: hidden;
+}
+
+.modalDivider {
+  border: none;
+  border-top: 2px solid black;  /* 구분선 */
+  margin-right: 10px;
+}
+
+/* 모달 자기소개 스타일 */
+.introduceTitle{
+  padding-inline: 3px;
+  margin-top: 3px;
+}
+
+.introduceLast{
+  padding-inline: 12px;
+}
+
+.listStyle{
+  margin-left: 30px;
+}
+
+.introduceMyself{
+  margin-top: 3px;
+  margin-bottom: 2px;
+  padding-inline: 12px;
+}
+
+.joinClub{
+  padding-inline: 10px;
+  color: #000;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* 아기 사자 추가 모달 */
+.pushLion {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  align-items: center;
+  z-index: 1000;
+}
+
+.pushLionContent {
+  position: relative;
+  background-color: #fff;
+  border-radius: 10px;
+  width: 90%;
+  height: 640px;
+  max-width: 1000px;
+  overflow-y: auto;
+  box-shadow: 0 0 20px black;
+  scrollbar-width: none;
+  padding-left: 10px;
+  padding-bottom: 50px;
+}
+
+.pushLionContent::-webkit-scrollbar {
+  display: none;
+  overflow: hidden;
+}
+
+.pushLionAddButton {
+  position: absolute;
+  right: 70px;
+  bottom: 3%;
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-right: 2px;
+  margin-top: 10px;
+}
+
+.pushLionAddButton:hover:not(:disabled) {
+  background-color: gainsboro;
+  color: black;
+}
+
+.pushRandomButton{
+  position: absolute;
+  right: 70px;
+  bottom: 3%;
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-right: 55px;
+}
+
+/* 입력 검사 스타일 */
+.pushLionAddButton:disabled {
+  background-color: #e0e0e0;
+  color: #aaa;
+  border-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pushLionCancelButton {
+  position: absolute;
+  right: 20px;
+  bottom: 3%;
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.pushLionCancelButton:hover {
+  background-color: gainsboro;
+  color: black;
+}
+
+.pushLionGrid {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.inputName {
+  color: black;
+  border: 2px solid gainsboro;
+  border-radius: 4px;
+  padding: 2%;
+  width: 95%;
+}
+
+.inputPart {
+  color: black;
+  border: 2px solid gainsboro;
+  border-radius: 4px;
+  padding: 2%;
+  width: 95%;
+}
+
+.inputLongtype {
+  position: relative;
+  color: black;
+  border: 2px solid gainsboro;
+  border-radius: 4px;
+  padding: 1%;
+  width: 97.5%;
+}
+
+.inputIntroduce {
+  display: block;
+  color: black;
+  border: 2px solid gainsboro;
+  border-radius: 4px;
+  height: 90px;
+  padding-left: 1%;
+  padding-top: 0.5%;
+  width: 97.5%;
+  font-family: inherit;
+  resize: none;
+}
+
+.inputEmail {
+  color: black;
+  border: 2px solid gainsboro;
+  border-radius: 4px;
+  padding: 2%;
+  width: 95%;
+}
+
+.inputPhone {
+  color: black;
+  border: 2px solid gainsboro;
+  border-radius: 4px;
+  padding: 2%;
+  width: 95%;
+}
+
+.inputWarning {
+  position: absolute;
+  bottom: -16px;
+  right: 20px;
+  padding: 2px;
+  font-size: 12px;
+  color: #e53935;
+  border: 1px solid orange;
+  background-color: rgba(255, 255, 224, 0.5);
+}
+
+.pushLabel {
+  white-space: pre-line;
+}
+
+.pushLionRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fullWidth {
+  grid-template-columns: 1fr;
+  position: relative;
+}
+
+.halfWidth {
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+}
+
+.randomButtonsRow{
+  display: flex;
+  gap: 5px;
+  margin-bottom: 15px;
+  margin-top: 10px;
+}
+
+.randomOneButton {
+  background-color: white;
+  color: black;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  margin-right: 2px;
+  box-shadow: 3px 3px 4px gainsboro;
+}
+
+.randomOneButton:disabled {
+  background-color: gainsboro;
+  cursor: not-allowed;
+}
+
+.randomFiveButton {
+  background-color: white;
+  color: black;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  margin-right: 2px;
+  box-shadow: 3px 3px 4px gainsboro;
+}
+
+.randomFiveButton:disabled {
+  background-color: gainsboro;
+  cursor: not-allowed;
+}
+
+.refrashButton {
+  background-color: white;
+  color: black;
+  border: 1px solid #ccc;
+  box-shadow: 3px 3px 4px gainsboro;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.7rem;
+  cursor: pointer;
+}
+
+.refrashButton:disabled {
+  background-color: gainsboro;
+  cursor: not-allowed;
+}
+
+.retryButton {
+  background-color: white;
+  color: brown;
+  border: 1px solid #ccc;
+  box-shadow: 3px 3px 4px gainsboro;
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 0.7rem;
+  cursor: pointer;
+}
+
+.refrashState {
+  font-size:medium;
+  color: #aaa;
+  margin-left: 5px;
+  padding-top: 0.4%;
+}
+
+.sortLabelRow{
+  display: flex;
+}
+
+.sortSelect {
+  font-size: 0.8rem;
+  margin-left: 8px;
+  padding: 4px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+}
+
+.firstSortLabel {
+  color: gray;
+}
+
+.sortLabel{
+  margin-left: 15px;
+  color: gray;
+}
+
+.noResult {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 1.5rem;
+  color: #aaa;
+  margin-top: 50px;
+}
+
+.noList {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 1.5rem;
+  color: #aaa;
+  margin-top: 50px;
+  cursor: pointer;
+}
+
+.lionImage {
+  position: absolute;
+  top: -200px;
+  width: 150px;
+  transition: top 1s ease-in-out;
+}
+
+.imageSlide {
+  top: 50px;
+}
