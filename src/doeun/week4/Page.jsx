@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./Page.module.css";
-import { memberspro } from "./memberData.js";
+import { memberspro, members } from "./memberData.js";
 import defaultProfile from "./default-profile.jpg";
 
 // 랜덤 유저 API 데이터 가져오기
@@ -117,8 +117,19 @@ const getFilteredAndSortedMembers = () => {
   } else if (sortBy === "part") {
     filtered.sort((a, b) => a.part.localeCompare(b.part, "ko"));
   }
-
   return filtered;
+};
+
+const getDetailMember = (memberName) => {
+  const detailMember = members.find((m) => m.name === memberName);
+  if (detailMember) {
+    const proMember = memberspro.find((m) => m.name === memberName);
+    return {
+      ...detailMember,
+      image: proMember?.image || defaultProfile,
+    };
+  }
+  return null;
 };
 
 const handleFillRandomData = async () => {
@@ -539,9 +550,10 @@ const handleFillRandomData = async () => {
                   ? styles.myCard
                   : ""
               }`}
-              onClick={() =>
-                setSelectedMember(member)
-              }
+              onClick={() => {
+                const detailMember = getDetailMember(member.name);
+                setSelectedMember(detailMember);
+              }}
             >
               <div
                 className={
@@ -601,50 +613,103 @@ const handleFillRandomData = async () => {
           className={styles.modalOverlay}
           onClick={() => setSelectedMember(null)}
         >
-        <div
-          className={styles.profileModal}
-          onClick={(e) => e.stopPropagation()}
-        >
-        <button
-          className={styles.closeModalBtn}
-          onClick={() => setSelectedMember(null)}
-          aria-label="Close"
-        >
-          ✕
-        </button>
-        <img
-          src={selectedMember.image}
-          alt={selectedMember.name}
-          className={styles.profileImage}
-        />
+          <div
+            className={styles.profileModal}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className={styles.closeModalBtn}
+              onClick={() => setSelectedMember(null)}
+              aria-label="Close"
+            >
+              ✕
+            </button>
 
-        <h2>{selectedMember.name}</h2>
+            {/* 고정 영역: 프로필 이미지, 이름, 역할 */}
+            <div className={styles.profileHeader}>
+              <img
+                src={selectedMember.image}
+                alt={selectedMember.name}
+                className={styles.profileImage}
+              />
+              <h2 className={styles.profileName}>{selectedMember.name}</h2>
+              <p className={`${styles.profileRole} ${
+                styles[`part${selectedMember.part?.charAt(0).toUpperCase() + selectedMember.part?.slice(1)}`]
+              }`}>
+                {selectedMember.part?.toUpperCase()} · {selectedMember.track}
+              </p>
+            </div>
 
-        <p className={`${styles.profilePart} ${
-          styles[`part${selectedMember.part}`]
-        }`}>
-         {selectedMember.part}
-        </p>
+            {/* 스크롤 영역: 섹션들 */}
+            <div className={styles.profileContent}>
 
-        <p className={styles.profileTech}>
-          관심 기술 : {selectedMember.tech}
-        </p>
+              {/* 자기소개 섹션 */}
+              {selectedMember.intro && (
+                <div className={styles.profileSection}>
+                  <h3 className={styles.sectionTitle}>자기소개</h3>
+                  <p className={styles.sectionText}>{selectedMember.intro}</p>
+                </div>
+              )}
 
-        <p className={styles.profileIntro}>
-          {selectedMember.intro}
-        </p>
+              {/* 연락처 섹션 */}
+              {(selectedMember.email || selectedMember.phone || selectedMember.link) && (
+                <div className={styles.profileSection}>
+                  <h3 className={styles.sectionTitle}>연락처</h3>
+                  <div className={styles.contactList}>
+                    {selectedMember.email && (
+                      <div className={styles.contactItem}>
+                        <span className={styles.contactLabel}>Email:</span>
+                        <a href={`mailto:${selectedMember.email}`} className={styles.contactValue}>
+                          {selectedMember.email}
+                        </a>
+                      </div>
+                    )}
+                    {selectedMember.phone && (
+                      <div className={styles.contactItem}>
+                        <span className={styles.contactLabel}>Phone:</span>
+                        <a href={`tel:${selectedMember.phone}`} className={styles.contactValue}>
+                          {selectedMember.phone}
+                        </a>
+                      </div>
+                    )}
+                    {selectedMember.link && (
+                      <div className={styles.contactItem}>
+                        <span className={styles.contactLabel}>Link:</span>
+                        <a href={selectedMember.link} target="_blank" rel="noopener noreferrer" className={styles.contactValue}>
+                          {selectedMember.link}
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
-        <button
-          onClick={() =>
-            setSelectedMember(null)
-          }
-          className={styles.closeBtn}
-        >
-          닫기
-        </button>
-      </div>
-    </div>
-  )}
+              {/* 관심 기술 섹션 */}
+              {selectedMember.skills && selectedMember.skills.length > 0 && (
+                <div className={styles.profileSection}>
+                  <h3 className={styles.sectionTitle}>관심 기술</h3>
+                  <div className={styles.skillsList}>
+                    {selectedMember.skills.map((skill, idx) => (
+                      <span key={idx} className={styles.skillTag}>
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* 한마디 섹션 */}
+              {selectedMember.word && (
+                <div className={styles.profileSection}>
+                  <h3 className={styles.sectionTitle}>한마디</h3>
+                  <p className={styles.wordText}>{selectedMember.word}</p>
+                </div>
+              )}
+
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

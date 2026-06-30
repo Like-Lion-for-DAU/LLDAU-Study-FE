@@ -420,12 +420,151 @@
 .cancelBtn, .randomBtn { background: var(--toss-bg-element); color: var(--toss-text-secondary); }
 .cancelBtn:hover, .randomBtn:hover { background: var(--toss-bg-hover); }
 
-/* 프로필 바텀시트 */
-.profileModal { text-align: center; }
-.profileImage { width: 84px; height: 84px; border-radius: 50%; object-fit: cover; margin-bottom: 16px; background: var(--toss-bg-element); }
-.profilePart { color: var(--toss-blue); font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-.profileTech { color: var(--toss-text-secondary); font-size: 13px; margin-bottom: 14px; }
-.profileIntro { font-size: 15px; color: var(--toss-text-primary); line-height: 1.6; margin-bottom: 28px; }
+/* 프로필 모달 */
+.profileModal {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  max-height: 88vh;
+  overflow: hidden;
+}
+
+.profileHeader {
+  flex-shrink: 0;
+  padding: 0 0 20px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.profileImage {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 16px;
+  background: var(--toss-bg-element);
+}
+
+.profileName {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--toss-text-primary);
+  margin: 0 0 8px 0;
+}
+
+.profileRole {
+  color: var(--toss-blue);
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.profileRole.partFrontend { color: var(--toss-blue); }
+.profileRole.partBackend { color: var(--toss-red); }
+.profileRole.partDesign { color: var(--toss-green); }
+
+/* 스크롤 영역 */
+.profileContent {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 20px 0;
+}
+
+.profileContent::-webkit-scrollbar {
+  display: none;
+}
+
+/* 섹션 */
+.profileSection {
+  padding: 0 24px 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.profileSection:last-child {
+  border-bottom: none;
+  padding-bottom: 8px;
+}
+
+.sectionTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--toss-text-secondary);
+  margin: 0 0 12px 0;
+  text-align: left;
+}
+
+.sectionText {
+  font-size: 15px;
+  color: var(--toss-text-primary);
+  line-height: 1.6;
+  margin: 0;
+  text-align: left;
+}
+
+/* 연락처 */
+.contactList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contactItem {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.contactLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--toss-text-tertiary);
+  min-width: 60px;
+}
+
+.contactValue {
+  font-size: 13px;
+  color: var(--toss-blue);
+  word-break: break-all;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.contactValue:hover {
+  color: var(--toss-blue-hover);
+  text-decoration: underline;
+}
+
+/* 관심 기술 */
+.skillsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-start;
+}
+
+.skillTag {
+  display: inline-block;
+  background: var(--toss-blue-alpha);
+  color: var(--toss-blue);
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* 한마디 */
+.wordText {
+  font-size: 14px;
+  color: var(--toss-text-secondary);
+  line-height: 1.6;
+  margin: 0;
+  text-align: left;
+  font-style: italic;
+}
+
 .closeBtn { background: var(--toss-blue); color: #ffffff; }
 
 /* X 닫기 버튼 */
@@ -499,6 +638,131 @@
   .searchInput {
     padding: 8px 12px;
     font-size: 13px;
+  }
+}
+
+/* 태블릿 반응형 (481px ~ 768px) */
+@media (max-width: 768px) and (min-width: 481px) {
+  .bigModal, .profileModal {
+    max-width: 85vw;
+  }
+
+  .profileHeader {
+    padding-bottom: 16px;
+  }
+
+  .profileImage {
+    width: 76px;
+    height: 76px;
+  }
+
+  .profileName {
+    font-size: 18px;
+  }
+
+  .profileRole {
+    font-size: 13px;
+  }
+
+  .profileSection {
+    padding: 0 20px 18px 20px;
+  }
+
+  .sectionTitle {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+
+  .sectionText {
+    font-size: 14px;
+  }
+
+  .contactLabel {
+    font-size: 12px;
+    min-width: 55px;
+  }
+
+  .contactValue {
+    font-size: 12px;
+  }
+
+  .skillTag {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .wordText {
+    font-size: 13px;
+  }
+}
+
+/* 모바일 반응형 (max-width: 480px) */
+@media (max-width: 480px) {
+  .bigModal, .profileModal {
+    max-width: 90vw;
+    padding: 16px;
+  }
+
+  .profileHeader {
+    padding-bottom: 12px;
+  }
+
+  .profileImage {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 12px;
+  }
+
+  .profileName {
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+
+  .profileRole {
+    font-size: 12px;
+  }
+
+  .profileContent {
+    padding: 16px 0;
+  }
+
+  .profileSection {
+    padding: 0 16px 16px 16px;
+  }
+
+  .sectionTitle {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+
+  .sectionText {
+    font-size: 13px;
+  }
+
+  .contactItem {
+    gap: 6px;
+  }
+
+  .contactLabel {
+    font-size: 11px;
+    min-width: 50px;
+  }
+
+  .contactValue {
+    font-size: 11px;
+  }
+
+  .skillsList {
+    gap: 6px;
+  }
+
+  .skillTag {
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+
+  .wordText {
+    font-size: 12px;
   }
 }
 

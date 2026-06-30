@@ -22,7 +22,7 @@ export const memberspro = [
         name: "김주완",
         part: "Frontend",
         intro: "성실히 배우고 싶은 학생입니다.",
-        image: "https://i.namu.wiki/i/eThT8CYFzrGi-QEREijNJdiceYKYXYjArupDY07S2Gxlo0CZDO2cQyWWnDXHfqemvizFtSh0SRScxaIpKR-xZA.gif",
+        image: noprofile,
         tech: "HTML / CSS",
         isMe: false,
     },
