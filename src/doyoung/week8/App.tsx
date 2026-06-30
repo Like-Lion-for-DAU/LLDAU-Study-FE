@@ -1,12 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
-import { members as initialMembers } from "./members";
+import { members as initialMembers, Member } from "./members";
 import WeekPage from "./Page";
 import DetailPage from "./DetailPage";
 import NotFoundPage from "./NotFoundPage";
 
 function App() {
-  const [members, setMembers] = useState(initialMembers);
+  const [members, setMembers] = useState<Member[]>(initialMembers);
 
   return (
     <Routes>

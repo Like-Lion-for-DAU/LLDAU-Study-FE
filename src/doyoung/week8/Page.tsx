@@ -1,11 +1,32 @@
 import styles from "./Page.module.css";
-import { members as initialMembers } from "./members";
+import { members as initialMembers, Member, Contact } from "./members";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 const TIMEOUT_MS = 5000;
 
-function SummaryCard({ member }) {
+type FetchStatus = "idle" | "loading" | "success" | "error";
+type SortType = "recent" | "name";
+type PartFilter = "ALL" | "Frontend" | "Backend" | "Design";
+type FetchType = "add" | "refresh";
+
+interface MemberInput {
+  name: string;
+  role: string;
+  skills: string;
+  intro: string;
+  bio: string;
+  email: string;
+  phone: string;
+  web: string;
+  motto: string;
+}
+
+interface SummaryCardProps {
+  member: Member;
+}
+
+function SummaryCard({ member }: SummaryCardProps) {
   const navigate = useNavigate();
   return (
     <div
@@ -28,7 +49,11 @@ function SummaryCard({ member }) {
   );
 }
 
-export function ContactList({ contact }) {
+interface ContactListProps {
+  contact: Contact | undefined;
+}
+
+export function ContactList({ contact }: ContactListProps) {
   if (!contact) return null;
   return (
     <ul>
@@ -56,8 +81,14 @@ export function ContactList({ contact }) {
   );
 }
 
-export default function WeekPage({ members, setMembers }) {
-  const [retryAction, setRetryAction] = useState(null);
+interface WeekPageProps {
+  members: Member[];
+  setMembers: React.Dispatch<React.SetStateAction<Member[]>>;
+}
+
+export default function WeekPage({}: WeekPageProps) {
+  const [members, setMembers] = useState<Member[]>(initialMembers);
+  const [retryAction, setRetryAction] = useState<(() => void) | null>(null);
 
   const handleRetry = () => {
     if (retryAction) {
@@ -65,28 +96,27 @@ export default function WeekPage({ members, setMembers }) {
     }
   };
 
-  const [fetchStatus, setFetchStatus] = useState("idle");
-
+  const [fetchStatus, setFetchStatus] = useState<FetchStatus>("idle");
   const [searchParams, setSearchParams] = useSearchParams();
+  const [statusMessage, setStatusMessage] = useState<string>("");
 
-  const [statusMessage, setStatusMessage] = useState("");
+  const latestControllRef = useRef<AbortController | null>(null);
+  const latestRequestIdRef = useRef<number>(0);
 
-  const latestControllRef = useRef(null);
+  const sortType = (searchParams.get("sort") ?? "recent") as SortType;
 
-  const latestRequestIdRef = useRef(0);
-
-  const sortType = searchParams.get("sort") ?? "recent";
-
-  const updateParam = (key, value, defaultValue) => {
+  const updateParam = (key: string, value: string, defaultValue: string) => {
     const next = new URLSearchParams(searchParams);
     if (value === defaultValue || value === "") next.delete(key);
     else next.set(key, value);
     setSearchParams(next, { replace: true });
   };
 
-  const statusResetTimerRef = useRef(null);
+  const statusResetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
 
-  const fetchRandomUsers = async (count, type = "add") => {
+  const fetchRandomUsers = async (count: number, type: FetchType = "add") => {
     const requestId = ++latestRequestIdRef.current;
     setRetryAction(() => () => fetchRandomUsers(count, type));
 
@@ -117,11 +147,10 @@ export default function WeekPage({ members, setMembers }) {
       }
       const data = await response.json();
       const parts = ["Frontend", "Backend", "Design"];
-      const newMember = data.results.map((user) => ({
+      const newMember: Member[] = data.results.map((user: any) => ({
         id: makeNextId(),
         name: `${user.name.first} ${user.name.last}`,
         role: parts[Math.floor(Math.random() * parts.length)],
-        //Math.floor -> 소수점 버림
         intro: "랜덤 유저입니다.",
         bio: [`${user.location.country}에서 온 사용자`],
         skills: ["React", "JavaScript", "CSS"],
@@ -150,7 +179,7 @@ export default function WeekPage({ members, setMembers }) {
     } catch (error) {
       clearTimeout(timeOutId);
       setFetchStatus("error");
-      if (error.name === "AbortError" && timedOut) {
+      if ((error as Error).name === "AbortError" && timedOut) {
         setStatusMessage("시간 초과");
       } else {
         setStatusMessage("불러오기 실패");
@@ -200,38 +229,36 @@ export default function WeekPage({ members, setMembers }) {
       setTimeout(() => setFetchStatus("idle"), 2000);
     } catch (error) {
       clearTimeout(timeoutId);
-      if (error.name === "AbortError" && timedOut) {
+      if ((error as Error).name === "AbortError" && timedOut) {
         setFetchStatus("error");
         setStatusMessage("시간 초과");
-      } else if (error.name !== "AbortError") {
+      } else if ((error as Error).name !== "AbortError") {
         setFetchStatus("error");
         setStatusMessage("랜덤 데이터 불러오기 실패");
       }
     }
   };
 
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState<boolean>(false);
 
   const search = searchParams.get("q") ?? "";
-  const partFilter = searchParams.get("part") ?? "ALL";
+  const partFilter = (searchParams.get("part") ?? "ALL") as PartFilter;
 
-  const nextIdRef = useRef(
+  const nextIdRef = useRef<number>(
     initialMembers.length === 0
       ? 1
-      : Math.max(...initialMembers.map((m) => m.id)) + 1,
+      : Math.max(...initialMembers.map((m) => Number(m.id))) + 1,
   );
 
   const frontendCount = members.filter((m) => m.role === "Frontend").length;
-
   const backendCount = members.filter((m) => m.role === "Backend").length;
-
   const designCount = members.filter((m) => m.role === "Design").length;
 
-  function makeNextId(user) {
+  function makeNextId(): number {
     return nextIdRef.current++;
   }
 
-  const [memberInput, setmemberInput] = useState({
+  const [memberInput, setmemberInput] = useState<MemberInput>({
     name: "",
     role: "",
     skills: "",
@@ -246,21 +273,18 @@ export default function WeekPage({ members, setMembers }) {
   const visibleMembers = [...members]
     .filter((member) => {
       const matchPart = partFilter === "ALL" || member.role === partFilter;
-
       const matchSearch = member.name
         .toLowerCase()
         .includes(search.toLowerCase());
-
       return matchPart && matchSearch;
     })
-    //a, b로 나눠진 이유 => a와 b를 비교하기 위해
     .sort((a, b) => {
       if (sortType === "name") return a.name.localeCompare(b.name);
-      return b.id - a.id;
+      return Number(b.id) - Number(a.id);
     });
 
   useEffect(() => {
-    const handleEsc = (e) => {
+    const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setShowForm(false);
       }
@@ -275,7 +299,12 @@ export default function WeekPage({ members, setMembers }) {
     };
   }, [showForm]);
 
-  function handleInputChange(field, event) {
+  function handleInputChange(
+    field: keyof MemberInput,
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) {
     setmemberInput((prevState) => ({
       ...prevState,
       [field]: event.target.value,
@@ -285,9 +314,7 @@ export default function WeekPage({ members, setMembers }) {
   function handleRemoveLast() {
     setMembers((prev) => {
       const lastIndex = prev.findLastIndex((member) => !member.isMe);
-
       if (lastIndex === -1) return prev;
-
       return prev.filter((_, index) => index !== lastIndex);
     });
   }
@@ -300,9 +327,9 @@ export default function WeekPage({ members, setMembers }) {
     };
   }, []);
 
-  function handleSubmit(event) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const newMember = {
+    const newMember: Member = {
       id: makeNextId(),
       name: memberInput.name,
       role: memberInput.role,
@@ -361,21 +388,17 @@ export default function WeekPage({ members, setMembers }) {
           {fetchStatus === "idle" && (
             <p className={styles["statusText"]}>준비 완료</p>
           )}
-
           {fetchStatus === "loading" && (
             <p className={styles["statusText"]}>불러오는 중...</p>
           )}
-
           {fetchStatus === "success" && (
             <p className={styles["statusSuccess"]}>완료!</p>
           )}
-
           {fetchStatus === "error" && (
             <div>
               <p className={styles["statusError"]}>
                 불러오기 실패{statusMessage ? ` : ${statusMessage}` : ""}
               </p>
-
               <button className={styles["retryBtn"]} onClick={handleRetry}>
                 재시도
               </button>
@@ -519,8 +542,8 @@ export default function WeekPage({ members, setMembers }) {
                 </label>
                 <textarea
                   id="bio"
-                  rows="5"
-                  cols="30"
+                  rows={5}
+                  cols={30}
                   value={memberInput.bio}
                   className={styles["form"]}
                   onChange={(event) => handleInputChange("bio", event)}
@@ -607,6 +630,7 @@ export default function WeekPage({ members, setMembers }) {
           </div>
         </section>
       )}
+
       {visibleMembers.length === 0 ? (
         <p>조건에 맞는 아기사자가 없습니다.</p>
       ) : (
