@@ -1,3 +1,6 @@
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate, useSearchParams, useOutletContext, Link } from "react-router-dom";
+import type { Dispatch, SetStateAction } from "react";
 import styles from "./Page.module.css";
 import {
   members as initialMembers,
@@ -6,24 +9,25 @@ import {
   useFormData,
   randomResult,
   randomNewMember,
-} from "./script.js";
-import { useState, useEffect, useRef } from "react";
-import {
-  useNavigate,
-  useSearchParams,
-  useOutletContext,
-  Link,
-} from "react-router-dom";
+} from "./script.ts";
+import type { Member } from "./script.ts";
+
+interface OutletContext {
+  memberList: Member[];
+  setMemberList: Dispatch<SetStateAction<Member[]>>;
+}
+
+type FetchStatus = "ready" | "loading" | "success" | "error";
 
 export default function Week7Page() {
-  const { memberList, setMemberList } = useOutletContext();
-  const [showAdd, setShowAdd] = useState(false);
+  const { memberList, setMemberList } = useOutletContext<OutletContext>();
+  const [showAdd, setShowAdd] = useState<boolean>(false);
   const { formData, setFormData, handleInput, isFormValid, warn, warnFormat, reset } =
     useFormData();
-  const [fetching, setFetching] = useState("ready");
-  const [bannerIdx, setBannerIdx] = useState(0);
-  const [showExtra, setShowExtra] = useState(false);
-  const [viewMode, setViewMode] = useState("slider");
+  const [fetching, setFetching] = useState<FetchStatus>("ready");
+  const [bannerIdx, setBannerIdx] = useState<number>(0);
+  const [showExtra, setShowExtra] = useState<boolean>(false);
+  const [viewMode, setViewMode] = useState<"slider" | "grid">("slider");
   const navigate = useNavigate();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -31,7 +35,7 @@ export default function Week7Page() {
   const sortType = searchParams.get("sort") ?? "newest";
   const sortSearch = searchParams.get("q") ?? "";
 
-  const updateParam = (key, value, defaultValue) => {
+  const updateParam = (key: string, value: string, defaultValue: string): void => {
     const next = new URLSearchParams(searchParams);
     if (value === defaultValue || value === "") {
       next.delete(key);
@@ -41,26 +45,26 @@ export default function Week7Page() {
     setSearchParams(next, { replace: true });
   };
 
-  const statusResetTimerRef = useRef(null);
-  const lastAction = useRef(null);
-  const nextIdRef = useRef(Math.max(0, ...initialMembers.map((m) => m.id)) + 1);
-  const touchStartX = useRef(null);
-  const extraToggleRef = useRef(null);
-  const viewportRef = useRef(null);
+  const statusResetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastAction = useRef<(() => Promise<void>) | null>(null);
+  const nextIdRef = useRef<number>(Math.max(0, ...initialMembers.map((m) => m.id)) + 1);
+  const touchStartX = useRef<number | null>(null);
+  const extraToggleRef = useRef<HTMLDivElement | null>(null);
+  const viewportRef = useRef<HTMLDivElement | null>(null);
 
-  const dragStartX = useRef(null);
-  const dragDelta = useRef(0);
-  const isDragging = useRef(false);
-  const [dragOffset, setDragOffset] = useState(0);
-  const [snapping, setSnapping] = useState(false);
-  const [viewportWidth, setViewportWidth] = useState(0);
+  const dragStartX = useRef<number | null>(null);
+  const dragDelta = useRef<number>(0);
+  const isDragging = useRef<boolean>(false);
+  const [dragOffset, setDragOffset] = useState<number>(0);
+  const [snapping, setSnapping] = useState<boolean>(false);
+  const [viewportWidth, setViewportWidth] = useState<number>(0);
 
   usePageScrollDown(showAdd, () => setShowAdd(false));
 
   useEffect(() => {
     if (!showExtra) return;
-    const handleClickOutside = (e) => {
-      if (extraToggleRef.current && !extraToggleRef.current.contains(e.target)) {
+    const handleClickOutside = (e: MouseEvent): void => {
+      if (extraToggleRef.current && !extraToggleRef.current.contains(e.target as Node)) {
         setShowExtra(false);
       }
     };
@@ -68,14 +72,14 @@ export default function Week7Page() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showExtra]);
 
-  const fetchMessage = {
+  const fetchMessage: Record<FetchStatus, string> = {
     ready: "준비 완료!",
     loading: "요청 중...",
     success: "작업을 완료하였습니다!",
     error: "실패하였습니다. 잠시 후 다시 시도해주세요.",
   };
 
-  function makeNextId() {
+  function makeNextId(): number {
     const id = nextIdRef.current;
     nextIdRef.current += 1;
     return id;
@@ -127,13 +131,13 @@ export default function Week7Page() {
     }
   }, [displayList.length, bannerIdx]);
 
-  const handleAddSubmit = (e) => {
+  const handleAddSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const skillList = formData.skills
       .split(",")
       .map((s) => s.trim())
       .filter(Boolean);
-    const newMember = {
+    const newMember: Member = {
       id: makeNextId(),
       name: formData.name,
       part: formData.part,
@@ -155,7 +159,7 @@ export default function Week7Page() {
     reset();
   };
 
-  const handleFetchRandom = async () => {
+  const handleFetchRandom = async (): Promise<void> => {
     setFetching("loading");
     lastAction.current = handleFetchRandom;
     try {
@@ -169,7 +173,7 @@ export default function Week7Page() {
     }
   };
 
-  const handleFetchFiveRandom = async () => {
+  const handleFetchFiveRandom = async (): Promise<void> => {
     setFetching("loading");
     lastAction.current = handleFetchFiveRandom;
     try {
@@ -186,7 +190,7 @@ export default function Week7Page() {
     }
   };
 
-  const handleRefresh = async () => {
+  const handleRefresh = async (): Promise<void> => {
     setFetching("loading");
     lastAction.current = handleRefresh;
     try {
@@ -205,23 +209,23 @@ export default function Week7Page() {
     }
   };
 
-  const handleRetry = () => {
+  const handleRetry = (): void => {
     if (fetching === "error") {
       setFetching("ready");
       if (lastAction.current) lastAction.current();
     }
   };
 
-  const handlePushRandom = async () => {
+  const handlePushRandom = async (): Promise<void> => {
     const randomData = await pushRandomMembers();
     setFormData(randomData);
   };
 
-  const goPrev = () => {
+  const goPrev = (): void => {
     if (displayList.length === 0) return;
     setBannerIdx((i) => (i - 1 + displayList.length) % displayList.length);
   };
-  const goNext = () => {
+  const goNext = (): void => {
     if (displayList.length === 0) return;
     setBannerIdx((i) => (i + 1) % displayList.length);
   };
@@ -229,7 +233,7 @@ export default function Week7Page() {
   const SNAP_MS = 300;
   const GAP = 10;
 
-  const snapToNext = (delta) => {
+  const snapToNext = (delta: number): void => {
     if (snapping) return;
     const direction = delta < 0 ? -1 : 1;
     const cardWidth = viewportWidth * 0.6;
@@ -242,22 +246,22 @@ export default function Week7Page() {
     }, SNAP_MS);
   };
 
-  const snapBack = () => {
+  const snapBack = (): void => {
     setSnapping(true);
     setDragOffset(0);
     setTimeout(() => setSnapping(false), SNAP_MS);
   };
 
-  const handleTouchStart = (e) => {
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>): void => {
     if (snapping) return;
     touchStartX.current = e.touches[0].clientX;
   };
-  const handleTouchMove = (e) => {
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>): void => {
     if (touchStartX.current === null) return;
     const delta = e.touches[0].clientX - touchStartX.current;
     setDragOffset(delta);
   };
-  const handleTouchEnd = (e) => {
+  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>): void => {
     if (touchStartX.current === null) return;
     const delta = e.changedTouches[0].clientX - touchStartX.current;
     if (Math.abs(delta) > 40) {
@@ -268,21 +272,21 @@ export default function Week7Page() {
     touchStartX.current = null;
   };
 
-  const handleMouseDown = (e) => {
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>): void => {
     if (snapping) return;
     dragStartX.current = e.clientX;
     dragDelta.current = 0;
     isDragging.current = false;
     setDragOffset(0);
 
-    const handleMouseMove = (e) => {
-      const delta = e.clientX - dragStartX.current;
+    const handleMouseMove = (e: MouseEvent): void => {
+      const delta = e.clientX - (dragStartX.current ?? 0);
       dragDelta.current = delta;
       isDragging.current = Math.abs(delta) > 5;
       setDragOffset(delta);
     };
 
-    const handleMouseUp = () => {
+    const handleMouseUp = (): void => {
       const delta = dragDelta.current;
       if (Math.abs(delta) > 60) {
         snapToNext(delta);

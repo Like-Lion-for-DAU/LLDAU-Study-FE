@@ -23,7 +23,7 @@ export default function DoyoungPage() {
         <Route path="week5" element={<Week5Page />} />
         <Route path="week6" element={<Week6Page />} />
         <Route path="week7/*" element={<Week7App />} />
-        <Route path="week8" element={<Week8Page />} />
+        <Route path="week8/*" element={<Week8Page />} />
         <Route path="week9" element={<Week9Page />} />
         <Route path="week10" element={<Week10Page />} />
       </Routes>
