@@ -529,14 +529,14 @@ export default function Week3Page() {
 - [ ] 새 멤버 isMe: false 기본값 추가
 - [ ] 상세 카드 섹션 또는 모달로 입력한 데이터 모두 표시
 - [ ] 본인 카드 isMe 활용한 강조
-- [ ] import 경로 정리 (../week2/)
+- [v] import 경로 정리 (../week2/) -> import { memberspro } from '../week2/member.js';
 - [ ] label에 htmlFor 추가
-- [ ] required 일관성 (모든 필수 필드)
-- [ ] && 체크 제거 (memberList는 항상 배열)
-- [ ] key를 인덱스 없는 고유값으로
-- [ ] 함수형 setState 패턴
+- [v] required 일관성 (모든 필수 필드)
+- [v] && 체크 제거 (memberList는 항상 배열)
+- [v] key를 인덱스 없는 고유값으로
+- [v] 함수형 setState 패턴
 - [ ] 파트 필터 구현
-- [ ] 빈 상태 메시지
+- [v] 빈 상태 메시지
 - [ ] ESC 키로 폼 닫기
 
 ---

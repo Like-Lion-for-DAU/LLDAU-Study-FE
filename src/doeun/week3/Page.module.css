@@ -209,3 +209,8 @@
   border: none;
   cursor: pointer;
 }
+
+.myCard {
+  border: 3px solid skyblue;
+  transform: scale(1.03);
+}

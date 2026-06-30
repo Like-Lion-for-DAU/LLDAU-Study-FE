@@ -15,42 +15,48 @@ export const memberspro = [
         part: "Frontend",
         intro: "분야를 넘나들며 성장하는 개발자입니다",
         image: noprofile,
-        tech: "HTML / CSS"
+        tech: "HTML / CSS",
+        isMe: false,
     },
     {
         name: "김주완",
         part: "Frontend",
         intro: "성실히 배우고 싶은 학생입니다.",
         image: "https://i.namu.wiki/i/eThT8CYFzrGi-QEREijNJdiceYKYXYjArupDY07S2Gxlo0CZDO2cQyWWnDXHfqemvizFtSh0SRScxaIpKR-xZA.gif",
-        tech: "HTML / CSS"
+        tech: "HTML / CSS",
+        isMe: false,
     },
     {
         name: "백태우",
         part: "Frontend",
         intro: "AI학과이지만 Full Stack Developer를 목표로 하고있기 때문에 Frontend에서 짱 먹어보겠습니다 감사합니다",
         image: "https://i.pinimg.com/236x/ab/58/35/ab58355b3cc43e8649ef972985205330.jpg",
-        tech: "NLU / NLG"
+        tech: "NLU / NLG",
+        isMe: false,
     },
     {
         name: "임도영",
         part: "Frontend",
         intro: "아기사자 14기 프론트엔드 임도영",
         image: "https://i.pinimg.com/236x/4d/95/31/4d9531cd97ec55ed7ec35448fbe0e41d.jpg",
-        tech: "HTML / CSS"
+        tech: "HTML / CSS",
+        isMe: false,
     },
     {
         name: "정서윤",
         part: "Frontend",
         intro: "-",
         image: noprofile,
-        tech: "HTML / CSS"
+        tech: "HTML / CSS",
+        isMe: false,
     },
     {
         name: "정소민",
         part: "Frontend",
         intro: "컴퓨터공학과 25학번 정소민입니다.",
         image: profile,
-        tech: "React"
+        tech: "React",
+        isMe: false,
     }
 ]
 

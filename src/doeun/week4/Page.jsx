@@ -62,6 +62,9 @@ export default function Week4Page() {
   const [memberList, setMemberList] = useState(memberspro);
   const [showForm, setShowForm] = useState(false);
   const [selectedMember, setSelectedMember] = useState(null);
+  const [sortBy, setSortBy] = useState("default");
+  const [filterPart, setFilterPart] = useState("전체");
+  const [searchText, setSearchText] = useState("");
 
   // 로딩 / 에러 상태
   const [loading, setLoading] = useState(false);
@@ -89,6 +92,33 @@ export default function Week4Page() {
 const handleInputChange = (e) => {
   const { name, value } = e.target;
   setFormData((prev) => ({ ...prev, [name]: value }));
+};
+
+const getFilteredAndSortedMembers = () => {
+  let filtered = [...memberList];
+
+  // 파트 필터
+  if (filterPart !== "전체") {
+    filtered = filtered.filter((member) => member.part === filterPart);
+  }
+
+  // 검색 필터 (이름, 소개, 기술)
+  if (searchText.trim()) {
+    filtered = filtered.filter((member) =>
+      member.name.toLowerCase().includes(searchText.toLowerCase()) ||
+      member.intro.toLowerCase().includes(searchText.toLowerCase()) ||
+      (member.tech && member.tech.toLowerCase().includes(searchText.toLowerCase()))
+    );
+  }
+
+  // 정렬
+  if (sortBy === "name") {
+    filtered.sort((a, b) => a.name.localeCompare(b.name, "ko"));
+  } else if (sortBy === "part") {
+    filtered.sort((a, b) => a.part.localeCompare(b.part, "ko"));
+  }
+
+  return filtered;
 };
 
 const handleFillRandomData = async () => {
@@ -240,36 +270,76 @@ const handleFillRandomData = async () => {
         </button>
 
         {/* 상태 표시 */}
-        {loading && (
-          <p className={styles.loadingText}>
-            불러오는 중...
-          </p>
+        {!loading && !error && !success && (
+          <span className={styles.readyText}>
+            준비완료
+          </span>
         )}
 
-        {!loading && !error && !success && (
-          <p className={styles.readyText}>
-            준비완료
-          </p>
+        {loading && (
+          <span className={styles.loadingText}>
+            불러오는 중...
+          </span>
         )}
 
         {success && !loading && (
-          <p className={styles.successText}>
+          <span className={styles.successText}>
             완료!
-          </p>
+          </span>
         )}
 
         {error && (
-          <div className={styles.errorBox}>
-          <p>{error}</p>
-
-          <button
-            className={styles.retryBtn}
-            onClick={refreshMembers}
-          >
-            재시도
-          </button>
-        </div>
+          <span className={styles.errorBox}>
+            <span>{error}</span>
+            <button
+              className={styles.retryBtn}
+              onClick={refreshMembers}
+            >
+              재시도
+            </button>
+          </span>
         )}
+      </div>
+
+      {/* 필터 & 정렬 & 검색 */}
+      <div className={styles.filterSection}>
+        <div className={styles.filterGroup}>
+          <label className={styles.filterLabel}>파트</label>
+          <select
+            className={styles.filterSelect}
+            value={filterPart}
+            onChange={(e) => setFilterPart(e.target.value)}
+          >
+            <option value="전체">전체</option>
+            <option value="Frontend">Frontend</option>
+            <option value="Backend">Backend</option>
+            <option value="Design">Design</option>
+          </select>
+        </div>
+
+        <div className={styles.filterGroup}>
+          <label className={styles.filterLabel}>정렬</label>
+          <select
+            className={styles.filterSelect}
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+          >
+            <option value="default">기본순</option>
+            <option value="name">이름순</option>
+            <option value="part">파트순</option>
+          </select>
+        </div>
+
+        <div className={styles.searchGroup}>
+          <label className={styles.filterLabel}>검색</label>
+          <input
+            type="text"
+            className={styles.searchInput}
+            placeholder="이름, 소개, 기술 검색"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
+        </div>
       </div>
 
       {/* 전체 화면 모달 */}
@@ -282,6 +352,13 @@ const handleFillRandomData = async () => {
           className={styles.bigModal}
           onClick={(e) => e.stopPropagation()}
         >
+        <button
+          className={styles.closeModalBtn}
+          onClick={() => setShowForm(false)}
+          aria-label="Close"
+        >
+          ✕
+        </button>
         <form
           className={styles.bigForm}
           onSubmit={handleSubmit}
@@ -454,7 +531,7 @@ const handleFillRandomData = async () => {
             등록된 아기 사자가 없습니다.
           </p>
         ) : (
-          memberList.map((member) => (
+          getFilteredAndSortedMembers().map((member) => (
             <div
               key={member.id}
               className={`${styles.week4card} ${
@@ -500,9 +577,9 @@ const handleFillRandomData = async () => {
                 </h3>
 
                 <span
-                  className={
-                    styles.week4part
-                  }
+                  className={`${styles.week4part} ${
+                    styles[`part${member.part}`]
+                  }`}
                 >
                   {member.part}
                 </span>
@@ -528,6 +605,13 @@ const handleFillRandomData = async () => {
           className={styles.profileModal}
           onClick={(e) => e.stopPropagation()}
         >
+        <button
+          className={styles.closeModalBtn}
+          onClick={() => setSelectedMember(null)}
+          aria-label="Close"
+        >
+          ✕
+        </button>
         <img
           src={selectedMember.image}
           alt={selectedMember.name}
@@ -536,7 +620,9 @@ const handleFillRandomData = async () => {
 
         <h2>{selectedMember.name}</h2>
 
-        <p className={styles.profilePart}>
+        <p className={`${styles.profilePart} ${
+          styles[`part${selectedMember.part}`]
+        }`}>
          {selectedMember.part}
         </p>
 

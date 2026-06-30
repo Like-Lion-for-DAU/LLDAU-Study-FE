@@ -1,556 +1,572 @@
-.week-page {
-  padding: 40px;
-  background: #f9fafb;
-  min-height: 100vh;
-  font-family: "Pretendard", sans-serif;
+/* ================================= */
+/* 1. 토스 최신 다크 모드 시스템 컬러 */
+/* ================================= */
+:root {
+  --toss-blue: #0064ff;
+  --toss-blue-hover: #1b74ff;
+  --toss-blue-alpha: rgba(0, 100, 255, 0.15);
+
+  --toss-bg-deep: #0f1218;
+  --toss-bg-surface: #171c24;
+  --toss-bg-element: #222934;
+  --toss-bg-hover: #1f2632;
+
+  --toss-text-primary: #f3f4f6;
+  --toss-text-secondary: #b0b8c1;
+  --toss-text-tertiary: #6b7684;
+
+  --toss-red: #f04452;
+  --toss-red-alpha: rgba(240, 68, 82, 0.15);
+
+  --toss-green: #31b45f;
+  --toss-green-alpha: rgba(49, 180, 95, 0.15);
 }
 
-/* 상단 */
+.week-page {
+  font-family: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+  letter-spacing: -0.4px;
+  color: var(--toss-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--toss-bg-deep);
+  min-height: 100vh;
+  padding: 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.week-page::-webkit-scrollbar {
+  display: none;
+}
+
+/* ================================= */
+/* 2. 상단 고정 네비게이션 헤더 */
+/* ================================= */
+.week4header {
+  position: sticky;
+  top: 0;
+  background: rgba(15, 18, 24, 0.8); 
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  z-index: 100;
+  padding: 24px 20px 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04); 
+}
 
 .week-page h2 {
-  font-size: 36px;
-  font-weight: 800;
-  color: #191f28;
-  margin-bottom: 24px;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--toss-text-primary);
+  margin: 0 0 20px 0;
 }
 
-/* 버튼 영역 */
-
+/* ================================= */
+/* 3. 토스 세그먼트 캡슐 컨트롤 (필터 칩) */
+/* ================================= */
 .week4controls {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   flex-wrap: wrap;
-  margin-bottom: 24px;
+  padding: 0 20px;
+  justify-content: flex-start;
 }
 
 .week4btn {
   border: none;
-  background: white;
-  padding: 14px 20px;
-  border-radius: 16px;
+  background: var(--toss-bg-element);
+  padding: 10px 16px;
+  border-radius: 100px; 
   cursor: pointer;
-
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
-
-  color: #191f28;
-
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
-
-  transition: all 0.2s ease;
+  color: var(--toss-text-secondary);
+  transition: all 0.15s ease;
 }
 
 .week4btn:hover {
-  transform: translateY(-2px);
-
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+  background: var(--toss-bg-hover);
+  color: var(--toss-text-primary);
 }
 
 .countText {
   display: flex;
   align-items: center;
-
-  padding: 14px 20px;
-
-  background: #3182f6;
-
-  color: white;
-
-  border-radius: 16px;
-
+  padding: 10px 16px;
+  background: var(--toss-blue-alpha);
+  color: var(--toss-blue);
+  border-radius: 100px;
+  font-size: 14px;
   font-weight: 700;
 }
 
 .countNumber {
-  margin-left: 6px;
-  color: white;
-  font-size: 18px;
+  margin-left: 4px;
 }
 
-/* 상태 */
-
-.loadingText,
-.readyText,
-.successText {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.loadingText {
-  color: #6b7684;
-}
-
-.readyText {
-  color: #6b7684;
-}
-
-.successText {
-  color: #3182f6;
-}
-
-.errorBox {
+/* ================================= */
+/* 필터, 정렬, 검색 섹션 */
+/* ================================= */
+.filterSection {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 12px;
+  padding: 12px 20px;
+  background: var(--toss-bg-deep);
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
 
-  color: #ef4444;
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+}
 
+.searchGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 auto;
+  min-width: 200px;
+}
+
+.filterLabel {
+  font-size: 12px;
   font-weight: 600;
+  color: var(--toss-text-tertiary);
+  text-transform: uppercase;
 }
 
-.retryBtn {
-  border: none;
-
-  background: #ef4444;
-
-  color: white;
-
+.filterSelect {
+  border: 1px solid transparent;
+  background: var(--toss-bg-element);
   padding: 10px 14px;
-
-  border-radius: 10px;
-
+  border-radius: 14px;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--toss-text-primary);
+  transition: all 0.15s ease;
+  font-family: inherit;
+  min-width: 140px;
 }
 
-/* 카드 그리드 */
+.filterSelect:hover {
+  background: var(--toss-bg-hover);
+}
+
+.filterSelect:focus {
+  outline: none;
+  background: var(--toss-bg-hover);
+  border-color: var(--toss-blue);
+}
+
+.searchInput {
+  border: 1px solid transparent;
+  background: var(--toss-bg-element);
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 14px;
+  color: var(--toss-text-primary);
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+
+.searchInput::placeholder {
+  color: var(--toss-text-tertiary);
+}
+
+.searchInput:focus {
+  outline: none;
+  background: var(--toss-bg-hover);
+  border-color: var(--toss-blue);
+}
+
+/* ================================= */
+/* 4. 토스 내역/소비 리스트 뷰 */
+/* ================================= */
+.week4content {
+  background: var(--toss-bg-deep);
+  padding: 8px 0;
+}
 
 .week4CardGrid {
-  display: grid;
-
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-
-  gap: 28px;
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
-/* 카드 */
-
 .week4card {
-  background: white;
-
-  border-radius: 28px;
-
-  overflow: hidden;
-
+  display: flex;
+  align-items: center;
+  padding: 18px 24px;
+  background: var(--toss-bg-deep);
   cursor: pointer;
-
-  box-shadow:
-    0 2px 8px rgba(15, 23, 42, 0.04),
-    0 12px 24px rgba(15, 23, 42, 0.05);
-
-  transition: all 0.25s ease;
+  transition: background-color 0.12s ease;
+  position: relative;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03); 
 }
 
 .week4card:hover {
-  transform: translateY(-8px);
-
-  box-shadow:
-    0 8px 16px rgba(15, 23, 42, 0.06),
-    0 24px 40px rgba(15, 23, 42, 0.08);
+  background-color: var(--toss-bg-hover);
 }
 
-.myCard {
-  border: 2px solid #3182f6;
+/* 내가 만든 카드 등 특정 강조 아이템 왼쪽 블루 바 가이드라인 */
+.myCard::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 14px;
+  bottom: 14px;
+  width: 3px;
+  background: var(--toss-blue);
+  border-radius: 0 4px 4px 0;
 }
 
-/* 이미지 */
+/* 토스 특유의 미니멀한 꺾쇠(Chevron) 화살표 아이콘 */
+.week4card::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-top: 2px solid var(--toss-text-tertiary);
+  border-right: 2px solid var(--toss-text-tertiary);
+  transform: rotate(45deg);
+  position: absolute;
+  right: 24px;
+  opacity: 0.6;
+}
 
+/* ================================= */
+/* 5. 리스트 내부 상세 요소 구조 */
+/* ================================= */
 .week4imageWrapper {
-  position: relative;
-
-  width: 100%;
-
-  height: 360px;
-
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
   overflow: hidden;
+  background: var(--toss-bg-element);
+  flex-shrink: 0;
+  margin-right: 16px;
 }
 
 .week4image {
   width: 100%;
   height: 100%;
-
   object-fit: cover;
-
-  transition: 0.3s;
 }
-
-.week4card:hover .week4image {
-  transform: scale(1.05);
-}
-
-/* 기술 태그 */
-
-.week4tag {
-  position: absolute;
-
-  top: 18px;
-  right: 18px;
-
-  background: rgba(255, 255, 255, 0.95);
-
-  color: #3182f6;
-
-  padding: 10px 14px;
-
-  border-radius: 999px;
-
-  font-size: 13px;
-
-  font-weight: 700;
-
-  backdrop-filter: blur(12px);
-}
-
-/* 카드 내용 */
 
 .week4info {
-  padding: 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-right: 80px; /* 우측 태그와 화살표가 겹치지 않도록 안전 여백 확보 */
 }
 
 .week4name {
-  font-size: 28px;
-
-  font-weight: 700;
-
-  color: #191f28;
-
-  margin-bottom: 8px;
-}
-
-.week4part {
-  display: inline-block;
-
-  color: #3182f6;
-
-  font-weight: 700;
-
-  margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--toss-text-primary);
 }
 
 .week4description {
-  color: #6b7684;
-
-  line-height: 1.7;
-
-  margin-top: 8px;
+  font-size: 13px;
+  color: var(--toss-text-secondary);
+  line-height: 1.4;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-/* 모달 배경 */
+.week4tag {
+  position: absolute;
+  right: 44px; 
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--toss-blue);
+  background: var(--toss-blue-alpha);
+  padding: 5px 10px;
+  border-radius: 6px;
+}
 
+.week4part {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--toss-text-tertiary);
+}
+
+.partFrontend {
+  color: var(--toss-blue);
+}
+
+.partBackend {
+  color: var(--toss-red);
+}
+
+.partDesign {
+  color: var(--toss-green);
+}
+
+/* ================================= */
+/* 6. ✨ 부드럽고 쫀득한 토스 오리지널 바텀시트 애니메이션 */
+/* ================================= */
+
+/* 모달 뒷배경 페이드인 효과 */
 .modalOverlay {
   position: fixed;
   inset: 0;
-
-  background: rgba(0, 0, 0, 0.45);
-
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
-  align-items: center;
-
+  align-items: flex-end; /* 화면 아래에 딱 붙어서 올라오도록 정렬 */
   z-index: 999;
+  backdrop-filter: blur(4px);
+  animation: tossFadeIn 0.24s ease-out forwards;
 }
 
-/* 메인 모달 */
-
-.bigModal {
-  width: 90%;
-  max-width: 1200px;
-
-  max-height: 90vh;
-
+/* 토스 스타일 바텀시트 몸통 */
+.bigModal, .profileModal {
+  width: 100%;
+  max-width: 540px;
+  max-height: 88vh;
   overflow-y: auto;
-
-  background: white;
-
-  border-radius: 32px;
-
-  padding: 40px;
-
-  box-shadow:
-    0 20px 60px rgba(15, 23, 42, 0.15);
+  background: var(--toss-bg-surface);
+  border-radius: 24px 24px 0 0;
+  padding: 32px 24px 28px 24px;
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.4);
+  position: relative;
+  animation: tossFadeIn 0.24s ease-out forwards;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-.bigForm {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.bigModal::-webkit-scrollbar,
+.profileModal::-webkit-scrollbar {
+  display: none;
 }
 
-.row2 {
-  display: grid;
-
-  grid-template-columns: 1fr 1fr;
-
-  gap: 20px;
-}
-
-/* 입력 */
-
-.inputGroup {
-  display: flex;
-  flex-direction: column;
-
-  gap: 8px;
-}
+/* 폼 요소 레이아웃 */
+.bigForm { display: flex; flex-direction: column; gap: 20px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.inputGroup { display: flex; flex-direction: column; gap: 6px; }
 
 .inputGroup label {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-
-  color: #4e5968;
+  color: var(--toss-text-secondary);
 }
 
 .inputGroup input,
 .inputGroup textarea,
 .inputGroup select {
   width: 100%;
-
-  border: none;
-
-  background: #f2f4f6;
-
-  border-radius: 16px;
-
-  padding: 16px;
-
+  border: 1px solid transparent;
+  background: var(--toss-bg-element);
+  border-radius: 14px;
+  padding: 15px 16px;
   font-size: 15px;
-
-  transition: all 0.2s;
-
+  color: var(--toss-text-primary);
   box-sizing: border-box;
+  font-family: inherit;
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
 }
 
-.inputGroup textarea {
-  resize: none;
-
-  min-height: 140px;
-}
-
+/* 인풋 포커스시 선명하게 반짝이는 효과 */
 .inputGroup input:focus,
 .inputGroup textarea:focus,
 .inputGroup select:focus {
   outline: none;
-
-  background: white;
-
-  box-shadow: 0 0 0 3px rgba(49, 130, 246, 0.15);
+  background: var(--toss-bg-hover);
+  border-color: var(--toss-blue);
 }
 
-/* 버튼 */
-
+/* 모달 하단 버튼 구조 */
 .modalButtons {
   display: flex;
-
-  justify-content: flex-end;
-
-  gap: 12px;
-
-  margin-top: 10px;
+  flex-direction: column-reverse; 
+  gap: 10px;
+  margin-top: 16px;
 }
 
-.modalButtons button {
+.modalButtons button, .closeBtn {
+  width: 100%;
   border: none;
-
   border-radius: 14px;
-
-  padding: 14px 22px;
-
-  font-size: 15px;
-
-  font-weight: 700;
-
-  cursor: pointer;
-
-  transition: 0.2s;
-}
-
-.randomBtn {
-  background: #f2f4f6;
-}
-
-.submitBtn {
-  background: #3182f6;
-  color: white;
-}
-
-.submitBtn:hover {
-  background: #1b64da;
-}
-
-.cancelBtn {
-  background: #e5e8eb;
-}
-
-/* 빈 상태 */
-
-.emptyMessage {
-  text-align: center;
-
-  color: #6b7684;
-
+  padding: 16px;
   font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
 
-  padding: 60px;
+/* 버튼 눌렀을 때 쫀득하게 살짝 들어가는 토스 액션 피드백 */
+.modalButtons button:active, .closeBtn:active {
+  transform: scale(0.98);
+}
+
+.submitBtn { background: var(--toss-blue); color: #ffffff; }
+.submitBtn:hover { background: var(--toss-blue-hover); }
+.cancelBtn, .randomBtn { background: var(--toss-bg-element); color: var(--toss-text-secondary); }
+.cancelBtn:hover, .randomBtn:hover { background: var(--toss-bg-hover); }
+
+/* 프로필 바텀시트 */
+.profileModal { text-align: center; }
+.profileImage { width: 84px; height: 84px; border-radius: 50%; object-fit: cover; margin-bottom: 16px; background: var(--toss-bg-element); }
+.profilePart { color: var(--toss-blue); font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.profileTech { color: var(--toss-text-secondary); font-size: 13px; margin-bottom: 14px; }
+.profileIntro { font-size: 15px; color: var(--toss-text-primary); line-height: 1.6; margin-bottom: 28px; }
+.closeBtn { background: var(--toss-blue); color: #ffffff; }
+
+/* X 닫기 버튼 */
+.closeModalBtn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: none;
+  color: var(--toss-text-secondary);
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+  padding: 0;
+  line-height: 1;
+}
+
+.closeModalBtn:hover {
+  color: var(--toss-text-primary);
+}
+
+.closeModalBtn:active {
+  transform: scale(0.9);
+}
+
+/* 상태 메시지 공통 */
+.emptyMessage { text-align: center; color: var(--toss-text-tertiary); padding: 80px 24px; }
+.loadingText, .readyText { font-size: 14px; color: var(--toss-text-tertiary); display: inline-flex; align-items: center; }
+.successText { font-size: 14px; color: var(--toss-blue); font-weight: 600; display: inline-flex; align-items: center; }
+.errorBox { display: inline-flex; align-items: center; gap: 8px; color: var(--toss-red); font-size: 14px; font-weight: 600; }
+.retryBtn { border: none; background: var(--toss-red-alpha); color: var(--toss-red); padding: 6px 10px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 12px; }
+
+/* ================================= */
+/* 7. 완벽한 토스 타이밍 애니메이션 프레임 */
+/* ================================= */
+@keyframes tossFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* ================================= */
-/* Desktop (1200px 이상) */
+/* 8. 모바일 반응형 최적화 */
 /* ================================= */
-
-.week4CardGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
-}
-
-.week-page {
-  padding: 40px;
-}
-
-/* ================================= */
-/* Tablet (768px ~ 1199px) */
-/* ================================= */
-
-@media (max-width: 1199px) {
-  .week-page {
-    padding: 28px;
-  }
-
-  .week4CardGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
-  }
-
-  .week4imageWrapper {
-    height: 300px;
-  }
-
-  .bigModal {
-    width: 95%;
-    padding: 32px;
-  }
-
-  .row2 {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ================================= */
-/* Mobile (767px 이하) */
-/* ================================= */
-
-@media (max-width: 767px) {
-  .week-page {
-    padding: 16px;
-  }
-
+@media (max-width: 1024px) {
   .week4controls {
-    flex-direction: column;
-    align-items: stretch;
+    gap: 6px;
+    padding: 0 16px;
   }
 
   .week4btn {
-    width: 100%;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .filterSection {
+    gap: 10px;
+    padding: 10px 16px;
+  }
+
+  .filterSelect {
+    min-width: 120px;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .searchInput {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 767px) {
+  .week4header { padding: 18px 16px 14px 16px; }
+
+  .week4CardGrid {
+    padding: 0 12px;
+  }
+
+  .week4card {
+    padding: 14px 12px;
+    margin: 0 -12px;
+  }
+
+  .week4card::after { right: 12px; }
+
+  .week4imageWrapper { width: 40px; height: 40px; margin-right: 12px; }
+
+  .week4name { font-size: 15px; }
+
+  .week4description { font-size: 12px; }
+
+  .week4tag { right: 32px; font-size: 11px; padding: 4px 8px; }
+
+  .week4controls {
+    gap: 6px;
+    padding: 8px 12px;
+  }
+
+  .week4btn {
+    padding: 8px 10px;
+    font-size: 12px;
+    flex: 1 1 auto;
+    min-width: 80px;
   }
 
   .countText {
+    font-size: 12px;
+    padding: 8px 12px;
+    flex: 1 1 auto;
+    min-width: 80px;
+  }
+
+  .filterSection {
+    gap: 8px;
+    padding: 8px 12px;
+  }
+
+  .filterGroup {
+    min-width: 48%;
+  }
+
+  .filterSelect {
     width: 100%;
-    text-align: center;
+    min-width: unset;
   }
 
-  .week4CardGrid {
-    grid-template-columns: 1fr;
-    gap: 18px;
-  }
-
-  .week4imageWrapper {
-    height: 240px;
-  }
-
-  .week4name {
-    font-size: 20px;
-  }
-
-  .week4description {
-    font-size: 14px;
-  }
-
-  .bigModal {
+  .searchGroup {
     width: 100%;
-    height: 100vh;
-    max-height: 100vh;
-
-    border-radius: 0;
-
-    padding: 20px;
+    min-width: unset;
   }
 
-  .modalButtons {
-    flex-direction: column;
-  }
-
-  .modalButtons button {
+  .searchInput {
     width: 100%;
   }
-}
-.profileModal {
-  width: 90%;
-  max-width: 500px;
 
-  background: white;
-
-  border-radius: 28px;
-
-  padding: 32px;
-
-  text-align: center;
-
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-}
-
-.profileImage {
-  width: 180px;
-  height: 180px;
-
-  border-radius: 50%;
-
-  object-fit: cover;
-
-  margin-bottom: 20px;
-}
-
-.profilePart {
-  color: #3182f6;
-
-  font-weight: 700;
-
-  margin-bottom: 12px;
-}
-
-.profileTech {
-  color: #666;
-
-  margin-bottom: 12px;
-}
-
-.profileIntro {
-  line-height: 1.7;
-
-  color: #444;
-
-  margin-bottom: 20px;
-}
-
-.closeBtn {
-  border: none;
-
-  background: #3182f6;
-
-  color: white;
-
-  padding: 12px 20px;
-
-  border-radius: 12px;
-
-  cursor: pointer;
+  .filterLabel {
+    font-size: 11px;
+  }
 }
