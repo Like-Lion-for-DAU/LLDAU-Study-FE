@@ -6,3 +6,241 @@
   font-size: 1.5rem;
   font-weight: 700;
 }
+
+.weekPage {
+  padding: 40px 24px;
+  background-color: var(--color-bg-secondary);
+}
+
+.cardContainer {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+}
+
+.card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-divider);
+  height: 420px;
+  display: flex;
+  flex-direction: column;
+}
+
+.imageBox {
+  width: 100%;
+  height: 300px;
+  display: flex;
+}
+
+.cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  object-position: center;
+  display: block;
+}
+
+.badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background-color: var(--color-white);
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid var(--color-divider);
+}
+
+.cardContent {
+  height: 160px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+.name {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.role {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.introduce {
+  margin: 0;
+  line-height: 1.5;
+  font-size: 15px;
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 1024px) {
+  .cardContainer {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .cardContainer {
+    grid-template-columns: 1fr;
+  }
+}
+
+.controlArea {
+  max-width: 1400px;
+  margin: 0 auto 32px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.controlArea button {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--color-divider);
+  background-color: var(--color-white);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.formBox {
+  max-width: 1400px;
+  margin: 0 auto 32px;
+  padding: 20px;
+
+  border-radius: 16px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-divider);
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.formBox input,
+.formBox select {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--color-divider);
+}
+
+.formBox button {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--color-divider);
+  background-color: var(--color-white);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.modalBg {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background-color: rgba(0, 0, 0, 0.4);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalBox {
+  position: relative;
+
+  width: 600px;
+  padding: 32px;
+
+  border-radius: 24px;
+  background-color: var(--color-white);
+}
+
+.closeBtn {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+
+  border: none;
+  background: none;
+
+  font-size: 32px;
+  cursor: pointer;
+}
+
+.modalTop {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.modalImage {
+  width: 120px;
+  height: 120px;
+
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.modalTop h2 {
+  margin: 0;
+  font-size: 36px;
+}
+
+.modalTop h3 {
+  margin: 8px 0;
+  color: var(--color-primary);
+}
+
+.modalTop p {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+.modalContent {
+  margin-top: 24px;
+}
+
+.modalContent h3 {
+  margin-top: 24px;
+}
+
+.skillTag {
+  display: inline-block;
+
+  padding: 8px 16px;
+  border-radius: 999px;
+
+  background-color: var(--color-new-feature-bg);
+  color: var(--color-primary);
+
+  font-weight: 700;
+}
+
+.commentBox {
+  padding: 20px;
+  border-radius: 16px;
+
+  background-color: var(--color-gray-100);
+  color: var(--color-text-secondary);
+}

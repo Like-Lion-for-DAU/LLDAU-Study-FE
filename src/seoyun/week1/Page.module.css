@@ -6,3 +6,87 @@
   font-size: 1.5rem;
   font-weight: 700;
 }
+
+body {
+    background-color: #f0f0f0; 
+    font-family: "돋움", dotum, sans-serif; 
+    margin: 0; 
+    padding: 0;
+}
+
+
+.container {
+    width: 90%; 
+    max-width: 1000px; 
+    margin-left: auto; 
+    margin-right: auto; 
+    padding-top: 50px;
+}
+
+.card-grid {
+    display: grid; 
+    gap: 20px; 
+    grid-template-columns: 1fr; 
+}
+
+
+.summary-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px; 
+    display: flex; 
+    flex-direction: column; 
+    padding-bottom: 15px;
+}
+
+
+.summary-card.me {
+    border: 5px solid orange; 
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.3); 
+}
+
+.image-wrapper {
+    position: relative; 
+    height: 250px;
+    overflow: hidden;
+}
+
+.image-wrapper img {
+    width: 100%; 
+    height: 100%;
+    object-fit: cover;
+}
+
+.badge {
+    position: absolute; 
+    top: 10px; 
+    right: 10px; 
+    background-color: black;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+@media (min-width: 600px) {
+    .card-grid {
+        grid-template-columns: 1fr 1fr; 
+    }
+}
+
+
+@media (min-width: 900px) {
+    .card-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+.detail-section {
+    margin-top: 50px;
+}
+
+.detail-card {
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-left: 10px solid #ccc; 
+}
